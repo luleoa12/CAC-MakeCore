@@ -1,24 +1,40 @@
-# MakeCore
-[makecore.org](https://makecore.org)
-
-**Start:** March 28, 2025 | **Release:** June 14, 2025 | **End:** August 24, 2025  
-**4+ months spent | 15,000+ lines of code**
+<img src="docs/screenshots/logo.svg" alt="MakeCore Logo" width="120"><br>
+<h1># MakeCore</h1>
+<a href="https://makecore.org">makecore.org</a><br><br>
+<strong>Start:</strong> March 28, 2025 | <strong>Release:</strong> June 14, 2025 |<strong>End:</strong> October 25, 2025<br>
+<strong>4+ months spent | 15,000+ lines of code</strong><br><br>
 
 > “One commit a day keeps unemployment away.” – Leo Lu, 2025
 
 ---
 
-## Stack
+## About
+MakeCore is an online platform designed for sharing, reviewing, and discussing MakeCode and Scratch programs. Users can create programs, join studios, participate in game contests (MakeJams), and interact with the community.
 
-- **Frontend:** HTML, CSS  
-- **Backend:** Flask (Python)  
-- **Database:** PostgreSQL + Supabase (images)  
-- **Hosting:** Render  
-- **Mail:** MailGun 
+**Live Project:** [https://makecore.org](https://makecore.org)
 
 ---
 
-## Features + Devlog
+## How It's Made
+**Tech used:** HTML, CSS, JavaScript, Flask (Python), PostgreSQL, Supabase, Render, MailGun
+
+MakeCore was built with a focus on community collaboration and interactive features:
+- Programs with comments, upvotes/downvotes, and version tracking  
+- Studios with role-based member system and activity tracking  
+- MakeJam contests with scoring, ranking, leaderboards, and countdowns  
+- Dynamic dashboard showing community stats and program highlights  
+- Authentication flows including email verification and password reset  
+
+---
+
+## Lessons Learned
+- Managing user sessions in Flask
+- Handling image uploads to Supabase
+- Designing clean and structured UI 
+- Connecting frontend components to backend endpoints via JS-based API requests
+
+
+## Features
 
 ### Programs
 - Create, edit, delete programs  
