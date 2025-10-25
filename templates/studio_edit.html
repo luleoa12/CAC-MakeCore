@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block head %}
+  <link rel="stylesheet" href="/static/css/studio_edit.css">
+  <link rel="stylesheet" href="/static/css/colors.css">
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<div class="studio-section">
+  <h2 class="studio-title">Edit Studio</h2>
+  <form method="POST" enctype="multipart/form-data" class="studio-form">
+    <div class="form-group">
+      <label for="title">Studio Title</label>
+      <input type="text" name="title" id="title" maxlength="100" value="{{ studio.title }}" required>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea name="description" id="description" rows="4" required>{{ studio.description }}</textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="thumbnail">Thumbnail (optional)</label>
+      <input type="file" name="thumbnail" id="thumbnail" accept="image/*">
+      <div style="margin-top: 12px;">
+        <p style="color: var(--color7); font-size: 0.9rem; margin-bottom: 8px;">Current thumbnail:</p>
+        {% if studio.thumbnail_url %}
+          <img src="{{ studio.thumbnail_url }}" class="studio-thumb" alt="Current Studio Thumbnail" id="current-thumbnail">
+        {% else %}
+          <img data-theme-src="/static/themes/orange/img/studio_default.svg" class="studio-thumb" alt="Default Studio Thumbnail" id="current-thumbnail">
+        {% endif %}
+      </div>
+      <div id="new-thumbnail-preview" style="display: none; margin-top: 12px;">
+        <p style="color: var(--color7); font-size: 0.9rem; margin-bottom: 8px;">New thumbnail preview:</p>
+        <img id="preview-image" class="studio-thumb" alt="New Thumbnail Preview">
+      </div>
+    </div>
+
+
+
+    <button type="submit" class="studio-btn">Save Changes</button>
+  </form>
+  <a href="{{ url_for('studio_detail', studio_id=studio.id) }}" class="btn-link">← Back to Studio</a>
+</div>
+{% endblock %}
+{% block scripts %}
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7H9JTC8BY1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-7H9JTC8BY1');
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const thumbnailInput = document.getElementById('thumbnail');
+  const previewContainer = document.getElementById('new-thumbnail-preview');
+  const previewImage = document.getElementById('preview-image');
+  const currentThumbnail = document.getElementById('current-thumbnail');
+  
+  thumbnailInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file.');
+        this.value = '';
+        return;
+      }
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File size must be less than 5MB.');
+        this.value = '';
+        return;
+      }
+      
+      // Create FileReader to preview the image
+      const reader = new FileReader();
+      
+      reader.onload = function(e) {
+        previewImage.src = e.target.result;
+        previewContainer.style.display = 'block';
+        
+        // Hide current thumbnail if it exists
+        if (currentThumbnail) {
+          currentThumbnail.style.display = 'none';
+        }
+      };
+      
+      reader.readAsDataURL(file);
+    } else {
+      // No file selected, hide preview and show current thumbnail
+      previewContainer.style.display = 'none';
+      if (currentThumbnail) {
+        currentThumbnail.style.display = 'block';
+      }
+    }
+  });
+});
+</script>
+{% endblock %}

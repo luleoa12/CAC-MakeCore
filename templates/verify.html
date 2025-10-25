@@ -1,0 +1,323 @@
+{% extends "base.html" %}
+{% block title %}Verify Email | MakeCore{% endblock %}
+{% block head %}
+  <link rel="stylesheet" href="/static/css/colors.css">
+  <link rel="stylesheet" href="/static/css/auth.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% endblock %}
+{% block content %}
+  <div class="login-wrapper">
+    <div class="login-layout verify-layout">
+      <div class="marketing-column">
+        <div class="quote-section">
+          <h1 class="quote-title">Verify Your Account</h1>
+          <div class="testimonial">
+            <div class="quote-mark">"</div>
+            <blockquote class="quote-text">
+              We're almost there! Just one more step to secure your account and start sharing amazing projects.
+            </blockquote>
+            <div class="testimonial-author">
+              <div class="author-avatar">
+                <div class="avatar-placeholder">LL</div>
+              </div>
+              <div class="author-info">
+                <div class="author-name">Leo Lu</div>
+                <div class="author-title">Developer of MakeCore</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game Images Carousel -->
+        <div class="game-carousel-section">
+          <div class="carousel-header">
+            <h3>Join 1K+ Creators</h3>
+          </div>
+          <div class="game-carousel">
+            <div class="carousel-track">
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/1.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/2.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/3.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/4.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/5.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/6.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/7.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/8.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/9.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/10.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/11.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/12.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/13.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/14.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/15.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/16.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/17.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/18.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <!-- Duplicates for smooth infinite loop -->
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/1.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/2.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/3.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/4.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/5.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/6.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/7.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/8.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/9.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/10.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/11.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/12.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/13.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/14.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/15.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/16.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/17.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/18.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="login-form-column">
+        <div class="auth-container">
+          <h2>Verification Code</h2>
+          <p style="text-align:center; color:var(--auth-text-light); font-size:1.15rem; margin-bottom: 24px;">Enter the 4-digit code we've sent to your email (if it's not there, check your spam)</p>
+          <form id="verify-form">
+            <div id="code-inputs" style="display:flex; gap:18px; justify-content:center; margin:24px 0;">
+              <input type="text" maxlength="1" class="edit-input code-digit" required style="width:68px; height:68px; font-size:1.5rem; text-align:center; border-radius:12px; background:var(--color10); color:var(--color7); border:2px solid var(--color1); padding:0; line-height:64px;">
+              <input type="text" maxlength="1" class="edit-input code-digit" required style="width:68px; height:68px; font-size:1.5rem; text-align:center; border-radius:12px; background:var(--color10); color:var(--color7); border:2px solid var(--color1); padding:0; line-height:64px;">
+              <input type="text" maxlength="1" class="edit-input code-digit" required style="width:68px; height:68px; font-size:1.5rem; text-align:center; border-radius:12px; background:var(--color10); color:var(--color7); border:2px solid var(--color1); padding:0; line-height:64px;">
+              <input type="text" maxlength="1" class="edit-input code-digit" required style="width:68px; height:68px; font-size:1.5rem; text-align:center; border-radius:12px; background:var(--color10); color:var(--color7); border:2px solid var(--color1); padding:0; line-height:64px;">
+            </div>
+                    <button type="submit" class="auth-submit" style="width: 300px; margin: 18px auto 0 auto; display: block;">Verify</button>
+          </form>
+          <div id="verify-status" style="text-align:center;margin-top:12px;color:var(--auth-text-light);font-size:1.08rem;"></div>
+          <div class="auth-alt" style="text-align: center; margin: 16px 0; margin-top: 0px;">
+            <a href="#" id="resend-link" style="color: var(--color3); text-decoration: none; font-weight: 500; padding: 0; border-radius: 8px; background: var(--color8); transition: all 0.2s ease; display: inline-block; width: 300px; height: 40px; line-height: 40px; text-align: center;">Resend code</a>
+          </div>
+          <div class="auth-alt" style="text-align: center; margin: -5px 0;">
+            <a href="/login" class="back-to-signup" style="color: var(--auth-text-light); text-decoration: none; font-weight: 400; padding: 0; border-radius: 6px; background: transparent; border: none; transition: all 0.2s ease; display: inline-block; width: 300px; height: 40px; line-height: 40px; text-align: center;">← Back to sign up</a>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+<script>
+  Array.from(document.querySelectorAll('.code-digit')).forEach((el, idx, arr) => {
+    el.addEventListener('input', e => {
+      if (e.inputType !== 'deleteContentBackward' && el.value && arr[idx + 1]) arr[idx + 1].focus();
+    });
+    el.addEventListener('keydown', e => {
+      if (e.key === "Backspace" && !el.value && arr[idx - 1]) arr[idx - 1].focus();
+    });
+  });
+  
+  const form = document.getElementById('verify-form');
+  form.onsubmit = async function (e) {
+    e.preventDefault();
+    const code = Array.from(document.querySelectorAll('.code-digit')).map(i => i.value).join('');
+    const resp = await fetch('/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: code })
+    });
+    const data = await resp.json();
+    if (data.success) {
+      if (data.redirect) {
+        window.location.href = data.redirect;
+      } else {
+        alert('Email verified! You can now log in.');
+        window.location.href = '/login';
+      }
+    } else {
+      alert(data.message || 'Incorrect code. Please try again.');
+    }
+  };
+  
+  function showTopNotification(message, type) {
+    const existing = document.getElementById('top-notification');
+    if (existing) {
+      existing.remove();
+    }
+    
+    const verificationHeading = document.querySelector('h2');
+    if (!verificationHeading) return;
+    
+    const notification = document.createElement('div');
+    notification.id = 'top-notification';
+    notification.style.cssText = `
+      margin-bottom: 20px;
+      padding: 16px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 600;
+      font-size: 16px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      animation: fadeIn 0.3s ease-out;
+    `;
+    
+    if (type === 'info') {
+      notification.style.backgroundColor = 'var(--color3)';
+      notification.style.color = 'white';
+    } else if (type === 'danger' || type === 'warning') {
+      notification.style.backgroundColor = '#d32f2f';
+      notification.style.color = 'white';
+    }
+    
+    const content = document.createElement('div');
+    content.style.display = 'flex';
+    content.style.alignItems = 'center';
+    content.style.gap = '12px';
+    
+    const messageDiv = document.createElement('span');
+    messageDiv.textContent = message;
+    
+    content.appendChild(messageDiv);
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '×';
+    closeBtn.style.cssText = `
+      background: none;
+      border: none;
+      color: white;
+      margin-left: 5px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 0;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background-color 0.2s;
+    `;
+    
+    closeBtn.onmouseover = () => closeBtn.style.backgroundColor = 'rgba(255,255,255,0.2)';
+    closeBtn.onmouseout = () => closeBtn.style.backgroundColor = 'transparent';
+    closeBtn.onclick = () => {
+      notification.style.animation = 'fadeOut 0.3s ease-out';
+      setTimeout(() => notification.remove(), 300);
+    };
+    
+    notification.appendChild(content);
+    notification.appendChild(closeBtn);
+    
+    verificationHeading.parentNode.insertBefore(notification, verificationHeading);
+    
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes fadeOut {
+        from { opacity: 1; transform: translateY(0); }
+        to { opacity: 0; transform: translateY(-10px); }
+      }
+    `;
+    document.head.appendChild(style);
+    
+
+  }
+
+  document.getElementById('resend-link').onclick = async function (e) {
+    e.preventDefault();
+    try {
+      const resp = await fetch('/resend_verification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await resp.json();
+      
+      showTopNotification(data.message, data.type);
+    } catch (err) {
+      showTopNotification('Failed to resend verification email. Please try again later.', 'danger');
+    }
+  };
+  </script>
+{% endblock %}
+{% block scripts %}
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7H9JTC8BY1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-7H9JTC8BY1');
+</script>
+{% endblock %}

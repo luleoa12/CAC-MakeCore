@@ -1,0 +1,22 @@
+
+
+{% extends "base.html" %}
+{% block title %}MindMap{% endblock %}
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; min-height: 70vh; margin-top: 20px;">
+  <div style="background: #fff; border: 6px solid #ff9100; border-radius: 32px; padding: 0px 0px; box-shadow: 0 8px 32px #ff910044; max-width: 98vw; max-height: 80vh; overflow: auto;">
+    <img src="{{ url_for('static', filename='img/mindmap.png') }}" alt="Mindmap" style="display: block; max-width: 90vw; max-height: 70vh; border-radius: 18px;">
+  </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7H9JTC8BY1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-7H9JTC8BY1');
+</script>
+{% endblock %}

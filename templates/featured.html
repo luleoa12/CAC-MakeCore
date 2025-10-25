@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/css/featured.css">
+{% endblock %}
+
+{% block content %}
+
+<!-- Left arrow (back)  -->
+<div class="nav-arrow left-arrow" id="prev-arrow">
+  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="var(--color3)" viewBox="0 0 16 16">
+    <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
+  </svg>
+</div>
+
+<!-- <div style="margin-top: 10px; text-align: center; background-color: var(--color3); color: var(--color8);  padding: 8px 15px; margin-bottom: 20px; font-size: 14px;">
+    Turn on ads in settings to have a random Scratch/MakeCode game from your collection featured here!
+</div> -->
+<div style="margin-top: 10px; text-align: center; background-color: var(--color3); color: var(--color8);  padding: 8px 15px; margin-bottom: 20px; font-size: 14px;">
+    A random Scratch/MakeCode game from your collection will be featured here!
+</div>
+
+<div class="carousel-container" style="margin-top: -77px; border-radius: 10px;">
+    <div class="carousel-track">
+        {% for game in games %}
+        <div class="carousel-item" style="{% if not loop.first %}display:none;{% endif %}">
+        <div class="featured-header" style="margin-left: -220px;margin-top: 65px;">
+            <a href="/dashboard/{{ game.developer }}">
+                <img data-theme-src="{{ profile_pics[game] if profile_pics[game] else '/static/themes/blue/img/default_avatar.svg' }}" style="margin-top: 5px; margin-left: 180px; width: 50px; height: 50px; border-radius: 6px;">
+            </a>
+            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; margin-left: 15px; position: relative; z-index: 1;">
+                <div>
+                    <h1 class="title" style="pointer-events: none; display: inline-block; margin: 0;">{{ game.name }}</h1>
+                    <h3 class="title" style="font-size: 16px; margin: 0; pointer-events: none;">
+                        By <a href="/dashboard/{{ game.developer }}" style="text-decoration: underline; color: var(--color20); font-weight: bold; pointer-events: auto;">
+                            {{ game.developer }}
+                        </a>
+                    </h3>
+                </div>
+            
+                <h1 style="color: var(--color1); margin: 0;">Featured Games</h1>
+            </div>
+            
+        </div>
+        <div class="game-info-container" style="margin-top: -55px;">
+            <div class="game-iframe-container">
+                <div class="game-header">   
+                    <button class="play-button">Play</button>
+                    <a href="/program/{{ game.id }}" target="_blank" class="view-button" style="text-decoration: none;">
+                        View
+                    </a>
+                </div>
+                <div class="game-container
+                {% if 'makecode' in game.program_url %}game-container-makecode
+                {% elif 'scratch' in game.program_url %}game-container-scratch
+                {% endif %}" style="background: url('{{ game.image_url }}') center/cover no-repeat; position: relative;">
+                    {% if "makecode" in game.program_url %}
+                        {% set code_id = game.program_url.rstrip('/').split('/')[-1] %}
+                        <iframe data-src="https://arcade.makecode.com/---run?id={{ code_id }}&embed=1&nofooter=1" allowfullscreen sandbox="allow-popups allow-forms allow-scripts allow-same-origin"></iframe>
+                    {% endif %}
+                    {% if "scratch" in game.program_url %}
+                        {% set project_id = game.program_url.rstrip('/').split('/')[-1] %}
+                        <iframe data-src="//scratch.mit.edu/projects/embed/{{ project_id }}/?autostart=true" allowtransparency="true" frameborder="0" allowfullscreen></iframe>
+                    {% endif %}
+                    <div class="play-overlay"></div>
+                </div>
+            </div>
+            
+            <div class="game-details">
+                 
+                <div style="margin-left:-10px; display: flex; gap: 10px;">
+                    <a href="/program/{{ game.id }}" style="text-decoration: none; color: inherit;">
+                        <div class="analytics">
+                            <img class="icon" data-theme-src="/static/themes/green/img/arrow.svg" style="margin-left: 8px;">
+                            <span class="count">{{ game.likes }}</span>
+                        </div>
+                    </a>
+                    <a href="/program/{{ game.id }}" style="text-decoration: none; color: inherit;">
+                        <div class="analytics">
+                            <img class="icon" data-theme-src="/static/themes/green/img/arrow.svg" style="margin-left: 8px; transform: rotate(180deg);">
+                            <span class="count">{{ game.dislikes }}</span>
+                        </div>
+                    </a>
+                    <a href="/program/{{ game.id }}" style="text-decoration: none; color: inherit;">
+                        <div class="analytics">
+                            <img class="icon" data-theme-src="/static/themes/green/img/comments.svg" style="margin-left: 8px; height: 30px;">
+                            <span class="count">{{ comments[game] }}</span>
+                        </div>
+                    </a>    
+                    <a href="/program/{{ game.id }}" style="text-decoration: none; color: inherit;">
+                        <div class="analytics">
+                            <img class="icon" data-theme-src="/static/themes/green/img/viewers.svg" style="margin-left: 8px; height: 20px;">
+                            <span class="count">{{ views[game] }}</span>
+                        </div>
+                    </a>    
+                    <div>
+                        <a class="new-tab-icon" href="/program/{{ game.id }}" target="_blank" style="border-radius: 10px; width: 63px; height: 63px; display: flex; margin-top: 0px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
+                                <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
+                            </svg>
+                        </a>
+                    </div>
+                    
+                 
+                </div>
+               
+                <div class="description-box" style="margin-left: -10px; height: 157.5px; width: 440px; overflow-x: auto;">
+                    <h3>Description</h3>
+                    <p>{{ game.description or 'No description available.' }}</p>
+                </div>
+                
+                <div class="controls-box" style="margin-left: -10px; height: 157.5px; width: 440px; overflow-x:auto;">
+                    <h3>Controls</h3>
+                    <p>{{ game.controls or 'No controls available.' }}</p>
+                </div>
+            </div>
+        </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Right arrow (next) -->
+<svg class="nav-arrow right-arrow" id="next-arrow" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="var(--color3)" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+    <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/>
+</svg>
+
+<!-- <div class="dots-container">
+  {% for game in games %}
+    <span class="dot" onclick="currentSlide({{ loop.index }});" {% if loop.first %}class="dot active"{% endif %}></span>
+  {% endfor %}
+</div> -->
+  
+
+
+{% endblock %}
+{% block scripts %}
+<script src="/static/js/featured.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7H9JTC8BY1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-7H9JTC8BY1');
+</script>
+{% endblock %}

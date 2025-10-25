@@ -1,0 +1,245 @@
+
+<link rel="stylesheet" href="/static/css/browse_projects.css">
+<div id="browseProjectsModal" class="modal-bg" style="display:none;">
+  <div class="modal-content">
+    <div class="modal-header"><div class="modal-title">Add to Studio</div>
+      <button class="modal-close modal-title" id="closeBrowseProjectsModal" type="button">&times;</button>
+    </div>
+    <div class="modal-body">
+
+      {% if user_projects %}
+        <div class="project-modal-grid">
+        {% for project in user_projects %}
+        <div class="project-card-modal{% if project.id in user_studio_project_ids %} selected{% endif %}" tabindex="0" data-project-id="{{ project.id }}" role="checkbox" aria-checked="{% if project.id in user_studio_project_ids %}true{% else %}false{% endif %}">
+          {% if project.image_url %}
+            <img src="{{ project.image_url }}" alt="{{ project.name }}" class="project-image">
+          {% else %}
+            <img data-theme-src="/static/themes/orange/img/studio_default.svg" alt="{{ project.name }}" class="project-image">
+          {% endif %}
+          <span class="project-card-title" style="height: 28px; display: flex; align-items: center; justify-content: center;">{{ project.name }}</span>
+          <div class="project-card-check">
+            <svg class="checkmark-svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 18 18">
+              <polyline points="4 10 8 14 14 5"/>
+            </svg>
+            <span class="plus-icon">+</span>
+          </div>
+        </div>
+        {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-projects-msg">No projects found for your account.</div>
+      {% endif %}
+    </div>
+    <div class="modal-footer">
+      <button id="project-modal-done" class="done-btn">Done</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const doneBtn = document.getElementById('project-modal-done');
+  const modal = document.getElementById('browseProjectsModal');
+  const studioId = "{{ studio.id }}";
+  
+
+  function refreshGridLayout() {
+    const grid = document.querySelector('.studio-projects-grid');
+    if (grid) {
+
+      grid.style.display = 'grid';
+
+      setTimeout(() => {
+        grid.style.display = '';
+      }, 10);
+    }
+  }
+
+  let initialSelected = new Set(window.userStudioProjectIds || []);
+  let currentSelected = new Set(initialSelected);
+
+
+  document.querySelectorAll('.project-card-modal').forEach(card => {
+    card.addEventListener('click', function() {
+      const projectId = card.getAttribute('data-project-id');
+      const isSelected = card.classList.contains('selected');
+      
+      // Add loading state
+      card.classList.add('loading');
+      
+      if (isSelected) {
+
+        fetch(`/studios/${studioId}/remove_project/${projectId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': (window.csrf_token || ''),
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        }).then(resp => {
+          console.log('Remove project response:', resp.status, resp.statusText);
+          if (resp.ok) {
+            card.classList.remove('selected');
+            card.setAttribute('aria-checked', 'false');
+            const plus = card.querySelector('.plus-icon');
+            const check = card.querySelector('.checkmark-svg');
+            if (plus) plus.style.display = 'block';
+            if (check) check.style.display = 'none';
+            currentSelected.delete(Number(projectId));
+            
+            const grid = document.querySelector('.studio-projects-grid');
+            if (grid) {
+              const projectCards = grid.querySelectorAll('.project-card');
+              projectCards.forEach(card => {
+                const link = card.querySelector('a[href*="/program/"]');
+                if (link && link.href.includes(`/program/${projectId}`)) {
+                  card.remove();
+                }
+              });
+              
+              const remainingCards = grid.querySelectorAll('.project-card');
+              if (remainingCards.length === 0) {
+                const noProjects = grid.querySelector('.no-projects');
+                if (noProjects) {
+                  noProjects.style.display = 'block';
+                } else {
+                  const noProjectsDiv = document.createElement('div');
+                  noProjectsDiv.className = 'no-projects';
+                  noProjectsDiv.innerHTML = `
+                    <i class="fas fa-folder-open"></i>
+                    <p>No projects in this studio yet.</p>
+                    <button id="browseProgramsBtnEmpty" class="btn-orange">
+                      Add Programs
+                    </button>
+                  `;
+                  grid.appendChild(noProjectsDiv);
+                  
+                  const newButton = noProjectsDiv.querySelector('#browseProgramsBtnEmpty');
+                  if (newButton) {
+                    newButton.addEventListener('click', function(e) {
+                      e.preventDefault();
+                      const modal = document.getElementById('browseProjectsModal');
+                      if (modal) modal.style.display = 'block';
+                    });
+                  }
+                }
+              }
+            }
+            
+            fetch(`/studios/${studioId}?tab=activity&ajax=1`)
+              .then(r => r.text())
+              .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newActivity = doc.querySelector('#tab-activity');
+                if (newActivity) {
+                  document.querySelector('#tab-activity').innerHTML = newActivity.innerHTML;
+                }
+              });
+          } else {
+            resp.json().then(data => {
+              console.error('Remove project error:', data);
+              alert(data.error || 'Failed to remove project from studio.');
+            }).catch(() => {
+              alert('Failed to remove project from studio.');
+            });
+          }
+        }).catch(error => {
+          console.error('Remove project network error:', error);
+          alert('Network error. Please try again.');
+        }).finally(() => {
+          card.classList.remove('loading');
+        });
+      } else {
+        if (!initialSelected.has(Number(projectId))) {
+          fetch(`/studios/${studioId}/add_project`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': (window.csrf_token || ''),
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ project_id: projectId })
+          }).then(resp => {
+            console.log('Add project response:', resp.status, resp.statusText);
+            if (resp.ok) {
+              return resp.json().then(data => {
+                card.classList.add('selected');
+                card.setAttribute('aria-checked', 'true');
+                const plus = card.querySelector('.plus-icon');
+                const check = card.querySelector('.checkmark-svg');
+                if (plus) plus.style.display = 'none';
+                if (check) check.style.display = 'block';
+                currentSelected.add(Number(projectId));
+                
+                const grid = document.querySelector('.studio-projects-grid');
+                if (grid) {
+                  const noProjects = grid.querySelector('.no-projects');
+                  if (noProjects) {
+                    noProjects.style.display = 'none';
+                  }
+                  
+                  let img = card.querySelector('img.project-image');
+                  let title = card.querySelector('.project-card-title')?.textContent || '';
+                  
+                  const developer = data.developer || {};
+                  const developerUsername = developer.username || 'User';
+                  const developerAvatar = developer.profile_pic_url || '/static/themes/orange/img/default_avatar.svg';
+                  
+                
+                  let cardDiv = document.createElement('div');
+                  cardDiv.className = 'project-card';
+                  
+                  cardDiv.innerHTML = `
+                    <a href="/program/${projectId}" class="project-link">
+                      <div class="project-image-container">
+                        ${img ? `<img src="${img.src}" alt="${img.alt}" class="project-image" loading="lazy">` : 
+                          '<div class="project-image-placeholder"><i class="fas fa-file-code"></i></div>'}
+                      </div>
+                      <div class="project-card-content">
+                        <img src="${developerAvatar}" 
+                             alt="${developerUsername}" class="developer-avatar">
+                        <div class="project-info">
+                          <h3 class="project-title" title="${title}">
+                            ${title.length > 20 ? title.substring(0, 20) + '...' : title}
+                          </h3>
+                          <span class="developer-username" title="${developerUsername}">
+                            ${developerUsername.length > 15 ? developerUsername.substring(0, 15) + '...' : developerUsername}
+                          </span>
+                        </div>
+                      </div>
+                    </a>`;
+                  
+                  grid.appendChild(cardDiv);
+                  
+                  refreshGridLayout();
+                }
+              });
+            } else {
+              resp.json().then(data => {
+                console.error('Add project error:', data);
+                alert(data.error || 'Failed to add project to studio.');
+              }).catch(() => {
+                alert('Failed to add project to studio.');
+              });
+            }
+          }).catch(error => {
+            console.error('Add project network error:', error);
+            alert('Network error. Please try again.');
+          }).finally(() => {
+            card.classList.remove('loading');
+          });
+        }
+      }
+    });
+  });
+
+  if (doneBtn && modal) {
+    doneBtn.addEventListener('click', function() {
+      modal.style.display = 'none';
+
+    });
+  }
+});
+</script>

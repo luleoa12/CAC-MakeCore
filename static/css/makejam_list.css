@@ -1,0 +1,517 @@
+body {
+  font-family: 'Fira Code', monospace;
+}
+.makejam-admin-row {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+    margin: 32px 0;
+  }
+  .makejam-admin-col {
+    background: #232323ee;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px 0 rgba(var(--color4-rgb), 0.13);
+    padding: 28px 18px;
+    min-width: 300px;
+    flex: 1 1 0;
+    color: #fff;
+  }
+  .makejam-admin-col h3 {
+    color: #ffb347;
+    margin-bottom: 18px;
+    font-size: 1.3rem;
+  }
+  .makejam-admin-contest-card {
+    background: linear-gradient(135deg, #ffb347 60%, #ff7f50 100%);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 18px;
+    color: #fff;
+  }
+  .makejam-admin-contest-card-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+  .makejam-admin-btn {
+    background: var(--color2);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 7px 16px;
+    margin-top: 10px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .makejam-admin-global-ranking li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .makejam-admin-global-ranking .rank {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #ffb347;
+    width: 28px;
+    text-align: right;
+  }
+  .makejam-admin-global-ranking .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--color1);
+    display: inline-block;
+  }
+
+.makejam-admin-dashboard-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 920px;
+  margin: 20px auto;
+}
+
+.makejam-contest {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.makejam-contest-thumbnail {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.makejam-contest-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.makejam-contest-name {
+  font-size: 1rem;
+  margin: 0 0 2px 0;
+}
+
+.makejam-contest-dates {
+  font-size: 0.8rem;
+  color: #777;
+  margin: 0;
+}
+.makejam-admin-card-view {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 22px 0 0;
+}
+.makejam-admin-card-date {
+  font-size: 0.98rem;
+  color: var(--color4);
+}
+
+.makejam-dashboard-outer {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 1000px;
+  margin: 20px auto 48px auto;
+  width: 100%;
+}
+
+.makejam-dashboard-top {
+  width: 100%;
+  background: #fff3e6;
+  border-radius: 18px;
+  box-shadow: 0 2px 16px rgba(var(--color1-rgb), 0.25);
+  padding: 32px 38px 24px 38px;
+  margin-bottom: 0;
+}
+
+.makejam-dashboard-bottom {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  width: 100%;
+}
+
+.makejam-dashboard-left {
+  flex: 2 1 0;
+  min-width: 0;
+}
+
+.makejam-dashboard-right {
+  flex: 1 1 260px;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.makejam-admin-global-ranking {
+  width: 260px;
+  background: #fff3e6;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(var(--color1-rgb), 0.25);
+  padding: 32px 18px;
+}
+
+.makejam-ranking-placeholder {
+  background: #fff3e6;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(var(--color1-rgb), 0.25);
+  padding: 32px 18px;
+  margin-top: 0;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .makejam-dashboard-bottom {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .makejam-dashboard-right {
+    max-width: 100%;
+    min-width: 0;
+  }
+  .makejam-admin-global-ranking {
+    width: 100%;
+  }
+}
+
+
+.makejam-tabs {
+  display: flex;
+  gap: 10px;
+}
+.makejam-tab-btn {
+  background: var(--color10);
+  color: var(--color7);
+  border: 2px solid var(--color1);
+  border-bottom: none;
+  border-radius: 12px 12px 0 0;
+  padding: 8px 24px;
+  font-weight: 600;
+  font-size: 1.07rem;
+  cursor: pointer;
+  outline: none;
+  transition: background 0.2s, color 0.2s;
+  margin-bottom: -2px;
+}
+.makejam-tab-btn.active {
+  background: var(--color1);
+  color: #fff;
+  border-bottom: 2px solid #ffb347;
+}
+.makejam-tab-content {
+  background: var(--color10);
+  border-radius: 0 0 12px 12px;
+  padding: 16px 10px 20px 10px;
+}
+
+.btn-orange {
+  background: var(--color2);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: 6px 14px;
+  font-weight: 600;
+  transition: background 0.17s;
+}
+.btn-orange:hover {
+  background: var(--color1);
+  color: #fff;
+}
+
+.makejam-admin-btn-large {
+  font-size: 1.15rem;
+  padding: 9px 22px;
+}
+.makejam-admin-dot {
+  font-size: 1.7rem;
+  color: #888;
+  margin: 0 8px;
+}
+
+.makejam-admin-submitted-title {
+  color: var(--color7);
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+.makejam-admin-score-input {
+  width: 65px;
+  border-radius: 6px;
+  border: 1.5px solid #ffb347;
+  padding: 2px 6px;
+  font-size: 1.07rem;
+  background: #181818;
+  color: var(--color7);
+  text-align: center;
+}
+
+.makejam-admin-table-header {
+  background: #181818;
+  color: #ffb347;
+  font-size: 1.12rem;
+}
+
+
+.studio-table {
+  width: 100%;
+  background: #222;
+  border-radius: 12px;
+}
+
+/* --- Add Project Button Styles --- */
+.makejam-add-project-btn {
+  display: inline-block;
+  font-size: 1.35rem;
+  padding: 18px 48px;
+  background: linear-gradient(90deg, #ff9100 0%, #ffb347 100%);
+  color: #fff;
+  border: none;
+  border-radius: 18px;
+  font-weight: 800;
+  font-family: 'Fira Code', monospace, monospace;
+  box-shadow: 0 4px 24px #ff910055, 0 0 0 4px #fff2 inset;
+  text-decoration: none;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(.4,2,.3,1), box-shadow 0.18s;
+  margin: 0 auto;
+  outline: none;
+  position: relative;
+  z-index: 1;
+}
+.makejam-add-project-btn:hover, .makejam-add-project-btn:focus {
+  background: linear-gradient(90deg, #ffb347 0%, #ff9100 100%);
+  box-shadow: 0 8px 32px #ff910088, 0 0 0 6px #fff4 inset, 0 0 16px 4px #ffb34788;
+  transform: translateY(-3px) scale(1.035);
+  animation: pulse-glow 1.2s infinite alternate;
+}
+.makejam-add-project-btn:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 8px #ff910033, 0 0 0 2px #fff1 inset;
+}
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 8px 32px #ff910088, 0 0 0 6px #fff4 inset, 0 0 16px 4px #ffb34788;
+  }
+  100% {
+    box-shadow: 0 12px 40px #ffb347cc, 0 0 0 10px #fff6 inset, 0 0 32px 8px #ff910099;
+  }
+}
+
+.studio-table thead tr {
+  background: #181818;
+  color: #ffb347;
+  font-size: 1.12rem;
+}
+.studio-table td {
+  color: #fff;
+}
+
+.makejam-admin-placeholder {
+  font-size: 3.1rem;
+  font-weight: 900;
+  color: var(--color7);
+  font-family: 'Inter', 'Fira Sans', Arial, sans-serif;
+  letter-spacing: 1px;
+  line-height: 1.08;
+}
+.makejam-admin-date-row {
+  margin-top: 18px;
+  font-size: 1.35rem;
+  color: #bdbdbd;
+  font-family: 'Inter', 'Fira Mono', 'Fira Code', monospace;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.makejam-admin-create-row {
+  margin-top: 28px;
+  text-align: left;
+}
+.makejam-admin-padding {
+  padding: 32px 32px 18px 32px;
+}
+.makejam-admin-placeholder-block {
+  padding: 32px 32px 18px 32px;
+}
+.makejam-admin-no-contests {
+  color: #ffb347;
+}
+
+.makejam-contest-header {
+  background: rgba(var(--color1-rgb), 0.8);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px rgba(var(--color1-rgb), 0.27);
+}
+
+.makejam-contest-name {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--color7);
+  font-family: 'Inter', 'Fira Sans', Arial, sans-serif;
+  letter-spacing: 1px;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.makejam-contest-dates {
+  font-size: 1.2rem;
+  color: #7a2e00;
+  margin-bottom: 16px;
+}
+
+.makejam-bottom-container {
+  display: flex;
+  gap: 24px;
+}
+
+.makejam-left-col {
+  flex: 1;
+  background: rgba(var(--color1-rgb), 0.8);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(var(--color1-rgb), 0.27);
+}
+
+.makejam-right-col {
+  width: 320px;
+  background: rgba(var(--color1-rgb), 0.8);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(var(--color1-rgb), 0.27);
+}
+
+.makejam-section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color7);
+  margin-bottom: 5px;
+  padding-bottom: 8px;
+}
+
+.makejam-past-contests,
+.makejam-my-contests {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.makejam-past-contest,
+.makejam-my-contest {
+  padding: 12px;
+  background: var(--color10);
+  border-radius: 8px;
+  border-left: 4px solid var(--color2);
+}
+
+.makejam-past-contest-name,
+.makejam-my-contest-name {
+  font-weight: 600;
+  color: #7a2e00;
+}
+
+.makejam-past-contest-dates,
+.makejam-my-contest-dates {
+  font-size: 0.9rem;
+  color: var(--color4);
+}
+
+.makejam-leaderboard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.makejam-leaderboard-entry {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--color10);
+  border-radius: 6px;
+}
+
+.makejam-leaderboard-rank {
+  font-weight: 700;
+  color: var(--color21);
+  width: 24px;
+}
+
+.makejam-leaderboard-name {
+  flex: 1;
+  color: var(--color7);
+  margin-left: 8px;
+  text-decoration: none;
+}
+
+.makejam-leaderboard-votes {
+  color: var(--color4);
+  font-weight: 600;
+}
+
+.makejam-switch-btns {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 24px;
+  justify-content: flex-start;
+}
+.makejam-switch-btn {
+  font-family: 'Fira Code', monospace;
+  background: var(--color15);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  padding: 0.7em 1.2em;
+  font-size: 1.1em;
+  box-shadow: 0 2px 8px rgba(var(--color1-rgb), 0.2);
+  transition: all 0.18s;
+  cursor: pointer;
+  outline: none;
+  letter-spacing: 0.5px;
+}
+
+.makejam-switch-btn.active, .makejam-switch-btn:focus {
+  background: var(--color14);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(var(--color1-rgb), 0.27);
+}
+
+.makejam-add-project-btn {
+  font-family: 'Fira Code', monospace;
+  background: var(--color2);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 22px;
+  padding: 0.7em 2.1em;
+  font-size: 1.1em;
+  box-shadow: 0 2px 8px rgba(var(--color1-rgb), 0.2);
+  transition: all 0.18s;
+  cursor: pointer;
+  outline: none;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 0.7em;
+}
+.makejam-add-project-btn:hover, .makejam-add-project-btn:focus {
+  background: #ff7a3d;
+  color: #fff;
+  transform: translateY(-1px) scale(1.03);
+  box-shadow: 0 6px 20px rgba(var(--color1-rgb), 0.33);
+  text-decoration: none;
+}

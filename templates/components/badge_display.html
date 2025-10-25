@@ -1,0 +1,203 @@
+<div class="badge-display-container" style="border-radius:18px; position:relative;">
+    <div style="position: relative;">
+        <div style="position: absolute; top: 0; right: 0; text-decoration: underline; font-size:14px;">
+            {% if session_user == userData %}
+                <a href="/account#badges" style="color: var(--color4);">View all</a>
+            {% endif %}
+        </div>
+    </div>
+    <div style="font-size:18px; color:var(--color3); margin-bottom:2px; font-weight: 600;">Badges</div>
+    
+    <div id="badge-count" style="font-size:2rem; font-weight:700; margin-bottom:10px; color:var(--color4);">0</div>
+    <div id="badges-container" style="display:flex; justify-content:center; align-items:center; gap:36px; margin-bottom:22px;">
+
+    </div>
+</div>
+<link rel="stylesheet" href="/static/css/account.css">
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const defaultBadges = [
+        {
+            badge_type: 'program',
+            name: 'Program Badge',
+            icon_url: '/static/themes/makecore/img/badges/unobtained/programs/program_1.svg',
+            required_count: 0,
+            obtained: false,
+            tooltip: 'Earned by creating 1 program',
+        },
+        {
+            badge_type: 'upvote',
+            name: 'Upvote Badge',
+            icon_url: '/static/themes/makecore/img/badges/unobtained/upvotes/upvote_5.svg',
+            required_count: 0,
+            obtained: false,
+            tooltip: 'Earned by receiving 5 upvotes',
+        },
+        {
+            badge_type: 'comment',
+            name: 'Get 5 Comments',
+            icon_url: '/static/themes/makecore/img/badges/unobtained/comments/comment_5.svg',
+            required_count: 0,
+            obtained: false,
+            tooltip: 'Earned by getting 5 comments',
+        }
+    ];
+    function displayBadges(badges) {
+        const container = document.getElementById('badges-container');
+        container.innerHTML = '';
+
+        const orderMap = {
+            'comment': [5, 15, 30, 50],
+            'program': [1, 5, 10, 30],
+            'upvote': [5, 25, 50, 100]
+        };
+
+        const bestBadges = {'comment': null, 'program': null, 'upvote': null};
+        badges.forEach(badge => {bestBadges[badge.badge_type] = badge;});
+
+        const allBadges = ['comment', 'program', 'upvote'].map(type => {
+            if (bestBadges[type]) {
+                return bestBadges[type];
+            }
+        }); 
+        allBadges.forEach(badge => {
+            const order = orderMap[badge.badge_type];
+            const index = order.indexOf(badge.required_count);
+            badge.rank = index !== -1 ? index+1 : Infinity;
+        });
+        allBadges.sort((a, b) => {
+            if (a.rank !== b.rank) return a.rank-b.rank;
+            return a.required_count-b.required_count;
+        });
+        console.log(allBadges);
+        const visibleBadges = allBadges.filter(badge => badge.obtained);
+        const count = visibleBadges.length;
+        let pos;
+        if (count === 1) {
+            pos = [0]; 
+        } else if (count === 2) {
+            pos = [0, 1];
+        } else if (count === 3) {
+            pos = [1, 2, 0]; 
+        } else {
+            pos = [0];
+            const theme=document.documentElement.getAttribute('data-theme');
+            console.log(theme);
+            const defaultBadge = {
+                badge_type: 'program',
+                name: 'Program [1]',
+                icon_url: `/static/themes/${theme}/img/badges/unobtained/programs/program_1.svg`,
+                required_count: 1,
+                obtained: false,
+                tooltip: 'Create 1 Program to Earn',
+                rank: 1
+            };
+            visibleBadges.push(defaultBadge);
+        }
+         
+
+        pos.forEach((i, position) => {
+            const badge = visibleBadges[i];
+            if (!badge) return;
+            const earnedBadge = window.earnedBadgesData.find(b => 
+                b.badge_type === badge.badge_type && 
+                b.required_count === badge.required_count
+            );
+            const badgeElement = document.createElement('div');
+            badgeElement.className = 'badge-card';
+            const theme = document.documentElement.getAttribute('data-theme') || 'makecore';
+            const themedIconUrl = badge.icon_url.replace(/\/themes\/[^/]+\//, `/themes/${theme}/`);
+
+            badgeElement.innerHTML = `
+                <div class="badge-container">
+                    <div class="badge-img-tooltip-wrapper">
+                        <img src="${themedIconUrl}" style="width: 85px; height: auto; object-fit: contain;" 
+                             alt="${badge.name}" 
+                             class="badge-img ${badge.obtained ? '' : 'badge-unobtained'}"
+                             data-badge-type="${badge.badge_type}"
+                             data-required-count="${badge.required_count}">
+                        <div class="badge-tooltip">${earnedBadge?.tooltip || badge.tooltip}</div>
+                    </div>
+                </div>
+            `;
+            
+            badgeElement.style.order = position + 1;
+            const imgElement = badgeElement.querySelector('img');
+            if (position === 1 && count === 3) {
+                imgElement.style.transform = 'scale(1.2)';
+                imgElement.style.transformOrigin = 'center 100%';
+
+                badgeElement.style.zIndex = '1';
+            } else if (count === 2) {
+                imgElement.style.transform = 'scale(1.25)';
+                badgeElement.style.margin = '0 20px';
+            } else if (count === 1) {
+                imgElement.style.transform = 'scale(1.2)';
+            } 
+
+            if (count === 1 || count === 2) {
+                container.style.justifyContent = 'center';
+            }
+            container.appendChild(badgeElement);
+        });
+    
+    }
+    const badgeUsername = {{ badge_username|tojson|safe }};
+    const earnedBadges = {{ earned_badges|tojson|safe }};
+    const url = badgeUsername ? `/api/user/badges/collected/best/${badgeUsername}` : '/api/user/badges/collected/best';
+
+    fetch(url)
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+        })
+        .then(badges => {
+            document.getElementById('badge-count').textContent = earnedBadges.length;
+            displayBadges(badges);
+        })
+        .catch(error => {
+            console.error('Error loading badges:', error);
+            displayBadges(defaultBadges);
+        });
+});
+
+
+</script>
+
+<style>
+    .badge-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+
+    .badge-obtained {
+        opacity: 1;
+        transition: transform 0.2s ease;
+    }
+
+    .badge-unobtained {
+        opacity: 0.5;
+        transition: opacity 0.3s ease;
+    }
+
+    #badges-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 36px;
+        width: 100%;
+    }
+
+    .badge-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 180px;
+        position: relative;
+    }
+</style>
+
+
+

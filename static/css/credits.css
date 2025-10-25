@@ -1,0 +1,41 @@
+
+.credits-container {
+  max-width: 660px;
+  margin: 20px auto 40px auto;
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 4px 32px rgba(var(--color1-rgb), 0.25);
+  padding: 38px 36px 24px 36px;
+  font-family: 'Fira Code', monospace;
+  color: var(--color7);
+}
+.credits-title {
+  text-align: center;
+  color: var(--color7);
+  font-size: 2.1rem;
+  margin-bottom: 22px;
+  letter-spacing: 1px;
+}
+.credits-section {
+  margin-bottom: 28px;
+}
+.credits-section h3 {
+  color: var(--color1);
+  font-size: 1.14rem;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+.credits-section ul {
+  padding-left: 20px;
+}
+.credits-section li {
+  margin-bottom: 7px;
+  font-size: 1.04rem;
+}
+.credits-footer {
+  text-align: center;
+  margin-top: 36px;
+  color: var(--color4);
+  font-size: 1.08rem;
+  font-weight: 600;
+}

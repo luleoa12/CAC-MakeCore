@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="/static/css/notifications.css">
+{% endblock %}
+
+{% block content %}
+  <div class="notif-list-container">
+    <div class="notif-list-title">
+      Notifications
+    </div>
+    <ul class="notif-list">
+      {% for notif in notifications %}
+      <div class="notif-row-flex">
+        {% if not notif.is_read %}
+        <span class="unread-notif"></span>
+        {% endif %}
+        <li class="notif-row {% if not notif.is_read %}unread{% endif %} {% if loop.index is odd %}odd{% else %}even{% endif %}">
+          <span class="notif-activity">
+            
+            {% if notif.type == 'comment' or notif.type == 'studio_activity' %}
+              <img data-theme-src="/static/themes/makecore/img/comments.svg" class="notif-icon" alt="Comment">
+            {% elif notif.type == 'follow' %}
+              <span class="notif-icon">
+                <img data-theme-src="/static/themes/makecore/img/feedback.svg" class="follow-icon" alt="Follow">
+              </span>
+            {% elif notif.type == 'upvote' %}
+              <span class="notif-icon">
+                <img data-theme-src="/static/themes/makecore/img/arrow.svg" class="upvote-icon" alt="Upvote">
+              </span>
+            {% elif notif.type == 'downvote' %}
+              <span class="notif-icon">
+                <img data-theme-src="/static/themes/makecore/img/arrow.svg" class="downvote-icon" style="rotate: 180deg;" alt="Downvote">
+              </span>
+            {% elif notif.type == 'badge' %}
+              <span class="notif-icon">
+                <img data-theme-src="/static/themes/makecore/img/notif_badge.svg" class="badge-icon" alt="Badge">
+              </span>
+            {% elif notif.type == 'studio_invite' %}
+              <span class="notif-icon">
+                <i class="fas fa-user-plus" style="color: #4CAF50;"></i>
+              </span>
+            {% elif notif.type == 'studio_accept' %}
+              <span class="notif-icon">
+                <i class="fas fa-check-circle" style="color: #2196F3;"></i>
+              </span>
+            {% elif notif.type == 'studio_invite_revoked' %}
+              <span class="notif-icon">
+                <i class="fas fa-times-circle" style="color: #f44336;"></i>
+              </span>
+            {% else %}
+              <span class="notif-icon"></span>
+            {% endif %}
+            {% if notif.type == 'follow' %}
+              {% set follower = notif.message.split(' ')[0] %}
+              <a href="/dashboard/{{ follower }}" class="notif-link">{{ follower }}</a> &nbsp;has started following you.
+            {% elif (notif.type == 'studio_activity' or notif.type == 'comment') and ': &quot;' in notif.message %}
+              {% set parts = notif.message.split(': &quot;', 1) %}
+              {{ parts[0]|safe }}:
+              <span class="notif-comment">{{ parts[1].rstrip(' &quot;')|safe }}</span>
+            {% else %}
+              {{ notif.message | safe }}
+            {% endif %}
+            {% if notif.related_url %}
+              <span>&nbsp;</span><a href="{{ notif.related_url }}" class="notif-link">View</a>
+            {% endif %}
+          </span>
+          <span class="notif-time">{{ notif.timestamp_pdt.strftime('%b %d, %Y %H:%M') }}</span>
+        </li>
+      </div>
+      {% else %}
+        <li class="notif-row"><span class="notif-activity">No notifications yet.</span></li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  let marked = false;
+  document.body.addEventListener('click', function() {
+    if (marked) return;
+    marked = true;
+    fetch('/notifications/mark_all_read', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(response => {
+      if (response.ok) {
+        const badge = document.querySelector('.notification-badge');
+        if (badge) badge.style.display = 'none';
+      }
+    });
+  }, { once: true });
+});
+</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7H9JTC8BY1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-7H9JTC8BY1');
+</script>
+{% endblock %}

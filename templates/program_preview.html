@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Program Preview | MakeCore</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <style>
+    body {
+      background: linear-gradient(180deg, var(--color10) 0%, #ffc0a2 95%);
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Fira Code', monospace;
+      color: var(--color7);
+    }
+    .program-preview-container {
+      max-width: 900px;
+      margin: 24px auto 0 auto;
+      padding: 18px 24px 10px 24px;
+      background: rgba(var(--color1-rgb), 0.8);
+      border-radius: 32px;
+      box-shadow: 0 4px 24px rgba(var(--color1-rgb), 0.27);
+      position: relative;
+    }
+    .program-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .program-title {
+      font-size: 1.6rem;
+      font-weight: bold;
+      background: var(--color1);
+      border-radius: 18px;
+      padding: 4px 18px;
+      display: inline-block;
+    }
+    .info-reviews {
+      font-size: 1.6rem;
+      margin-left: 30px;
+      font-weight: normal;
+      letter-spacing: 2px;
+      opacity: 0.85;
+    }
+    .program-description {
+      font-size: 1rem;
+      margin: 8px 0 10px 0;
+      background: rgba(var(--color1-rgb), 0.8);
+      border-radius: 10px;
+      padding: 6px 14px;
+      display: inline-block;
+    }
+    .program-main {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
+    .controls-box {
+      flex: 1.2;
+      background: var(--color10);
+      border-radius: 18px;
+      border: 2px solid var(--color1);
+      padding: 10px 10px 6px 10px;
+      margin-right: 0;
+      min-width: 180px;
+      text-align: center;
+      position: relative;
+    }
+    .controls-title {
+      font-weight: bold;
+      font-size: 1.18rem;
+      margin-bottom: 6px;
+    }
+    .controls-content {
+      font-size: 1.1rem;
+      margin-top: 6px;
+      color: var(--color7);
+      white-space: pre-line;
+      min-height: 60px;
+    }
+    .image-box {
+      flex: 1.8;
+      background: var(--color10);
+      border: 2.5px dashed var(--color1);
+      border-radius: 12px;
+      min-width: 180px;
+      min-height: 120px;
+      max-width: 240px;
+      max-height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin-left: 0;
+    }
+    .program-image {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    .program-meta {
+      margin-top: 14px;
+      background: rgba(var(--color1-rgb), 0.8);
+      border-radius: 10px;
+      padding: 12px 22px;
+      font-size: 1.1rem;
+      display: inline-block;
+    }
+    .launch-btn {
+      display: block;
+      margin: 36px auto 0 auto;
+      background: var(--color1);
+      color: var(--color7);
+      font-family: 'Fira Code', monospace;
+      font-size: 2rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 24px;
+      padding: 12px 48px;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(var(--color1-rgb), 0.27);
+      transition: background 0.18s, box-shadow 0.18s;
+    }
+    .launch-btn:hover {
+      background: var(--color8);
+    }
+  </style>
+</head>
+<body>
+  <div class="program-preview-container">
+    <div class="program-header">
+      <div class="program-title">{{ name }}</div>
+      <div class="info-reviews">Info / Reviews</div>
+    </div>
+    <div class="program-description">{{ description }}</div>
+    <div class="program-main">
+      <div class="controls-box">
+        <div class="controls-title">Controls:<br><span style="font-size:1rem;font-weight:normal;">WASD:</span></div>
+        <div class="controls-content">{{ controls }}</div>
+      </div>
+      <div class="image-box">
+        {% if image_url %}
+          <img class="program-image" src="{{ image_url }}" alt="Program Image">
+        {% else %}
+          <div style="text-align:center;width:100%;color:var(--color7);">Insert Image Here<br>[4:3 Ratio]</div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="program-meta">
+      <div>Developer: {{ developer }}</div>
+      <div>Last Updated: {{ last_updated }}</div>
+      <div>Version: {{ version }}</div>
+      <div>Mod Perms: {{ mod_perms }}</div>
+    </div>
+    <button class="launch-btn">Launch</button>
+    <form method="POST" action="/program/save">
+      <input type="hidden" name="name" value="{{ name }}">
+      <input type="hidden" name="description" value="{{ description }}">
+      <input type="hidden" name="controls" value="{{ controls }}">
+      <input type="hidden" name="image_url" value="{{ image_url }}">
+      <input type="hidden" name="developer" value="{{ developer }}">
+      <input type="hidden" name="version" value="{{ version }}">
+      <input type="hidden" name="mod_perms" value="{{ mod_perms }}">
+      <button type="submit" class="launch-btn" style="margin-top:18px; background:var(--color10); color:var(--color7); font-size:1.3rem; border-radius:18px;">Save</button>
+    </form>
+  </div>
+</body>
+</html>

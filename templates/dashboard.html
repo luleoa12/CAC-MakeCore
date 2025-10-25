@@ -1,0 +1,627 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | MakeCore{% endblock %}
+
+{% block head %}
+
+    <link rel="stylesheet" href="/static/css/shared-projects.css">
+    <!-- <link rel="stylesheet" href="/static/css/followers_modal.css"> -->
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <script src="/static/js/followers_modal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/rating_chart.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container" style="width: 100%; max-width: 1200px; margin: 0 auto; padding: 20px; ">
+
+  {% if username == 'MakeJam' and jams_with_unscored %}
+  {% for jam_block in jams_with_unscored %}
+    <div style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
+      <div class="dashboard-section" style="background:#fff7f0; border:3.5px solid #ffb36a; border-radius:18px; margin-bottom:36px; padding:28px 32px 24px 32px; color:var(--color7); box-shadow:0 2px 18px #ffb36a44; max-width:900px; width:100%;">
+        <div style="font-size:2.1rem; font-weight:700; color:#ff9100; margin-bottom:12px; text-align:center;">MakeJam: {{ jam_block.jam.name }}</div>
+        <div style="font-size:1.1rem; color:var(--color7); margin-bottom:10px; text-align:center;">{{ jam_block.jam.description }}</div>
+        <table class="studio-table" style="width:100%; background:#fff; border-radius:12px; margin-top:20px;">
+          <thead>
+            <tr style="background:#fff7f0; color:#ffb347; font-size:1.12rem;">
+              <th>User</th>
+              <th>Project</th>
+              <th>Description</th>
+              <th style="width:120px;">Score</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sub in jam_block.submissions %}
+            <tr>
+              <td>{{ sub.user.username if sub.user else sub.user_id }}</td>
+              <td><a href="{{ sub.project_link }}" target="_blank">{{ sub.project_title }}</a></td>
+              <td>{{ sub.description }}</td>
+              <td>{% if sub.total_score %}{{ sub.total_score }}{% else %}<span style="color:#bbb;">Not rated</span>{% endif %}</td>
+              <td>
+                <button type="button" class="btn btn-orange rate-btn" style="padding:4px 14px; font-size:1.01rem;"
+                  data-submission-id="{{ sub.id }}"
+                  data-project-title="{{ sub.project_title|e }}"
+                  data-theme_use="{{ sub.theme_use or '' }}"
+                  data-theme_build="{{ sub.theme_build or '' }}"
+                  data-art_style="{{ sub.art_style or '' }}"
+                  data-art_originality="{{ sub.art_originality or '' }}"
+                  data-enjoyment="{{ sub.enjoyment or '' }}"
+                  data-learning_curve="{{ sub.learning_curve or '' }}"
+                  data-gameplay_loop="{{ sub.gameplay_loop or '' }}"
+                  data-concept="{{ sub.concept or '' }}"
+                  data-creative_theme="{{ sub.creative_theme or '' }}">
+                  Rate
+                </button>
+              </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="5" style="color:#ffb347;">No unscored submissions.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <div style="margin-bottom:12px; text-align:center;">Dates: <b>{{ jam_block.jam.start_date.strftime('%Y-%m-%d') }}</b> to <b>{{ jam_block.jam.end_date.strftime('%Y-%m-%d') }}</b></div>
+      </div>
+    </div>
+  {% endfor %}
+  {% else %}
+  
+    <div class="dashboard-container">
+      <div class="dashboard-row">
+        <div class="dashboard-section" style="height: 558px; max-width: 240px;">
+          {% include 'profile_card.html' %}
+        </div>
+
+        <div class="dashboard-right-column">
+          <div class="dashboard-section-row">
+            <div class="dashboard-section" style="flex: 1; margin-right: 5px; max-height: 250px;">
+              <div class="featured-program-section">
+                {% include 'components/featured_project.html' %}
+              </div>
+            </div>
+            <div class="dashboard-section" style="flex: 1; max-height: 250px;">
+              <div>
+                <img data-theme-src="/static/themes/makecore/img/tierlist.svg" alt="Tier List" class="tierlist-img" />
+                {% if userData == session_user %}
+                <button id="showTierListBtn" class="tierlist-edit-btn">Edit Tier List</button>
+                {% else %}
+                <button id="showTierListBtn" class="tierlist-edit-btn">View Tier List</button>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <!-- botom right: graph -->
+          <div class="dashboard-section-row" style="min-width: 500px; margin-top: 6px; min-height: 281px;">
+            <div class="dashboard-section" style="margin-right: 6px;">
+              <div class="rating-chart-container" style="max-width:375px;">
+                <script>window.earnedBadgesData = {{ earned_badges|tojson|safe }};</script>
+                {% include 'components/rating_graph.html' %}
+              </div>
+
+            </div>
+            <div class="dashboard-section">
+              <div class="rating-chart-container" style="max-width:340px; max-height: 0px;">
+                {% include 'components/badge_display.html' %}
+              </div>
+
+            </div>
+          </div>
+          
+           
+        </div>
+      </div>
+            <!-- show followers in future update -->
+          <!-- <div class="dashboard-follow-row" style="display: flex; gap: 32px; justify-content: left; margin-bottom: 20px;">
+            <div id="openFollowersModalBtn" class="dashboard-follow-box dashboard-follow-box-orange">
+  <div class="dashboard-followers-count">{{ follower_count or 0 }}</div>
+  <div class="dashboard-followers-label">Followers</div>
+</div>
+            <a href="/following/{{ username }}" class="dashboard-follow-box" style="flex:1; min-width:120px; background:#18191b; border:1.5px solid #393a3b; border-radius:14px; padding:22px 0 18px 0; text-align:center; color:#fff; text-decoration:none; box-shadow:0 2px 8px #0002; transition:box-shadow .2s;">
+              <div style="font-size:2.2rem; font-weight:600; color:var(--color2);">{{ following_count or 0 }}</div>
+              <div style="font-size:1.1rem; color:#bbb; margin-top:2px;">Following</div>
+            </a>
+          </div> -->
+          <!-- --------------------------------- -->
+           
+          <!-- Featured Program Section -->
+
+        
+       
+
+      <div class="dashboard-row">
+        <div class="dashboard-section dashboard-shared-projects">
+          <div class="shared-projects-header">
+            <span>Shared Programs ({{ programs|length }})</span>
+            {% if userData == session_user %}
+              <a href="/myprograms" class="shared-viewall">View all</a>
+            {% endif %}
+          </div>
+          <div class="shared-projects-list-wrapper">
+            <span class="shared-arrow shared-arrow-left disabled">&#8592;</span>
+            <div class="shared-projects-list">
+              {% for p in programs %}
+                <div class="project-card">
+                  <a href="/program/{{ p.id }}" class="project-img-link">
+                    {% if p.image_url %}
+                      <img src="{{ p.image_url }}" class="project-img" alt="{{ p.name }}">
+                    {% else %}
+                      <img data-theme-src="/static/themes/orange/img/studio_default.svg" class="project-img" alt="{{ p.name }}">
+                    {% endif %}
+                  </a>
+                  <a href="/program/{{ p.id }}" class="project-title">{{ p.name|truncate(22, True, '...') }}</a>
+                </div>
+              {% endfor %}
+            </div>
+            <span class="shared-arrow shared-arrow-right">&#8594;</span>
+          </div>
+        </div>
+      </div>
+    
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const leftArrow = document.querySelector('.shared-arrow-left');
+  const rightArrow = document.querySelector('.shared-arrow-right');
+  const list = document.querySelector('.shared-projects-list');
+  const scrollAmount = 900; 
+
+  function updateArrows() {
+    if (!list) return;
+    if (list.scrollLeft <= 0) {
+      leftArrow.classList.add('disabled');
+      rightArrow.classList.remove('disabled');
+    }
+    else if (list.scrollLeft + list.clientWidth >= list.scrollWidth - 2) {
+      rightArrow.classList.add('disabled');
+      leftArrow.classList.remove('disabled');
+    }
+    else {
+      leftArrow.classList.remove('disabled');
+      rightArrow.classList.remove('disabled');
+    }
+  }
+
+  if (leftArrow && rightArrow && list) {
+    updateArrows();
+    leftArrow.addEventListener('click', function() {
+      if (!leftArrow.classList.contains('disabled')) {
+        list.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      }
+    });
+    rightArrow.addEventListener('click', function() {
+      if (!rightArrow.classList.contains('disabled')) {
+        list.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
+    });
+    list.addEventListener('scroll', updateArrows);
+    window.addEventListener('resize', updateArrows);
+    setTimeout(updateArrows, 100);
+  }
+});
+</script>
+
+        <div id="tierListModal" class="modal" style="display: none; position: fixed; z-index: 1001; left: 0; top: 0; width: 100vw; height: 100vh; background: rgba(255, 174, 133, 0.47); justify-content: center; align-items: center;">
+          <div class="dashboard-modal-content" style="background: #fff7f0; margin: 60px auto; padding: 32px; border-radius: 18px; max-width: 900px; width: 90vw; text-align: center; position: relative; box-shadow: 0 2px 32px #000a;">
+            <span class="close" id="closeTierListModal" style="position: absolute; top: 12px; right: 28px; font-size: 2.2rem; color: var(--color7); cursor: pointer;">&times;</span>
+            <div style="font-size:2rem; font-weight:600; margin-bottom:20px;">
+              {% if username[-1] == 's' %}
+                {{ username }}' Tier List
+              {% else %}
+                {{ username }}'s Tier List
+              {% endif %}
+            </div>
+            <div class="scroll-x-wrapper">
+              <div class="tierlist-container">
+                <div id="tierlist">
+                  {% set tiers = [("S", "#ff98cc"), ("A", "#ff958c"), ("B", "#ffc78d"), ("C", "#fef18d"), ("D", "#aeed84"), ("F", "#afe9ae"), ("N/A", "#c0a396")] %}
+                  {% for tier, color in tiers %}
+                    <div class="tier-row" data-tier="{{ tier }}">
+                      <div class="tier-label" style="background: {{ color }};">{{ tier }}</div>
+                      <div class="tier-scroll-wrapper">
+                        <div class="tier-dropzone" id="dropzone-{{ tier }}"></div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script>
+        document.getElementById('showTierListBtn').onclick = function() {
+          document.getElementById('tierListModal').style.display = 'flex';
+        };
+        document.getElementById('closeTierListModal').onclick = function() {
+          document.getElementById('tierListModal').style.display = 'none';
+        };
+        window.addEventListener('click', function(event) {
+          var modal = document.getElementById('tierListModal');
+          if (event.target === modal) {
+            modal.style.display = 'none';
+          }
+        });
+        </script>
+        <style>
+
+
+        </style>
+        <script>
+        
+        // Tier list
+          document.addEventListener('DOMContentLoaded', function() {
+            const programs = [
+              {% for p in programs %}
+                {
+                  id: '{{ p.id }}',
+                  name: '{{ p.name|e }}',
+                  image: '{{ p.image_url }}',
+                  tier: '{{ p.tier }}'
+                }{% if not loop.last %},{% endif %}
+              {% endfor %}
+            ];
+        
+            
+
+            function createProgramCard(program) {
+              const isOwner = {{ (userData == session_user)|tojson }};
+              const card = document.createElement('div');
+              card.className = 'program-card';
+              if (isOwner == true){
+                card.draggable = true;
+              }
+              else {
+                card.draggable = false;
+              }
+              card.dataset.id = program.id;
+                  
+              
+              
+          if (isOwner)
+          {
+            card.innerHTML = `
+              <div class="program-card-img-container">
+                <img src="${program.image}" alt="${program.name}" />
+                <div class="program-title">${program.name}</div>
+              </div>
+          `;
+          }
+          else{
+            card.innerHTML = `
+            <a href="/program/${program.id}" class="program-card-link">
+              <div class="program-card-img-container">
+                <img src="${program.image}" alt="${program.name}" />
+                <div class="program-title">${program.name}</div>
+              </div>
+            </a>
+          `;
+          }
+          
+          card.addEventListener('dragstart', e => {
+            e.dataTransfer.setData('text/plain', program.id);
+    
+            setTimeout(() => card.classList.add('drag-ghost'), 0);
+            card.dataset.originalParent = card.parentElement.id;
+            card.dataset.originalIndex = Array.from(card.parentElement.children).indexOf(card);
+          });
+          card.addEventListener('dragend', e => {
+            card.classList.remove('drag-ghost');
+   
+            document.querySelectorAll('.drop-placeholder').forEach(ph => ph.remove());
+            document.querySelectorAll('.tier-dropzone').forEach(z => z.classList.remove('drag-over'));
+          });
+          return card;
+        }
+        function showProgramInfo(name, tier) {
+          alert(`${name} (Tier: ${tier})`);
+        }
+        function setupTierList() {
+          const isOwner = {{ (userData == session_user)|tojson }};
+          const dropzones = {};
+          document.querySelectorAll('.tier-dropzone').forEach(zone => {
+            dropzones[zone.id.replace('dropzone-', '')] = zone;
+            zone.innerHTML = '';
+          });
+          
+        
+          programs.forEach(p => {
+            const tier = p.tier || 'N/A';
+            const zone = dropzones[tier] || dropzones['N/A'];
+            const card = createProgramCard(p);
+            
+            if (isOwner) {
+              card.draggable = true;
+              card.addEventListener('dragstart', e => {
+                e.dataTransfer.setData('text/plain', card.dataset.id);
+                card.classList.add('dragging');
+         
+                const ghost = card.cloneNode(true);
+                ghost.classList.add('drag-ghost');
+                document.body.appendChild(ghost);
+                e.dataTransfer.setDragImage(ghost, 0, 0);
+                setTimeout(() => ghost.remove(), 0);
+              });
+              
+              card.addEventListener('dragend', () => {
+                card.classList.remove('dragging');
+                document.querySelectorAll('.drag-ghost').forEach(el => el.remove());
+              });
+            }
+            
+            zone.appendChild(card);
+          });
+
+          document.querySelectorAll('.tier-dropzone').forEach(dropzone => {
+
+            if (isOwner) {
+              dropzone.addEventListener('dragover', e => {
+                e.preventDefault();
+                dropzone.classList.add('drag-over');
+                const draggingId = document.querySelector('.program-card.drag-ghost')?.dataset.id;
+
+                dropzone.querySelectorAll('.program-card.shift-right').forEach(card => card.classList.remove('shift-right'));
+
+                let insertBefore = null;
+                for (const child of dropzone.children) {
+                  if (!child.classList.contains('program-card')) continue;
+                  const rect = child.getBoundingClientRect();
+                  if (e.clientX < rect.left + rect.width / 2) {
+                    insertBefore = child;
+                    break;
+                  }
+                }
+
+                if (insertBefore) insertBefore.classList.add('shift-right');
+
+                let placeholder = dropzone.querySelector('.drop-placeholder');
+                if (!placeholder) {
+                  placeholder = document.createElement('div');
+                  placeholder.className = 'drop-placeholder';
+                }
+                if (insertBefore !== placeholder.nextSibling) {
+                  dropzone.insertBefore(placeholder, insertBefore);
+                }
+
+                Array.from(dropzone.querySelectorAll('.drop-placeholder')).forEach(ph => { if (ph !== placeholder) ph.remove(); });
+              });
+              
+              dropzone.addEventListener('dragleave', e => {
+                dropzone.classList.remove('drag-over');
+                dropzone.querySelectorAll('.drop-placeholder').forEach(ph => ph.remove());
+                dropzone.querySelectorAll('.program-card.shift-right').forEach(card => card.classList.remove('shift-right'));
+              });
+              
+              dropzone.addEventListener('drop', e => {
+                e.preventDefault();
+                dropzone.classList.remove('drag-over');
+                const id = e.dataTransfer.getData('text/plain');
+                const card = document.querySelector(`.program-card[data-id='${id}']`);
+                const ph = dropzone.querySelector('.drop-placeholder');
+                if (card && ph) {
+                  dropzone.insertBefore(card, ph);
+                  ph.remove();
+                } else if (card) {
+                  dropzone.appendChild(card);
+                }
+                saveTierList();
+                document.querySelectorAll('.drop-placeholder').forEach(ph => ph.remove());
+                dropzone.querySelectorAll('.program-card.shift-right').forEach(card => card.classList.remove('shift-right'));
+              });
+            }
+          });
+        }
+
+        function saveTierList() {
+          const tiers = {};
+          document.querySelectorAll('.tier-dropzone').forEach(zone => {
+            const tier = zone.id.replace('dropzone-', '');
+            tiers[tier] = Array.from(zone.children).map(card => card.dataset.id);
+          });
+          fetch('/dashboard/save_tiers', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(tiers)
+          })
+        }
+
+          setupTierList();
+          
+   
+          const followersData = {{ followers|tojson|safe }};
+          const followersBtn = document.getElementById('openFollowersModalBtn');
+          if (followersBtn && followersData) {
+          followersBtn.onclick = () => openFollowersModal(followersData);
+        }
+
+          function openPreviewModal(id, name, image) {
+            const modal = document.getElementById('previewModal');
+            document.getElementById('modalImage').src = image;
+            document.getElementById('modalTitle').textContent = name;
+            document.getElementById('editProjectBtn').href = `/programs/${id}/edit`;
+            modal.style.display = 'block';
+          }
+          function closePreviewModal() {
+            document.getElementById('previewModal').style.display = 'none';
+          }
+          window.onclick = function(event) {
+            const modal = document.getElementById('previewModal');
+            if (event.target == modal) {
+              modal.style.display = 'none';
+            }
+          }
+              });
+        </script>
+
+        <!-- preview/edit modal for tierlist -->
+        <div id="previewModal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); justify-content:center; align-items:center;">
+          <div style="background:#232526; margin:60px auto; padding:32px; border-radius:16px; max-width:400px; text-align:center; position:relative;">
+            <span onclick="closePreviewModal()" style="position:absolute; top:12px; right:20px; font-size:2rem; color:#fff; cursor:pointer;">&times;</span>
+            <img id="modalImage" src="" alt="Preview" style="width:100%; max-width:340px; border-radius:10px; margin-bottom:18px;" />
+            <div id="modalTitle" style="font-size:1.2rem; color:#fff; margin-bottom:16px;"></div>
+            <a id="editProjectBtn" href="#" style="display:inline-block; padding:10px 24px; background:#0077ff; color:#fff; border-radius:6px; text-decoration:none; font-weight:bold;">Edit Project</a>
+          </div>
+        </div>
+
+        <!-- future update maybe: followers modal -->
+        <div id="followersModal" class="followers-modal-bg followers-modal-bg-orange" style="display:none;">
+          <div class="followers-modal followers-modal-orange followers-modal-small">
+            <span onclick="closeFollowersModal()" class="followers-modal-close">&times;</span>
+            <div class="followers-modal-header">
+              <span class="followers-modal-title">Followers <span class="followers-modal-count">{{ followers|length }}</span></span>
+              <input type="text" class="followers-search" placeholder="Search Followers" oninput="filterFollowers()">
+            </div>
+            <div class="followers-list">
+              {% for u in followers %}
+              <div class="followers-card">
+                <img class="followers-avatar" src="{{ u.profile_pic_url or '/static/themes/makecore/img/default_avatar.svg' }}" alt="{{ u.username }}">
+                <div class="followers-info">
+                  <div class="followers-name">{{ u.username }}</div>
+                </div>
+                {% if u.is_followed %}
+                  <button class="followers-follow-btn followed">Followed</button>
+                {% else %}
+                  <button class="followers-follow-btn">Follow</button>
+                {% endif %}
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+    </div>
+{% endif %}
+<!-- MakeJam Rating Modal -->
+<div id="rateModal" class="modal-bg" style="display:none;">
+  <div class="dashboard-modal-content">
+    <span class="close" onclick="closeRateModal()">&times;</span>
+    <h3>Rate Submission</h3>
+    <div id="rateModalDetails"></div>
+    <form id="rateForm" onsubmit="submitRating(event)">
+  <input type="hidden" name="submission_id" id="modalSubmissionId">
+  <table class="rubric-table" style="width:100%; margin-bottom:12px;">
+    <tr><th>Category</th><th>Max</th><th>Your Score</th></tr>
+    <tr><td>Theme Use - Uses the Theme often</td><td>15</td><td><input type="number" name="theme_use" id="modalThemeUse" min="0" max="15" required></td></tr>
+    <tr><td>Theme Build - Built Around the Theme</td><td>10</td><td><input type="number" name="theme_build" id="modalThemeBuild" min="0" max="10" required></td></tr>
+    <tr><td>Art Style - Consistent Art Style</td><td>10</td><td><input type="number" name="art_style" id="modalArtStyle" min="0" max="10" required></td></tr>
+    <tr><td>Art Originality - Doesn't Copy other Art</td><td>5</td><td><input type="number" name="art_originality" id="modalArtOriginality" min="0" max="5" required></td></tr>
+    <tr><td>Gameplay - Fun and Engaging</td><td>15</td><td><input type="number" name="gameplay" id="modalGameplay" min="0" max="15" required></td></tr>
+    <tr><td>Gameplay Originality - Unique and Creative</td><td>10</td><td><input type="number" name="gameplay_originality" id="modalGameplayOriginality" min="0" max="10" required></td></tr>
+    <tr><td>Controls - Intuitive and Responsive</td><td>5</td><td><input type="number" name="controls" id="modalControls" min="0" max="5" required></td></tr>
+    <tr><td>Sound Design - Enhances the Experience</td><td>5</td><td><input type="number" name="sound_design" id="modalSoundDesign" min="0" max="5" required></td></tr>
+    <tr><td>Polish - Few to No Bugs</td><td>5</td><td><input type="number" name="polish" id="modalPolish" min="0" max="5" required></td></tr>
+    <tr><td>Replayability - Encourages Multiple Plays</td><td>5</td><td><input type="number" name="replayability" id="modalReplayability" min="0" max="5" required></td></tr>
+    <tr><td>Theme Interpretation - Creative Take on the Theme</td><td>10</td><td><input type="number" name="theme_interpretation" id="modalThemeInterpretation" min="0" max="10" required></td></tr>
+    <tr><td>Overall Enjoyment - How Much Fun Was It?</td><td>5</td><td><input type="number" name="overall_enjoyment" id="modalOverallEnjoyment" min="0" max="5" required></td></tr>
+  </table>
+  <button type="submit" class="btn btn-orange">Save</button>
+</form>
+    <div id="rateModalMsg"></div>
+  </div>
+</div>
+
+<style>
+.modal-bg {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 20000;
+}
+.dashboard-modal-content {
+  background: #fff7f0; padding: 32px; border-radius: 14px; min-width: 320px; box-shadow: 0 2px 18px #ffb36a44;
+  position: relative;
+}
+.dashboard-modal-content .close {
+  position: absolute; top: 8px; right: 14px; font-size: 2rem; color: #ff9100; cursor: pointer;
+}
+</style>
+<script>
+function openRateModal(id, title, rubric) {
+  document.getElementById('rateModal').style.display = 'flex';
+  document.getElementById('modalSubmissionId').value = id;
+  
+  Object.keys(rubric).forEach(key => {
+    const element = document.getElementById('modal' + key.charAt(0).toUpperCase() + key.slice(1));
+    if (element) {
+      element.value = rubric[key] || '';
+    }
+  });
+  
+  document.getElementById('rateModalDetails').innerHTML = `<b>Project:</b> ${title}`;
+  document.getElementById('rateModalMsg').innerHTML = '';
+}
+
+setTimeout(() => {
+  document.querySelectorAll('.rate-btn').forEach(btn => {
+    btn.onclick = function() {
+      openRateModal(
+        btn.dataset.submissionId,
+        btn.dataset.projectTitle,
+        {
+          theme_use: btn.dataset.theme_use,
+          theme_build: btn.dataset.theme_build,
+          art_style: btn.dataset.art_style,
+          art_originality: btn.dataset.art_originality,
+          gameplay: btn.dataset.gameplay,
+          gameplay_originality: btn.dataset.gameplay_originality,
+          controls: btn.dataset.controls,
+          sound_design: btn.dataset.sound_design,
+          polish: btn.dataset.polish,
+          replayability: btn.dataset.replayability,
+          theme_interpretation: btn.dataset.theme_interpretation,
+          overall_enjoyment: btn.dataset.overall_enjoyment
+        }
+      );
+    }
+  });
+}, 100);
+function closeRateModal() {
+  document.getElementById('rateModal').style.display = 'none';
+}
+function submitRating(e) {
+  e.preventDefault();
+  const id = document.getElementById('modalSubmissionId').value;
+  const rubric = {
+    theme_use: document.getElementById('modalThemeUse').value,
+    theme_build: document.getElementById('modalThemeBuild').value,
+    art_style: document.getElementById('modalArtStyle').value,
+    art_originality: document.getElementById('modalArtOriginality').value,
+    gameplay: document.getElementById('modalGameplay').value,
+    gameplay_originality: document.getElementById('modalGameplayOriginality').value,
+    controls: document.getElementById('modalControls').value,
+    sound_design: document.getElementById('modalSoundDesign').value,
+    polish: document.getElementById('modalPolish').value,
+    replayability: document.getElementById('modalReplayability').value,
+    theme_interpretation: document.getElementById('modalThemeInterpretation').value,
+    overall_enjoyment: document.getElementById('modalOverallEnjoyment').value
+  };
+  const params = new URLSearchParams(rubric);
+  fetch(`/makejam/submission/${id}/rate`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+    body: params.toString()
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById('rateModalMsg').innerHTML = '<span style="color:#1fa345;">Rating saved! Total: ' + data.total_score + '</span>';
+      setTimeout(() => location.reload(), 700);
+    } else {
+      document.getElementById('rateModalMsg').innerHTML = '<span style="color:var(--color4);">Failed: ' + (data.error || 'Unknown error') + '</span>';
+    }
+  })
+  .catch(error => {
+    console.error('[MODAL DEBUG] Error:', error);  
+    document.getElementById('rateModalMsg').innerHTML = '<span style="color:var(--color4);">Failed to save!</span>';
+  });
+}
+</script>
+
+
+</div> 
+{% endblock %}
+{% block scripts %}
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7H9JTC8BY1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-7H9JTC8BY1');
+</script>
+{% endblock %}

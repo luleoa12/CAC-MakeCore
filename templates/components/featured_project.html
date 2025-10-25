@@ -1,0 +1,303 @@
+
+<div class="featured-project-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; margin-top: -10px;">
+    <h3 style="margin: 0; font-size: 1.25rem; font-weight: 600; color: var(--color4);">Featured Program</h3>
+    <button class="btn btn-sm btn-outline-primary" id="changeFeaturedBtn" style="background: white;
+    color: var(--color14);
+    padding: 8px 4px;
+    border-radius: 8px;
+    text-align: center;
+    font-family: 'Fira Code', monospace;
+    font-size: 13px;
+    max-width: 80px;
+    text-decoration: none;
+    border: 1.5px solid var(--color14);
+    transition: all 0.2s ease;
+    font-weight: 500;
+    width: 100%;
+    letter-spacing: 0.3px;
+    box-shadow: 0 2px 8px rgba(255, 107, 53, 0.1);">
+        Change
+    </button>
+</div>
+
+<div id="featuredProjectContainer" style="margin: 8px auto 0; width: 100%; width: 250px; height: 200px; padding: 0.8rem; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+    <div id="featuredProjectContent" style="margin-left: 4px; width: 240px; aspect-ratio: 4/3; display: flex; flex-direction: column; justify-content: center;">
+        <div class="text-center">
+            <div class="spinner-border text-primary" role="status" style="width: 2rem; height: 2rem; color: #0d6efd !important;">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="featuredProgramModal" tabindex="-1" aria-labelledby="featuredProgramModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="border: none; border-radius: 0.5rem; overflow: hidden;">
+            <div class="modal-header" style="padding: 1rem 1.5rem; border-bottom: 1px solid #dee2e6; background-color: #f8f9fa;">
+                <h5 class="modal-title" id="featuredProgramModalLabel" style="margin: 0; font-size: 1.25rem; font-weight: 500;">Select Featured Program</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="border: none; background: transparent; font-size: 1.5rem; cursor: pointer;">&times;</button>
+            </div>
+            <div class="modal-body" id="programsList" style="padding: 1.5rem; max-height: 60vh; overflow-y: auto;">
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status" style="width: 2rem; height: 2rem; color: #0d6efd !important;">
+                        <span class="visually-hidden">Loading programs...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding: 1rem 1.5rem; border-top: 1px solid #dee2e6; background-color: #f8f9fa;">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="padding: 0.375rem 0.75rem; background-color: #6c757d; color: white; border: none; border-radius: 0.25rem; cursor: pointer;">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmFeaturedBtn" disabled style="padding: 0.375rem 0.75rem; background-color: #0d6efd; color: white; border: none; border-radius: 0.25rem; cursor: pointer; opacity: 0.65;">Set as Featured</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const featuredProjectContainer = document.getElementById('featuredProjectContainer');
+    const featuredProjectContent = document.getElementById('featuredProjectContent');
+    const changeFeaturedBtn = document.getElementById('changeFeaturedBtn');
+    const programsList = document.getElementById('programsList');
+    const confirmFeaturedBtn = document.getElementById('confirmFeaturedBtn');
+    const modal = document.getElementById('featuredProgramModal');
+    
+    let programs = [];
+    let selectedProgramId = null;
+    let modalInstance = null;
+
+    document.addEventListener('click', function(e) {
+        if (e.target === changeFeaturedBtn) {
+            console.log('Change button clicked (captured by document)');
+        }
+    }, true);
+    
+    window.onerror = function(message, source, lineno, colno, error) {
+        console.error('Uncaught error:', {message, source, lineno, colno, error});
+        return true; 
+    };
+    
+    setTimeout(() => {
+        console.log('Bootstrap available after delay:', typeof bootstrap !== 'undefined' ? 'Yes' : 'No');
+    }, 1000);
+    
+
+    function renderFeaturedProgram(program) {
+        featuredProjectContent.innerHTML = `
+            <a href="/program/${program.id}" style="text-decoration: none; color: inherit;">
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <img src="${program.image_url || '/static/themes/orange/img/studio_default.svg'}" 
+                         alt="${program.name}" 
+                         style="
+                             width: 100%;
+                             height: 100%;
+                             aspect-ratio: 4/3;
+                             object-fit: cover;
+                             border-radius: 8px;
+                             background: #f8f9fa;
+                         ">
+                    <div style="
+                        font-size: 0.9rem;
+                        font-weight: 600;
+                        color: var(--color3);
+                        text-align: left;
+                        padding: 0 0 0 0;
+                        width: 100%;
+                    ">
+                        ${program.name}
+                    </div>
+                </div>
+            </a>`;
+    }
+
+    function renderNoFeaturedProgram() {
+        featuredProjectContent.innerHTML = `
+            <div class="text-center py-4">
+                <p style="color: #6c757d; margin: 0;">No featured program selected</p>
+            </div>`;
+    }
+
+
+
+    async function loadFeaturedProgram() {
+        try {
+            featuredProjectContent.innerHTML = `
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status" style="width: 2rem; height: 2rem; color: #0d6efd !important;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>`;
+                
+            const username = window.location.pathname.split('/')[2] || '{{ username }}';
+            const response = await fetch(`/api/user/${username}/get_featured_program`);
+            if (!response.ok) throw new Error('Failed to load featured program');
+            
+            const { program } = await response.json();
+            if (program) {
+                renderFeaturedProgram(program);
+            } else {
+                renderNoFeaturedProgram();
+            }
+        } catch (error) {
+            console.error('Error loading featured program:', error);
+            renderNoFeaturedProgram();
+        }
+    }
+
+    changeFeaturedBtn.addEventListener('click', async function() {
+        console.log('Change button clicked');
+        try {
+            console.log('[DEBUG] Starting modal load sequence');
+            programsList.innerHTML = `
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status" style="width: 2rem; height: 2rem; color: #0d6efd !important;">
+                        <span class="visually-hidden">Loading programs...</span>
+                    </div>
+                </div>`;
+            
+            console.log('[DEBUG] Checking Bootstrap availability:', typeof bootstrap);
+
+            if (!modalInstance && typeof bootstrap !== 'undefined') {
+                console.log('[DEBUG] Creating new Bootstrap modal instance');
+                modalInstance = new bootstrap.Modal(modal);
+            } else if (!modalInstance) {
+                console.error('[DEBUG] Bootstrap not available');
+                throw new Error('Bootstrap JS not loaded');
+            }
+            
+            console.log('[DEBUG] Showing modal');
+            modalInstance.show();
+            
+            console.log('[DEBUG] Fetching programs from API');
+            const response = await fetch('/api/user/programs');
+            if (!response.ok) {
+                console.error('[DEBUG] API response not OK:', response.status);
+                throw new Error('Failed to load programs');
+            }
+            
+            programs = await response.json();
+            console.log('[DEBUG] Programs received:', programs.length);
+            renderProgramsList(programs);
+            
+            selectedProgramId = null;
+            confirmFeaturedBtn.disabled = true;
+            console.log('[DEBUG] Modal load complete');
+        } catch (error) {
+            console.error('Error loading programs:', error);
+            programsList.innerHTML = `
+                <div class="alert alert-danger" style="padding: 0.75rem 1.25rem; margin: 1rem; border: 1px solid #f5c2c7; border-radius: 0.25rem; color: #842029; background-color: #f8d7da;">
+                    Failed to load programs. Please try again later.
+                </div>`;
+        }
+    });
+
+    function renderProgramsList(programs) {
+        if (programs.length === 0) {
+            programsList.innerHTML = `
+                <div class="alert alert-info" style="padding: 0.75rem 1.25rem; margin: 1rem; border: 1px solid #b6effb; border-radius: 0.25rem; color: #055160; background-color: #cff4fc;">
+                    You don't have any programs yet. <a href="/new_project" style="color: #055160; text-decoration: underline;">Create one</a> to get started!
+                </div>`;
+            return;
+        }
+
+        programsList.innerHTML = `
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem;">
+                ${programs.map(program => `
+                    <div class="program-card ${program.is_featured ? 'border-primary' : ''}" 
+                         data-program-id="${program.id}"
+                         style="border: 1px solid #dee2e6; border-radius: 0.5rem; padding: 1rem; cursor: pointer; transition: all 0.2s; ${program.is_featured ? 'border-color: #0d6efd !important;' : ''}">
+                        <div style="display: flex; align-items: flex-start;">
+                            <div style="flex-shrink: 0; margin-right: 1rem;">
+                                <img src="${program.thumbnail || '/static/images/program-placeholder.png'}" 
+                                     alt="${program.name}" 
+                                     style="width: 60px; height: 60px; object-fit: cover; border-radius: 0.25rem;">
+                            </div>
+                            <div style="flex-grow: 1;">
+                                <h6 style="margin: 0 0 0.25rem 0; font-size: 1rem; font-weight: 500;">${program.name}</h6>
+                                ${program.is_featured ? 
+                                    '<span style="display: inline-block; background-color: #0d6efd; color: white; font-size: 0.75rem; padding: 0.15rem 0.5rem; border-radius: 0.25rem; margin-top: 0.25rem;">Currently Featured</span>' : 
+                                    ''}
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>`;
+
+        document.querySelectorAll('.program-card').forEach(card => {
+            card.addEventListener('click', function() {
+
+                document.querySelectorAll('.program-card').forEach(c => {
+                    c.style.borderColor = c === this ? '#0d6efd' : '#dee2e6';
+                    c.style.backgroundColor = c === this ? '#f8f9fa' : 'transparent';
+                });
+                
+                selectedProgramId = this.dataset.programId;
+                const isCurrentlyFeatured = programs.find(p => p.id === parseInt(selectedProgramId))?.is_featured;
+                confirmFeaturedBtn.disabled = isCurrentlyFeatured;
+            });
+        });
+    }
+
+    confirmFeaturedBtn.addEventListener('click', async function() {
+        if (!selectedProgramId) return;
+        
+        const btn = this;
+        const originalText = btn.textContent;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Updating...';
+        
+        try {
+            const response = await fetch('/api/user/featured_program', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ program_id: parseInt(selectedProgramId) })
+            });
+            
+            if (!response.ok) {
+                const error = await response.json().catch(() => ({}));
+                throw new Error(error.error || 'Failed to update featured program');
+            }
+            
+            if (modalInstance) {
+                modalInstance.hide();
+            } else {
+                modal.style.display = 'none';
+            }
+            
+            loadFeaturedProgram();
+
+
+            
+        } catch (error) {
+            console.error('Error updating featured program:', error);
+            alert('Failed to update featured program: ' + error.message);
+        } finally {
+            btn.disabled = false;
+            btn.textContent = originalText;
+        }
+    });
+
+    // Close modal handlers
+    const closeButtons = modal.querySelectorAll('[data-bs-dismiss="modal"], .btn-secondary');
+    closeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (modalInstance) {
+                modalInstance.hide();
+            } else {
+                modal.style.display = 'none';
+            }
+        });
+    });
+
+    // Initialize
+    loadFeaturedProgram();
+
+    const isOwnDashboard = window.location.pathname === '/dashboard';
+
+    if (changeFeaturedBtn) {
+        changeFeaturedBtn.style.display = isOwnDashboard ? 'block' : 'none';
+    }
+});
+</script>

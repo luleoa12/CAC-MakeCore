@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&display=swap');
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overscroll-behavior: none;
+}
+
+@media (max-width: 1400px) {
+    .ads-container {
+        display: none;
+    }
+}
+
+
+html[data-theme] body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+@media screen and (max-width: 1400px) {
+    html[data-theme="orange"] body {
+        background-image: url('/static/themes/orange/img/bg_no_arrows.svg');
+    }
+    html[data-theme="green"] body {
+        background-image: url('/static/themes/green/img/bg_no_arrows.svg');
+    }
+    html[data-theme="blue"] body {
+        background-image: url('/static/themes/blue/img/bg_no_arrows.svg');
+    }
+}
+
+@media screen and (min-width: 1401px) {
+    html[data-theme="orange"] body {
+        background-image: url('/static/themes/orange/img/bg.svg');
+    }
+    html[data-theme="green"] body {
+        background-image: url('/static/themes/green/img/bg.svg');
+    }
+    html[data-theme="blue"] body {
+        background-image: url('/static/themes/blue/img/bg.svg');
+    }
+}
+
+@media screen and (max-width: 1420px) {
+    #left-ad, #right-ad {
+        display:  none;
+    }
+}
+
+@media screen and (min-width: 1421px) {
+    #left-ad, #right-ad {
+        display:  block;
+    }
+}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="followers-modal-bg">
+  <div class="followers-modal">
+    <div class="followers-modal-header">
+      <span class="followers-modal-title">Followers <span class="followers-modal-count">{{ followers|length }}</span></span>
+      <input type="text" class="followers-search" placeholder="Search Followers" oninput="filterFollowers()">
+    </div>
+    <div class="followers-list">
+      {% for u in followers %}
+      <div class="followers-card">
+        <img class="followers-avatar" src="{{ u.profile_pic_url or '/static/themes/makecore/img/default_avatar.svg' }}" alt="{{ u.username }}">
+        <div class="followers-info">
+          <div class="followers-name">{{ u.username }}</div>
+        </div>
+        {% if u.is_followed %}
+          <button class="followers-follow-btn followed">Followed</button>
+        {% else %}
+          <button class="followers-follow-btn">Follow</button>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+<script>
+function filterFollowers() {
+  const input = document.querySelector('.followers-search');
+  const filter = input.value.toLowerCase();
+  document.querySelectorAll('.followers-card').forEach(card => {
+    const name = card.querySelector('.followers-name').textContent.toLowerCase();
+    card.style.display = name.includes(filter) ? '' : 'none';
+  });
+}
+</script>
+{% endblock %}

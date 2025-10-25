@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Credits | MakeCore{% endblock %}
+{% block head %}
+  <link rel="stylesheet" href="/static/css/credits.css">
+{% endblock %}
+{% block content %}
+<div class="credits-container">
+  <h2 class="credits-title">Credits</h2>
+  <div class="credits-section">
+    <div class="credits-section">
+      <h3>Development</h3>
+      <ul>
+        <li><b>Project Manager</b> — Leo Lu</li>
+        <li><b>Product Lead</b> — Leo Lu</li>
+        <li><b>Full-Stack Developer</b> — Leo Lu</li>
+        <li><b>System Architect</b> — Leo Lu</li>
+        <li><b>Database Manager</b> — Leo Lu</li>
+        <li><b>UI/UX Development</b> — Leo Lu</li>
+      </ul>
+
+      <h3>Concept</h3>
+      <ul>
+        <li><b>Original Concept</b> — Liam Armenta</li>
+        <li><b>Website Concept Expansion</b> — Leo Lu</li>
+      </ul>
+
+      <h3>Design</h3>
+      <ul>
+        <li><b>Lead Visual Designer</b> — Leo Lu</li>
+        <li><b>Visual Designer</b> — Liam Armenta</li>
+        <li><b>Lead Graphic Designer</b> — Liam Armenta</li>
+        <li><b>Graphic Designer</b> — Caillou Hoang</li>
+        <li><b>Graphic Designer</b> — Isaac Lopez</li>
+      </ul>
+
+
+    </div>
+    
+  </div>
+  <!-- <div class="credits-section">
+    <h3>Open Source & Libraries</h3>
+    <ul>
+      <li>Flask, SQLAlchemy, Jinja2</li>
+      <li>Supabase, Werkzeug</li>
+      <li>Google Fonts: Fira Code</li>
+    </ul>
+  </div> -->
+  <div class="credits-section">
+    <!-- Removed Ads Supporters for Congressional App Challenge -->
+    <!-- <h3>Ads Supporters</h3>
+    <div style="font-family: fira-code, monospace; color: var(--color7); font-size: 1.0rem;">
+      <p>Thanks you to everyone who has supported us with an ad view! Your support helps keep MakeCore running!</p>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+      {% for supporter in supporters %}
+        <div style="width: 200px; height: 70px; display: flex; background-color: var(--color2); align-items:center; border-radius: 10px;">
+          <img data-theme-src="{{ supporter[1] if supporter[1] else '/static/themes/blue/img/default_avatar.svg' }}" style="margin-left: 10px; width: 50px; height: 50px; border-radius: 10px;">
+          <h4 style="margin-left: 10px;"><a style="color: var(--color7); text-decoration: none;" href="/dashboard/{{ supporter[0] }}">{{ supporter[0][:10] ~ '...' if supporter[0]|length > 10 else supporter[0] }}</a></h4>
+        </div>
+
+      {% endfor %}
+      </div>
+    </div> -->
+    <h3>Special Thanks</h3>
+    <ul>
+      <li>All contributors, testers, and users who made MakeCore possible!</li>
+    </ul>
+    
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7H9JTC8BY1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-7H9JTC8BY1');
+</script>
+{% endblock %}

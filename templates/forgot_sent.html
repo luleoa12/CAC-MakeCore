@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Forgot Password | MakeCore{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="/static/css/colors.css">
+  <link rel="stylesheet" href="/static/css/auth.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+  <h2>Check Your Email</h2>
+  <h3>We've sent a password reset link to your email</h3>
+  
+  <div class="google-user-info">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+      <polyline points="22,6 12,13 2,6"></polyline>
+    </svg>
+    <div class="user-details">
+      <h4>{{ email }}</h4>
+      <p>Check your inbox and spam folder</p>
+    </div>
+  </div>
+  
+  <form method="GET" action="/login">
+    <button type="submit" class="auth-submit">Continue to Sign In</button>
+  </form>
+
+  <div class="auth-alt">
+    Don't receive the email? <a href="/forgot">Try again</a>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7H9JTC8BY1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-7H9JTC8BY1');
+</script>
+{% endblock %}

@@ -1,0 +1,62 @@
+.auth-container {
+  max-width: 410px;
+  background: rgba(var(--color1-rgb), 0.8);
+  border-radius: 22px;
+  box-shadow: 0 4px 24px rgba(var(--color1-rgb), 0.27);
+  padding: 36px 32px 24px 32px;
+  margin: 60px auto 0 auto;
+}
+.edit-input {
+  font-family: 'Fira Code', monospace;
+  font-size: 1.1rem;
+  background: var(--color10);
+  border: 2px solid var(--color1);
+  border-radius: 12px;
+  padding: 10px 18px;
+  color: var(--color6);
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+  outline: none;
+}
+.edit-input:focus {
+  border-color: var(--color3);
+}
+.login-btn {
+  width: 100%;
+  background: var(--color1);
+  color: var(--color7);
+  font-family: 'Fira Code', monospace;
+  font-size: 1.25rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 14px;
+  padding: 12px 0;
+  margin-top: 22px;
+}
+.login-btn:hover {
+  background: var(--color8);
+}
+
+
+h3 {
+  margin-top: -20px;
+  align-items:center;
+  color: rgba(var(--color6-rgb), 0.9);
+  font-size: 0.8rem;
+}
+.login-links-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 18px;
+  font-family: 'Fira Code', monospace;
+}
+.login-link-left, .login-link-right {
+  color: var(--color4);
+  text-decoration: underline;
+  margin-top:-10px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+

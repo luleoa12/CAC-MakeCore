@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="/static/css/ideas.css">
+{% endblock %}
+
+{% block content %}
+<div class="container" id="cardContainer">
+    <div class="card" id="flipCard">
+        <div class="front">
+            <h2>Click to Flip</h2>
+        </div>
+        <div class="back">
+            <h2>Back Side</h2>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const card = document.getElementById('flipCard');
+    const container = document.getElementById('cardContainer');
+    
+    if (container && card) {
+        container.addEventListener('click', function() {
+            card.classList.toggle('flipped');
+        });
+    }
+});
+</script>
+{% endblock %}

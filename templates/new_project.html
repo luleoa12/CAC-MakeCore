@@ -1,0 +1,623 @@
+{% extends 'base.html' %}
+{% block title %}New Project | MakeCore{% endblock %}
+{% block head %}
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/dark_theme.css">
+  <link rel="stylesheet" href="/static/css/new_project.css">
+  <link rel="stylesheet" href="/static/css/navbar.css">
+
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<form id="newProgramForm" method="POST" action="{{ url_for('new_project') }}" enctype="multipart/form-data">
+  <div id="modPermsModal" class="modal-bg" style="display:none;">
+    <div class="modal-content">
+      <button class="modal-close" id="closeModPermsModal" type="button">&times;</button>
+      <div style="font-size:1.2rem; color:var(--color4); font-weight:700; margin-bottom:12px;">Add Moderator Usernames</div>
+      <label for="modPermsUsernames" style="font-weight:700; color:var(--color14);">Type @ to add moderators:</label><br>
+      <div id="modPermsChips" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px;"></div>
+      <input type="text" id="modPermsUsernames" autocomplete="off" placeholder="Type @username..." style="width:100%; max-width:360px; padding:8px 10px; border-radius:6px; border:1.5px solid #b7a9a1; font-size:1.08rem; margin-top:2px;">
+      <div id="modPermsSuggestions" style="background:var(--color10); border:1px solid #b7a9a1; border-radius:6px; margin-top:2px; display:none; position:absolute; z-index:10001; max-height:160px; overflow-y:auto;"></div>
+      <button type="button" id="saveModPermsBtn" style="background:var(--color4); color:#fff; border:none; border-radius:8px; padding:8px 22px; font-size:1.08rem; font-family:'Fira Code',monospace; font-weight:700; box-shadow:0 1px 8px rgba(var(--color4-rgb), 0.25); cursor:pointer; margin-top:18px;">Add</button>
+      <div id="modPermsError" style="color:#c00; font-size:0.98rem; margin-top:8px; display:none;"></div>
+    </div>
+  </div>
+  <style>
+    @media (min-width: 1600px) {
+      #new_project-container {
+        transform: scale(1.1);
+        transform-origin: top center;
+        width: 90.91%; 
+        margin: 0 auto;
+        min-height: 110vh; 
+      }
+      
+      .program-preview-container {
+        transform: scale(1.1);
+        transform-origin: top center;
+      }
+    }
+  </style>
+  <div id="new_project-container" style="background: var(--background-gradient); min-height:100vh;">
+    <div class="program-preview-container" style="background: var(--container-bg); box-shadow: var(--container-shadow); color: var(--text-main); border-radius: var(--border-radius-lg);">
+      <div style="width:100%; display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; margin-top:-10px;">
+        <div style="font-size:2rem;font-weight:bold;color:var(--color7);letter-spacing:1px;">Create New Program</div>
+        <button type="submit" name="preview" value="1" class="preview-btn" rel="noopener noreferrer" style="background:var(--color2);color:var(--color7);font-family:'Fira Code',monospace;font-size:1.1rem;font-weight:700;border:none;border-radius:15px;padding:10px 24px;cursor:pointer;box-shadow:0 2px 4px rgba(var(--color1-rgb), 0.27);transition:background 0.18s, box-shadow 0.18s;">Save</button>
+      </div>
+      
+      <div class="program-header program-meta" style="display: flex; align-items: flex-start; gap: 16px; margin-bottom:20px;">
+        <div style="flex: 1 1 0; display: flex; flex-direction: column;">
+          <label for="name" class="edit-label" style="margin-bottom: 2px; font-size: 1rem;">Program Name:</label>
+          <input class="program-title edit-input" type="text" id="name" name="name" required maxlength="120" placeholder="Program Name">
+        </div>
+        <div style="flex: 2 1 0; display: flex; flex-direction: column;">
+          <label for="program_url" class="edit-label" style="margin-bottom: 2px; font-size: 1rem;">Program URL:</label>
+          <input class="edit-input" type="url" id="program_url" name="program_url" required maxlength="120" placeholder="Program URL" pattern="https?://.+" title="Please enter a valid URL starting with http:// or https://" style="width: 100%; min-width: 120px;">
+        </div>
+      </div>
+      <div class="program-main program-main-row">
+        <div class="desc-controls-col">
+          <label for="description" class="edit-label">Program Description:</label>
+          <textarea class="program-description edit-textarea" id="description" name="description" required maxlength="300"></textarea>
+          <label for="controls" class="edit-label">Controls:</label>
+          <textarea class="program-description edit-textarea" id="controls" name="controls" required maxlength="120"></textarea>
+        </div>
+        <div class="image-dropzone" id="image-dropzone">
+          <span class="dropzone-text" id="dropzone-text"><b>Insert Image Here</b><br><span style="font-weight:normal;">[4:3 Ratio]</span></span>
+          <input type="file" id="image" name="image" accept="image/*" required>
+          <img id="image-preview" style="display:none; width:100%; height:100%; position:absolute; top:0; left:0; object-fit:cover; border-radius:10px; background:#fff; z-index:2;" alt="Preview" />
+        </div>
+      </div>
+
+      
+
+      <div class="program-meta" style="margin-top:16px; display: flex; gap: 24px; align-items: center; justify-content: flex-start;">
+        <div>Version: <input class="edit-input" type="text" id="version" name="version" required maxlength="20" value="1.0.0"></div>
+        <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">Mod Perms:
+          <div id="modPermsInputGroup" style="display:flex; align-items:center; flex-wrap:wrap; background:var(--color10); border:2px solid var(--color1); border-radius:12px; min-width:180px; min-height:42px; padding:4px 8px; position:relative;">
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:nowrap; position:relative;">
+              <div id="modPermsCustomSelect" class="mod-perms-custom-select" tabindex="0" style="z-index:11;">
+                <span id="modPermsCustomSelected">All</span>
+                <span class="mod-perms-arrow">▼</span>
+                <div id="modPermsCustomDropdown" class="mod-perms-custom-dropdown" style="z-index:15;">
+                  <div class="mod-perms-custom-option" data-value="all"><span class="mod-perms-check"></span>All</div>
+                  <div class="mod-perms-custom-option" data-value="none"><span class="mod-perms-check"></span>None</div>
+                </div>
+              </div>
+              <div id="modPermsChipsDropdown" style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; background:transparent; border:none; min-height:28px;"></div>
+              <span id="modPermsAddPill" class="mod-chip mod-chip-placeholder" style="margin-left:6px; cursor:pointer; position:relative; z-index:10;"><span class="mod-chip-at">+</span> Add Moderators</span>
+            </div>
+            <input type="hidden" id="mod_perms" name="mod_perms" value="all">
+          </div>
+          
+        </div>
+      </div>
+    </form>
+    </div> 
+  </div>
+
+
+      <script>
+        
+        document.addEventListener('DOMContentLoaded', function() {
+           var modPermsSelect = document.getElementById('modPermsSelect');
+          var permsModal = document.getElementById('modPermsModal');
+          var closePermsBtn = document.getElementById('closeModPermsModal');
+          var savePermsBtn = document.getElementById('saveModPermsBtn');
+          var permsInput = document.getElementById('mod_perms');
+          var permsUsernames = document.getElementById('modPermsUsernames');
+          var chipsContainer = document.getElementById('modPermsChips');
+          var chipsDropdown = document.getElementById('modPermsChipsDropdown');
+          var modPermsCustomSelect = document.getElementById('modPermsCustomSelect');
+          var modPermsCustomSelected = document.getElementById('modPermsCustomSelected');
+          var modPermsCustomDropdown = document.getElementById('modPermsCustomDropdown');
+          var modPermsAddPill = document.getElementById('modPermsAddPill');
+          var suggestionsBox = document.getElementById('modPermsSuggestions');
+          var errorBox = document.getElementById('modPermsError');
+
+  modPermsAddPill.addEventListener('click', function () {
+    permsModal.style.display = 'flex';
+    modalSelectedUsernames = [...selectedUsernames];
+    renderChips();
+  });
+
+  closePermsBtn.addEventListener('click', function () {
+    permsModal.style.display = 'none';
+    renderChipsDropdown();
+    updateModPermsUI();
+  });
+
+  modPermsCustomSelect.addEventListener('click', function () {
+    modPermsCustomDropdown.style.display = 
+      modPermsCustomDropdown.style.display === 'block' ? 'none' : 'block';
+  });
+
+  Array.from(modPermsCustomDropdown.querySelectorAll('.mod-perms-custom-option')).forEach(option => {
+    option.addEventListener('click', function () {
+      const selected = option.getAttribute('data-value');
+      permsInput.value = selected;
+      modPermsCustomSelected.textContent = option.textContent.trim();
+      modPermsCustomDropdown.style.display = 'none';
+    });
+  });
+
+  document.addEventListener('click', function (e) {
+    if (!modPermsCustomSelect.contains(e.target)) {
+      modPermsCustomDropdown.style.display = 'none';
+    }
+  });
+
+
+  let allUsernames = [];
+  let selectedUsernames = [];
+  let modalSelectedUsernames = [];
+
+function renderChips() {
+  chipsContainer.innerHTML = '';
+  modalSelectedUsernames.forEach(username => {
+    const chip = document.createElement('div');
+    chip.className = 'mod-chip';
+    chip.textContent = '@' + username;
+    const removeBtn = document.createElement('span');
+    removeBtn.textContent = '×';
+    removeBtn.className = 'chip-remove';
+    removeBtn.addEventListener('click', () => {
+      modalSelectedUsernames = modalSelectedUsernames.filter(u => u !== username);
+      renderChips();
+      console.log('Removed user. Current modalSelectedUsernames:', modalSelectedUsernames);
+    });
+    chip.appendChild(removeBtn);
+    chipsContainer.appendChild(chip);
+  });
+  permsUsernames.value = '';
+  updateSuggestions();
+}
+
+function updateSuggestions() {
+  const query = permsUsernames.value.toLowerCase().replace('@', '');
+  const matches = allUsernames.filter(name =>
+    name.toLowerCase().startsWith(query) &&
+    !modalSelectedUsernames.includes(name)
+  );
+  suggestionsBox.innerHTML = '';
+  if (query.length > 0 && matches.length > 0) {
+    matches.forEach(name => {
+      const option = document.createElement('div');
+      option.className = 'suggestion-item';
+      option.textContent = '@' + name;
+      option.addEventListener('click', () => {
+        modalSelectedUsernames.push(name);
+        renderChips();
+        suggestionsBox.style.display = 'none';
+        console.log('Added user. Current modalSelectedUsernames:', modalSelectedUsernames);
+      });
+      suggestionsBox.appendChild(option);
+    });
+    suggestionsBox.style.display = 'block';
+  } else {
+    suggestionsBox.style.display = 'none';
+  }
+}
+
+permsUsernames.addEventListener('input', updateSuggestions);
+
+savePermsBtn.addEventListener('click', () => {
+  selectedUsernames = [...modalSelectedUsernames];
+  renderChipsDropdown();
+  updateModPermsUI();
+  permsModal.style.display = 'none';
+  console.log('Saved users. Current selectedUsernames:', selectedUsernames);
+});
+
+function renderChipsDropdown() {
+  chipsDropdown.innerHTML = '';
+  // Always render chips for every username in selectedUsernames (current moderators on save)
+  selectedUsernames.forEach(username => {
+    const chip = document.createElement('div');
+    chip.className = 'mod-chip';
+    chip.textContent = '@' + username;
+    chipsDropdown.appendChild(chip);
+  });
+  // Always append the Add Moderators pill at the end
+  if (modPermsAddPill) {
+    chipsDropdown.appendChild(modPermsAddPill);
+  }
+}
+
+function updateModPermsUI() {
+  if (selectedUsernames.length > 0) {
+    modPermsCustomSelected.textContent = "Custom";
+    permsInput.value = JSON.stringify(selectedUsernames);
+  } else {
+    modPermsCustomSelected.textContent = "All";
+    permsInput.value = "all";
+  }
+}
+
+
+          fetch('/api/usernames').then(r => r.json()).then(data => {
+            allUsernames = data.usernames || [];
+            renderDropdown();
+            updateModPermsUI();
+          });
+
+          function renderDropdown() {
+            modPermsSelect.innerHTML = '';
+            const opts = [
+              { value: 'all', label: 'All' },
+              { value: 'none', label: 'None' }
+            ];
+            opts.forEach(opt => {
+              const o = document.createElement('option');
+              o.value = opt.value;
+              o.textContent = opt.label;
+              o.addEventListener('click', function() {
+                if (modPermsSelect) modPermsSelect.value = opt.value;
+                if (permsInput) permsInput.value = opt.value;
+                if (modPermsCustomDropdown) modPermsCustomDropdown.style.display = 'none';
+              });
+              if (modPermsSelect) modPermsSelect.appendChild(o);
+            });
+            if (modPermsSelect && permsInput) modPermsSelect.value = permsInput.value || 'all';
+          }
+
+          fetch('/api/usernames').then(r => r.json()).then(data => {
+            allUsernames = data.usernames || [];
+            renderDropdown();
+            updateModPermsUI();
+          });
+
+          function renderChips() {
+            chipsContainer.innerHTML = '';
+            modalSelectedUsernames.forEach(username => {
+              const chip = document.createElement('span');
+              chip.className = 'mod-chip';
+              chip.innerHTML = `<span class="mod-chip-at">@</span>${username}<button type="button" class="mod-chip-x" title="Remove">&times;</button>`;
+              chip.querySelector('.mod-chip-x').onclick = function() {
+                modalSelectedUsernames = modalSelectedUsernames.filter(u => u !== username);
+                renderChips();
+                console.log('Current modal moderators after remove:', modalSelectedUsernames);
+              };
+              chipsContainer.appendChild(chip);
+            });
+          }
+
+          function renderChipsDropdown() {
+            chipsDropdown.innerHTML = '';
+            var customSelect = document.getElementById('modPermsCustomSelect');
+            if (selectedUsernames.length === 0) {
+              if (customSelect) customSelect.style.display = '';
+              // No chips, just leave empty (dropdown will show)
+            } else {
+              if (customSelect) customSelect.style.display = 'none';
+              selectedUsernames.forEach(username => {
+                const chip = document.createElement('span');
+                chip.className = 'mod-chip';
+                chip.innerHTML = `<span class="mod-chip-at">@</span>${username}<button type="button" class="mod-chip-x" title="Remove">&times;</button>`;
+                chip.querySelector('.mod-chip-x').onclick = function(e) {
+                  e.stopPropagation();
+                  selectedUsernames = selectedUsernames.filter(u => u !== username);
+                  renderChipsDropdown();
+                  updateModPermsUI();
+                  console.log('Current moderators after remove:', selectedUsernames);
+                };
+                chipsDropdown.appendChild(chip);
+              });
+            }
+
+            const addPill = document.getElementById('modPermsAddPill');
+            if (addPill && addPill.parentElement !== chipsDropdown.parentElement) {
+              chipsDropdown.parentElement.appendChild(addPill);
+            }
+          }
+
+          function showSuggestions(prefix) {
+            if (!prefix || prefix.length < 1) {
+              suggestionsBox.style.display = 'none';
+              return;
+            }
+            let filtered = allUsernames.filter(u => u.toLowerCase().startsWith(prefix.toLowerCase()) && !selectedUsernames.includes(u));
+            if (filtered.length === 0) {
+              suggestionsBox.style.display = 'none';
+              return;
+            }
+            suggestionsBox.innerHTML = '';
+            filtered.forEach(u => {
+              const opt = document.createElement('div');
+              opt.className = 'mod-suggestion';
+              opt.innerHTML = `<span class="mod-chip-at">@</span>${u}`;
+              opt.onclick = function() {
+                addChip(u);
+                suggestionsBox.style.display = 'none';
+                permsUsernames.value = '';
+                permsUsernames.focus();
+              };
+              suggestionsBox.appendChild(opt);
+            });
+            const rect = permsUsernames.getBoundingClientRect();
+            suggestionsBox.style.display = 'block';
+            suggestionsBox.style.left = rect.left + 'px';
+            suggestionsBox.style.top = (rect.bottom + window.scrollY) + 'px';
+            suggestionsBox.style.width = rect.width + 'px';
+          }
+
+          function addChip(username) {
+            if (!allUsernames.includes(username)) {
+              errorBox.style.display = 'block';
+              errorBox.textContent = `User @${username} does not exist.`;
+              return;
+            }
+            if (modalSelectedUsernames.includes(username)) return;
+            modalSelectedUsernames.push(username);
+            renderChips();
+            console.log('Current modal moderators after add:', modalSelectedUsernames);
+            errorBox.style.display = 'none';
+          }
+
+          permsUsernames.addEventListener('input', function(e) {
+            errorBox.style.display = 'none';
+            let val = permsUsernames.value;
+            let atMatches = val.match(/@([a-zA-Z0-9_]{1,30})/g);
+            if (atMatches) {
+              atMatches.forEach(tag => {
+                let uname = tag.replace('@', '');
+                if (uname && allUsernames.includes(uname) && !selectedUsernames.includes(uname)) {
+                  addChip(uname);
+                  permsUsernames.value = permsUsernames.value.replace(tag, '').trim();
+                }
+              });
+            }
+            // For autocomplete suggestions
+            let lastAt = val.lastIndexOf('@');
+            if (lastAt !== -1) {
+              let prefix = val.slice(lastAt + 1);
+              showSuggestions(prefix);
+            } else {
+              suggestionsBox.style.display = 'none';
+            }
+          });
+
+          permsUsernames.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              let val = permsUsernames.value.trim();
+              if (val.startsWith('@')) val = val.slice(1);
+              if (val && allUsernames.includes(val) && !selectedUsernames.includes(val)) {
+                addChip(val);
+                permsUsernames.value = '';
+                suggestionsBox.style.display = 'none';
+              } else if (val) {
+                errorBox.style.display = 'block';
+                errorBox.textContent = `User @${val} does not exist.`;
+              }
+            } else if (e.key === 'ArrowDown' && suggestionsBox.style.display === 'block') {
+              let first = suggestionsBox.querySelector('.mod-suggestion');
+              if (first) first.focus();
+            }
+          });
+
+          document.addEventListener('click', function(e) {
+            if (!suggestionsBox.contains(e.target) && e.target !== permsUsernames) {
+              suggestionsBox.style.display = 'none';
+            }
+          });
+
+          savePermsBtn.onclick = function() {
+            selectedUsernames = [...modalSelectedUsernames];
+            permsInput.value = selectedUsernames.join(',');
+            console.log('Current moderators on save:', selectedUsernames);
+            permsModal.style.display = 'none';
+            
+            renderChipsDropdown();
+            updateModPermsUI();
+          };
+
+          modPermsSelect.onchange = function() {
+            if (this.value === 'all' || this.value === 'none') {
+              permsInput.value = this.value;
+              selectedUsernames = [];
+              renderChips();
+              updateModPermsUI();
+              errorBox.style.display = 'none';
+            }
+          };
+
+
+          // Always open modal when clicking the add pill
+          modPermsAddPill.onclick = function() {
+            permsModal.style.display = 'flex';
+            setTimeout(() => permsUsernames.focus(), 100);
+          };
+
+          closePermsBtn.onclick = function() {
+            permsModal.style.display = 'none';
+            
+            errorBox.style.display = 'none';
+          };
+
+          permsModal.onclick = function(e) {
+            if (e.target === permsModal) permsModal.style.display = 'none';
+          };
+
+          function updateModPermsUI() {
+            if (selectedUsernames.length > 0) {
+              modPermsCustomSelect.style.display = 'none'; // hide dropdown
+              chipsDropdown.style.display = '';            // show chips
+            } else {
+              modPermsCustomSelect.style.display = '';     // show dropdown
+              chipsDropdown.style.display = 'none';        // hide chips
+            }
+            renderChipsDropdown();
+          }
+          function updateDropdownCheckmark() {
+            var opts = Array.from(modPermsCustomDropdown.getElementsByClassName('mod-perms-custom-option'));
+            opts.forEach(opt => {
+              var check = opt.querySelector('.mod-perms-check');
+              if (opt.getAttribute('data-value') === permsInput.value) {
+                check.style.display = 'inline';
+              } else {
+                check.style.display = 'none';
+              }
+            });
+          }
+
+          // Custom dropdown logic
+          modPermsCustomSelect.onclick = function(e) {
+            e.stopPropagation();
+            if (modPermsCustomDropdown.style.display === 'block') {
+              modPermsCustomDropdown.style.display = 'none';
+            } else {
+              modPermsCustomDropdown.style.display = 'block';
+              updateDropdownCheckmark();
+            }
+          };
+          Array.from(modPermsCustomDropdown.getElementsByClassName('mod-perms-custom-option')).forEach(opt => {
+            opt.onclick = function(ev) {
+              ev.stopPropagation();
+              var val = this.getAttribute('data-value');
+              permsInput.value = val;
+              selectedUsernames = [];
+              modPermsCustomSelected.textContent = val === 'none' ? 'None' : 'All';
+              modPermsCustomDropdown.style.display = 'none';
+              updateModPermsUI();
+              errorBox.style.display = 'none';
+              updateDropdownCheckmark();
+            };
+          });
+          document.addEventListener('click', function(e) {
+            if (!modPermsAddPill.contains(e.target) && !permsModal.contains(e.target)) {
+              modPermsCustomDropdown.style.display = 'none';
+            }
+          });
+
+
+          modPermsAddPill.onclick = function(e) {
+            permsModal.style.display = 'flex';
+            setTimeout(() => permsUsernames.focus(), 100);
+          };
+
+          renderChips();
+          updateModPermsUI();
+        });
+      </script>
+
+      <script>
+          
+          if (this.value === 'more') {
+            permsModal.style.display = 'flex';
+          } else {
+            permsInput.value = this.value;
+          }
+        
+
+          closePermsBtn.onclick = function() {
+            permsModal.style.display = 'none';
+            
+          };
+
+          permsModal.onclick = function(e) {
+            if (e.target === permsModal) permsModal.style.display = 'none';
+          };
+
+          savePermsBtn.onclick = function() {
+            var val = permsUsernames.value.trim();
+            permsInput.value = val;
+            permsModal.style.display = 'none';
+            
+          };
+        
+      </script>
+
+    
+
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const dropzone = document.getElementById('image-dropzone');
+  const imageInput = document.getElementById('image');
+  const previewImg = document.getElementById('image-preview');
+  const dropzoneText = document.getElementById('dropzone-text');
+
+  function showPreview(file) {
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        previewImg.src = ev.target.result;
+        previewImg.style.display = 'block';
+        if (dropzoneText) dropzoneText.style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    } else {
+      previewImg.src = '';
+      previewImg.style.display = 'none';
+      if (dropzoneText) dropzoneText.style.display = 'block';
+    }
+  }
+
+  imageInput.addEventListener('change', function(e) {
+    const file = this.files && this.files[0];
+    showPreview(file);
+  });
+
+
+  dropzone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    dropzone.classList.add('dragover');
+  });
+  dropzone.addEventListener('dragleave', function(e) {
+    dropzone.classList.remove('dragover');
+  });
+  dropzone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    dropzone.classList.remove('dragover');
+    const files = e.dataTransfer.files;
+    if (files && files[0] && files[0].type.startsWith('image/')) {
+      imageInput.files = files;
+      showPreview(files[0]);
+    }
+  });
+
+  dropzone.tabIndex = 0; 
+  dropzone.addEventListener('keydown', function(e) {
+    if ((e.key === 'Backspace' || e.key === 'Delete') && previewImg.style.display === 'block') {
+      imageInput.value = '';
+      previewImg.src = '';
+      previewImg.style.display = 'none';
+      if (dropzoneText) dropzoneText.style.display = 'block';
+      e.preventDefault();
+    }
+  });
+});
+</script>
+{% endblock %}
+{% block scripts %}
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7H9JTC8BY1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7H9JTC8BY1');
+
+
+  if (window.history.replaceState) {
+    window.history.replaceState(null, null, window.location.href);
+  }
+
+  window.addEventListener('pageshow', function(event) {
+    if (event.persisted || performance.navigation.type === 2) {
+      document.getElementById('newProgramForm').reset();
+    }
+  });
+
+
+  document.getElementById('newProgramForm').addEventListener('submit', function() {
+    const submitButton = this.querySelector('button[type="submit"]');
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = 'Saving...';
+    }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,389 @@
+body {
+  min-height: 100vh;
+  margin: 0;
+  overflow: hidden;
+
+}
+#new_project-container
+{
+  transform: scale(0.9);
+  transform-origin: top left;
+  width: 111.1111%;
+  height: 111.1111%;
+}
+
+.program-preview-container {
+    max-width: 950px;
+    margin: 28px auto 0 auto;
+
+    padding: 32px 32px 18px 32px;
+    background: rgba(var(--color1-rgb), 0.8);
+    border-radius: 32px;
+    box-shadow: 0 4px 24px rgba(var(--color1-rgb), 0.27);
+    position: relative;
+    font-family: 'Fira Code', monospace;
+    color: var(--color7);
+  }
+  .program-title {
+    font-size: 2.2rem;
+    background: var(--color1);
+    border-radius: 24px;
+    padding: 8px 36px;
+    display: inline-block;
+    border: none;
+    margin-bottom: 0;
+  }
+  .info-reviews {
+    font-size: 1.6rem;
+    margin-left: 30px;
+    font-weight: normal;
+    letter-spacing: 2px;
+    opacity: 0.85;
+    align-self: center;
+  }
+  .program-description {
+    font-size: 1.1rem;
+    margin: 16px 0 18px 0;
+    background: rgba(var(--color1-rgb), 0.8);
+    border-radius: 10px;
+    padding: 10px 24px;
+    display: inline-block;
+    border: none;
+  }
+  .program-main {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-bottom: 20px;
+    align-items: stretch;
+  }
+  .program-main.program-main-row {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    width: 100%;
+    align-items: flex-start;
+  }
+  .desc-controls-col {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-width: 0;
+    height: 180px; 
+    justify-content: stretch;
+  }
+  .desc-col, .controls-col {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .desc-col {
+    margin-right: 0;
+  }
+  .controls-col {
+    margin-left: 0;
+  }
+  .edit-label {
+    font-weight: bold;
+    color: var(--color7);
+    display: block;
+    margin-bottom: 0;
+    font-size: 1.08rem;
+    letter-spacing: 0.5px;
+}
+  .program-description.edit-textarea {
+    font-size: 1.1rem;
+    margin: 0px 0 0 0;
+    background: rgba(var(--color1-rgb), 0.8);
+    border-radius: 10px;
+    padding: 10px 24px;
+    display: block;
+    border: none;
+    width: 100%;
+    min-width: 220px;
+    min-height: 100px;
+    height: 65%;
+    box-sizing: border-box;
+    resize: none;
+    flex: 1 1 0;
+    color: var(--color4);
+}
+.program-description.edit-textarea::placeholder {
+    color: var(--color4);
+    opacity: 1;
+}
+
+
+ 
+  .controls-title {
+    font-size: 1.18rem;
+    margin-bottom: 6px;
+  }
+
+  .image-dropzone {
+  border: 4px dashed var(--color3);
+  border-radius: 5px;
+  background: var(--color17);
+  aspect-ratio: 4/3;
+  width: 100%;
+  max-width: 400px;
+  max-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin: 0 auto 0 auto;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.image-dropzone.dragover {
+  border-color: #0e35a6;
+  background: #f0f7ff;
+}
+
+.dropzone-text {
+  font-size: 2rem;
+  color: var(--color4);
+  margin-bottom: 18px;
+  text-align: center;
+  pointer-events: none;
+}
+.image-dropzone input[type='file'] {
+  opacity: 0;
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  cursor: pointer;
+}
+
+  .program-meta {
+    margin-top: 14px;
+    background: rgba(var(--color1-rgb), 0.8);
+    border-radius: 10px;
+    padding: 12px 22px;
+    font-size: 1.1rem;
+    display: inline-block;
+  }
+
+  input::placeholder {
+    color: var(--color1);
+  }
+  
+  .edit-input, .edit-textarea {
+    font-family: 'Fira Code', monospace;
+    font-size: 1.15rem;
+    background: var(--color10);
+    border: 2px solid var(--color1);
+    border-radius: 12px;
+    padding: 10px 18px;
+    color: var(--color7);
+    width: auto;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+    outline: none;
+  }
+  .edit-textarea {
+    min-height: 70px;
+    max-height: 200px;
+    resize: vertical;
+  }
+  .launch-btn {
+    display: block;
+    margin: 36px auto 0 auto;
+    background: var(--color2);
+    color: var(--color7);
+    font-family: 'Fira Code', monospace;
+    font-size: 1.4rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 15px;
+    padding: 12px 24px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(var(--color1-rgb), 0.27);
+    transition: background 0.18s, box-shadow 0.18s;
+  }
+  .launch-btn:hover {
+    background: var(--color8);
+  }
+  
+
+  .modal-bg {
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .modal-content {
+    background: var(--color10);
+    border-radius: 12px;
+    padding: 24px 32px;
+    max-width: 500px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    font-family: 'Fira Code', monospace;
+  }
+  
+  .modal-header {
+    background: var(--color1);
+    color: var(--color7);
+    font-family: 'Fira Code', monospace;
+    border-radius: 15px 15px 0 0;
+    font-weight: bold;
+  }
+  
+  .modal-footer {
+    background: #ffe2d1;
+    border-radius: 0 0 15px 15px;
+    font-family: 'Fira Code', monospace;
+    color: var(--color7);
+  }
+  
+  .modal-close {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #888;
+  }
+  
+  .modal-close:hover {
+    color: #000;
+  }
+
+  
+  
+
+  .mod-perms-custom-select {
+    background: var(--color10);
+    border: 1.5px solid var(--color1);
+    color: var(--color4);
+    font-family: 'Fira Code', monospace;
+    font-size: 1.08rem;
+    border-radius: 7px;
+    min-width: 48px;
+    padding: 5px 18px 5px 10px;
+    position: relative;
+    transition: border 0.13s, box-shadow 0.13s;
+    box-shadow: 0 1px 4px rgba(var(--color1-rgb), 0.25);
+    outline: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+  }
+  .mod-perms-custom-select:focus, .mod-perms-custom-select:active {
+    border: 2px solid var(--color2);
+    box-shadow: 0 2px 8px rgba(var(--color1-rgb), 0.25);
+  }
+  .mod-perms-arrow {
+    color: var(--color2);
+    font-weight: bold;
+    margin-left: 8px;
+    font-size: 1.12rem;
+    pointer-events: none;
+  }
+  .mod-perms-custom-dropdown {
+    background: var(--color10);
+    border: 1.5px solid var(--color1);
+    box-shadow: 0 2px 8px rgba(var(--color1-rgb), 0.25);
+    border-radius: 8px;
+    min-width: 90px;
+    margin-top: 2px;
+    z-index: 1000;
+    position: absolute;
+    left: 0;
+    top: 110%;
+    display: none;
+  }
+  .mod-perms-custom-select[style*="display: none"] {
+    display: none !important;
+  }
+  .mod-perms-custom-option {
+    color: var(--color4);
+    font-family: 'Fira Code', monospace;
+    font-size: 1.08rem;
+    padding: 7px 16px;
+    cursor: pointer;
+    transition: background 0.13s, color 0.13s;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+  }
+  .mod-perms-custom-option:hover, .mod-perms-custom-option:focus {
+    background: var(--color14);
+    color: var(--color4);
+  }
+  .mod-perms-check {
+    display: none;
+    color: var(--color2);
+    font-size: 1.1em;
+    margin-right: 8px;
+  }
+
+  .mod-chip {
+    background: var(--color1);
+    color: var(--color4);
+    font-family: 'Fira Code', monospace;
+    padding: 4px 14px 4px 10px;
+    border-radius: 18px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 1.03rem;
+    margin-right: 2px;
+    margin-bottom: 2px;
+    box-shadow: 0 1px 4px rgba(var(--color1-rgb), 0.25);
+    border: 1.5px solid var(--color2);
+  }
+  .mod-chip-at {
+    color: var(--color2);
+    font-weight: bold;
+    margin-right: 2px;
+  }
+  .mod-chip-x {
+    background: none;
+    border: none;
+    color: var(--color4);
+    font-size: 1.1rem;
+    margin-left: 6px;
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 0 2px;
+    transition: background 0.13s;
+  }
+  .mod-chip-x:hover {
+    background: var(--color3);
+  }
+  .mod-chip-placeholder {
+    background: var(--color1);
+    color: rgba(var(--color4-rgb), 0.69);
+    border-style: dashed;
+    cursor: pointer;
+  }
+  .mod-chip-add {
+    background: var(--color10);
+    color: var(--color4);
+    border: 1.5px dashed var(--color1);
+    cursor: pointer;
+  }
+  .mod-chip-add:hover {
+    background: var(--color17);
+  }
+  .mod-suggestion {
+    padding: 6px 12px;
+    cursor: pointer;
+    color: var(--color4);
+    font-family: 'Fira Code', monospace;
+    font-size: 1.03rem;
+  }
+  .mod-suggestion:hover {
+    background: var(--color1);
+  }

@@ -1,0 +1,200 @@
+body {
+  font-family: 'Fira Code', 'Fira Mono', 'Inter', Arial, sans-serif;
+  height: 100%;
+  overflow:hidden;
+}
+
+.arrows-left-img,
+.arrows-right-img {
+  position: absolute;
+}
+
+.studio-section {
+  max-width: 880px;
+  width: 100%;
+  margin: 18px auto 0 auto;
+  border-radius: 18px;
+
+  padding: 5px 3vw 20px 3vw;
+  background: #fff7f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.studio-create-flex {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
+}
+@media (max-width: 1350px) {
+  .arrows-left-img,
+  .arrows-right-img {
+    display: none;
+  }
+}
+@media (min-width: 900px) {
+  .studio-section {
+    align-items: flex-start;
+  }
+  #title-word-count {
+    font-size: 0.98rem;
+    color: var(--color7);
+    margin-bottom: 8px;
+    margin-top: 2px;
+    text-align: right;
+    transition: color 0.2s;
+  }
+
+  .studio-create-flex {
+    flex-direction: row;
+    gap: 48px;
+  }
+  .studio-create-left {
+    flex: 2;
+    min-width: 0;
+    margin-right: 24px;
+  }
+  .studio-create-right {
+    flex: 1;
+    max-width: 320px;
+    min-width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+}
+
+
+.studio-title {
+  font-size: 2.1rem;
+  font-weight: 900;
+  color: #ff9100;
+  margin-bottom: 18px;
+  letter-spacing: 1px;
+}
+
+.studio-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.studio-form label {
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: #b46b00;
+}
+
+.studio-form input[type="text"],
+.studio-form textarea {
+  font-size: 1.35rem;
+  border-radius: 10px;
+
+  padding: 18px 22px;
+  background: #fff;
+  color: var(--color7);
+  outline: none;
+  width: 100%;
+  min-width: 220px;
+  max-width: 400px;
+}
+
+.studio-form textarea {
+  resize: none;
+  max-height: 100px;
+}
+
+#desc-word-count {
+  font-size: 0.98rem;
+  color: var(--color7);
+  margin-bottom: 2px;
+  text-align: right;
+}
+
+.image-dropzone {
+  position: relative;
+  border: 4px dashed var(--color3);
+  border-radius: 5px;
+  background: var(--color17);
+  padding: 16px 0 10px 0;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 12px;
+  transition: border-color 0.2s;
+  min-width: 400px;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-dropzone img {
+  display: none;
+  width: 100%;
+}
+
+.dropzone-text {
+  font-size: 2rem;
+  color: var(--color4);
+  font-family: 'Fira Code', monospace;
+  margin-bottom: 18px;
+  text-align: center;
+  pointer-events: none;
+}
+
+.dropzone-text span {
+  font-weight: normal;
+  color: #b46b00;
+}
+
+.image-dropzone input[type="file"] {
+  opacity: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  cursor: pointer;
+}
+
+#image-preview {
+  display: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+  border-radius: 10px;
+  background: #fff;
+  z-index: 2;
+}
+
+.studio-btn {
+  margin-top: 8px;
+  font-size: 1.13rem;
+  font-weight: 700;
+  border-radius: 10px;
+  border: none;
+  padding: 11px 0;
+  letter-spacing: 0.5px;
+  background: var(--color8);
+  color: var(--color7);
+
+  transition: background 0.18s;
+}
+.studio-btn:hover {
+  background: var(--color9);
+}
+
+.btn-link {
+  color: var(--color7);
+  font-size: 1.03rem;
+  margin-top: -10px;
+  display: inline-block;
+}

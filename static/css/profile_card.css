@@ -1,0 +1,227 @@
+.profile-card-star-img {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  margin-right: 3px;
+}
+
+.profile-card-orange {
+  background: rgba(var(--color1-rgb), 0.8);
+  border: none;
+  border-radius: 20px;
+  padding: 24px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #333;
+  max-width: 410px;
+  margin: 0 auto 18px auto;
+  box-shadow: 0 8px 24px rgba(255, 147, 93, 0.15);  
+}
+
+.profile-card-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 16px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, var(--color1) 0%, var(--color9) 100%);
+  box-shadow: 0 4px 12px rgba(var(--color1-rgb), 0.3);
+}
+
+.profile-card-avatar-outline {
+  border-color: var(--color3);
+  border-radius: 50%;
+  border-width: 2px;
+  border-style: solid;
+  padding: 0;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(255, 147, 93, 0.2);
+}
+
+.profile-card-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: block;
+  background: #fff;
+  object-fit: cover;
+}
+
+.profile-card-header-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+
+.profile-card-username {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color4);
+  margin: 0;
+}
+
+.profile-card-badge {
+  color: var(--color3);
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.profile-card-follow-btn {
+  background: var(--color5);
+  border: none;
+  color: white;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 24px;
+  padding: 8px 24px;
+  cursor: pointer;
+  margin-left: auto;
+  transition: all 0.2s ease;
+}
+
+.profile-card-follow-btn.followed {
+  background: rgba(255, 147, 93, 0.2);
+  color: var(--color5);
+}
+
+.profile-card-follow-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 147, 93, 0.3);
+}
+
+.profile-edit-btn {
+  background: var(--color2);
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  padding: 12px 0px;
+  font-weight: 600;
+  transition: background 0.17s;
+  margin: 10px auto 12px auto;
+  display: block;
+  font-size: 1rem;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.profile-edit-btn:hover {
+  background: var(--color1);
+  color: #fff;
+}
+
+.profile-card-community-stats {
+  background: none;
+  border-radius: 0;
+  margin: 18px 0 18px 0;
+  padding: 18px 0 0 0;
+  color: #fff;
+  border-top: 1.5px solid var(--color2);
+  box-shadow: none;
+}
+.community-stats-title {
+  font-size: 1.13rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #fff;
+}
+.community-stats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.community-stats-item {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  color: #fff;
+  gap: 8px;
+}
+.community-stats-icon {
+  font-size: 1.3em;
+  margin-right: 8px;
+}
+.community-stats-num {
+  font-weight: 700;
+  margin-left: 6px;
+  font-size: 1.05em;
+}
+
+.profile-card-bio {
+  white-space: pre-line;
+  overflow-wrap: break-word;
+  word-break: break-all;
+  max-width: 220px;
+
+  color: #fff;
+  margin: 20px 20px 12px 0px;
+  border-radius: 5px;
+  padding: 10px;
+  background: rgba(255, 147, 93, 0.1);
+  font-size: 14px;
+}
+
+.profile-card-row {
+  margin: 0 auto 12px auto;
+  border-radius: 12px;
+  background: rgba(255, 147, 93, 0.1);
+  text-align: center;
+  font-size: 16px;
+  font-family: inherit;
+  color: #333;
+  font-weight: 500;
+  padding: 12px;
+  transition: background-color 0.2s ease;
+  width: 92%;
+}
+.profile-card-row-wide {
+  width: 98%;
+  margin-bottom: 12px;
+}
+.profile-card-row-label {
+  font-family: inherit;
+  font-size: 2rem;
+  color: var(--color2);
+  letter-spacing: 1px;
+}
+
+.profile-card-stats-group {
+  display: flex;
+  gap: 22px;
+  margin-top: 18px;
+  justify-content: center;
+}
+
+.profile-card-stats-box {
+  background: var(--color10);
+  border: 2.5px solid var(--color1);
+  border-radius: 18px;
+  box-shadow: 0 2px 8px rgba(var(--color1-rgb), 0.27);
+  padding: 18px 18px 12px 18px;
+  font-size: 1.23rem;
+  font-family: inherit;
+  color: var(--color7);
+  min-width: 220px;
+  margin-bottom: 0;
+}
+
+.profile-card-stats-line {
+  font-family: inherit;
+  color: var(--color7);
+  font-size: 1.2rem;
+  margin-bottom: 7px;
+  letter-spacing: 1px;
+}
+
+.profile-card-stats-num {
+  font-weight: bold;
+  color: var(--color2);
+  font-family: inherit;
+  margin-right: 5px;
+}

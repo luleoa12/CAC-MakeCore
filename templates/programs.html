@@ -1,0 +1,281 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="static/css/programs.css">
+  <script src="static/js/programs.js" defer></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.filter-operator').forEach(operator => {
+        const currentValue = operator.value;
+        const options = [
+          { value: '', text: '-' },
+          { value: 'greater', text: '>' },
+          { value: 'less', text: '<' },
+          { value: 'equal', text: '=' },
+          { value: 'not-equal', text: '≠' }
+        ];
+        
+        const customDropdown = document.createElement('div');
+        customDropdown.className = 'custom-dropdown';
+        
+        const dropdownButton = document.createElement('div');
+        dropdownButton.className = 'filter-operator';
+        dropdownButton.textContent = options.find(opt => opt.value === currentValue)?.text || '-';
+        
+        const dropdownOptions = document.createElement('div');
+        dropdownOptions.className = 'dropdown-options';
+        
+        options.forEach(option => {
+          const optionElement = document.createElement('div');
+          optionElement.className = 'dropdown-option';
+          optionElement.textContent = option.text;
+          optionElement.dataset.value = option.value;
+          
+          if (option.value === currentValue) {
+            optionElement.classList.add('selected');
+          }
+          
+          optionElement.addEventListener('click', function() {
+            operator.value = option.value;
+            dropdownButton.textContent = option.text;
+            
+            dropdownOptions.querySelectorAll('.dropdown-option').forEach(opt => opt.classList.remove('selected'));
+            optionElement.classList.add('selected');
+            
+            dropdownOptions.classList.remove('show');
+            dropdownButton.classList.remove('active');
+            
+            operator.dispatchEvent(new Event('change'));
+          });
+          
+          dropdownOptions.appendChild(optionElement);
+        });
+        
+        dropdownButton.addEventListener('click', function(e) {
+          e.stopPropagation();
+          
+          // Close all other dropdowns first
+          document.querySelectorAll('.dropdown-options.show').forEach(dropdown => {
+            if (dropdown !== dropdownOptions) {
+              dropdown.classList.remove('show');
+            }
+          });
+          document.querySelectorAll('.filter-operator.active').forEach(button => {
+            if (button !== dropdownButton) {
+              button.classList.remove('active');
+            }
+          });
+          
+          dropdownOptions.classList.toggle('show');
+          dropdownButton.classList.toggle('active');
+        });
+        
+        customDropdown.appendChild(dropdownButton);
+        customDropdown.appendChild(dropdownOptions);
+        
+        operator.style.display = 'none';
+        operator.parentNode.insertBefore(customDropdown, operator);
+        
+        document.addEventListener('click', function(e) {
+          if (!customDropdown.contains(e.target)) {
+            dropdownOptions.classList.remove('show');
+            dropdownButton.classList.remove('active');
+          }
+        });
+      });
+    });
+  </script>
+{% endblock %}
+
+{% block content %}
+  <div class="filter-container">
+    <form id="programs-search-form" method="get" class="search-form">
+      <input type="hidden" id="source-input" name="source" value="{{ request.args.get('source', 'all') }}">
+
+      <div class="top-row">
+        <div class="source-toggle" id="source-toggle" style="margin-left:-70px;">
+          <button type="button" class="source-option" data-source="all">All</button>
+          <button type="button" class="source-option" data-source="makecode" >MakeCode</button>
+          <button type="button" class="source-option" data-source="scratch">Scratch</button>
+        </div>
+        
+        <div class="filter-controls">
+          <div class="sort-dropdown">
+            <button type="button" class="sort-dropdown-toggle" id="sort-toggle">
+              <i class="bi bi-arrow-down-up"></i>
+              <span class="sort-text">Sort</span>
+              <i class="bi bi-chevron-down"></i>
+            </button>
+            <div class="sort-dropdown-content" id="sort-content" style="margin-top: 20px;">
+              <div class="sort-options">
+                <div class="sort-option" data-sort="upvotes">
+                  <span class="sort-label">Upvotes</span>
+                  <span class="sort-icon"><i class="bi bi-arrow-down-up"></i></span>
+                </div>
+                <div class="sort-option" data-sort="downvotes">
+                  <span class="sort-label">Downvotes</span>
+                  <span class="sort-icon"><i class="bi bi-arrow-down-up"></i></span>
+                </div>
+                <div class="sort-option" data-sort="comments">
+                  <span class="sort-label">Comments</span>
+                  <span class="sort-icon"><i class="bi bi-arrow-down-up"></i></span>
+                </div>
+                <div class="sort-option" data-sort="views">
+                  <span class="sort-label">Views</span>
+                  <span class="sort-icon"><i class="bi bi-arrow-down-up"></i></span>
+                </div>
+                <div class="sort-option" data-sort="date">
+                  <span class="sort-label">Date</span>
+                  <span class="sort-icon"><i class="bi bi-arrow-down-up"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="filter-dropdown">
+            <button type="button" class="filter-toggle-btn" id="filter-toggle">
+              <i class="bi bi-funnel"></i> Filter
+              <i class="bi bi-chevron-down"></i>
+            </button>
+            
+            <div class="filter-content" id="filter-content"  style="margin-top: 20px; width: 400px;margin-left: -150px;">
+              <div class="filter-header">
+                <span class="filter-title">Match any of the filters:</span>
+                <!-- <select name="filter-logic" class="filter-logic-select">
+                  <option value="any" {% if request.args.get('filter_logic') == 'any' %}selected{% endif %}>Any</option>
+                  <option value="all" {% if request.args.get('filter_logic') == 'all' %}selected{% endif %}>All</option>
+                </select> -->
+              </div>
+              
+              <div class="filter-rows">
+                <div class="filter-row">
+                  <div class="filter-label">
+                    <img class="icon" data-theme-src="/static/themes/green/img/arrow.svg" style="margin-left: 0px; height: 20px; margin-right: 4px;">
+                    <span>Upvotes</span>
+                  </div>
+                  <div class="filter-controls">
+                    <select name="upvotes-operator" class="filter-operator">
+                      <option value="">-</option>
+                      <option value="greater">&gt;</option>
+                      <option value="less">&lt;</option>
+                      <option value="equal">=</option>
+                      <option value="not-equal">≠</option>
+                    </select>
+                    <input type="number" name="upvotes-value" placeholder="0" min="0" class="filter-value">
+                  </div>
+                </div>
+                
+                <div class="filter-row">
+                  <div class="filter-label">
+                    <img class="icon" data-theme-src="/static/themes/green/img/arrow.svg" style="transform: rotate(180deg); margin-left: 0px; height: 20px; margin-right: 4px;">
+                    <span>Downvotes</span>
+                  </div>
+                  <div class="filter-controls">
+                    <select name="downvotes-operator" class="filter-operator">
+                      <option value="">-</option>
+                      <option value="greater">&gt;</option>
+                      <option value="less">&lt;</option>
+                      <option value="equal">=</option>
+                      <option value="not-equal">≠</option>
+                    </select>
+                    <input type="number" name="downvotes-value" placeholder="0" min="0" class="filter-value">
+                  </div>
+                </div>
+                
+                <div class="filter-row">
+                  <div class="filter-label">
+                    <img class="icon" data-theme-src="/static/themes/green/img/viewers.svg" style="margin-left: 0px; height: 20px; width: 20px; margin-right: 4px;">
+                    <span>Views</span>
+                  </div>
+                  <div class="filter-controls">
+                    <select name="views-operator" class="filter-operator">
+                      <option value="">-</option>
+                      <option value="greater">&gt;</option>
+                      <option value="less">&lt;</option>
+                      <option value="equal">=</option>
+                      <option value="not-equal">≠</option>
+                    </select>
+                    <input type="number" name="views-value" placeholder="0" min="0" class="filter-value">
+                  </div>
+                </div>
+                
+                <div class="filter-row">
+                  <div class="filter-label">
+                    <img class="icon" data-theme-src="/static/themes/green/img/comments.svg" style="margin-left: 0px; height: 20px; width: 20px; margin-right: 4px;">
+                    <span>Comments</span>
+                  </div>
+                  <div class="filter-controls">
+                    <select name="comments-operator" class="filter-operator">
+                      <option value="">-</option>
+                      <option value="greater">&gt;</option>
+                      <option value="less">&lt;</option>
+                      <option value="equal">=</option>
+                      <option value="not-equal">≠</option>
+                    </select>
+                    <input type="number" name="comments-value" placeholder="0" min="0" class="filter-value">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="filter-actions">
+                <button type="button" class="btn-reset" id="reset-filters">
+                  <i class="bi bi-x-circle"></i> Reset
+                </button>
+                <button type="button" class="btn-apply" id="apply-filters">
+                  <i class="bi bi-check-lg"></i> Apply
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bottom-row">
+        <div class="search-box" style="margin-left:-65px;">
+          <input type="text" name="search" placeholder="Search programs..." value="{{ request.args.get('search', '') }}" class="search-input" style="border-color: var(--color14);">
+          <button type="submit" class="search-button" style="background-color: var(--color14);">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+        
+        <div class="action-buttons">
+          {% if username %}
+          <div class="stats-badge" id="stats-badge" title="Your played games" {% if request.args.get('source', 'all') != 'all' %}style="display:none;"{% endif %}>
+            {{ played_count|default(0) }}/{{ total_programs|default(0) }} Played
+          </div>
+          {% endif %}
+          <button type="button" id="random-program" class="btn btn-random" title="Random program">
+            <i class="bi bi-shuffle"></i>
+          </button>
+        </div>
+      </div>
+      
+      <input type="hidden" name="sort" id="sort-input" value="{{ request.args.get('sort', '') }}">
+      <input type="hidden" name="order" id="order-input" value="{{ request.args.get('order', 'desc') }}">
+      <input type="hidden" name="source" id="source-input" value="{{ request.args.get('source', 'all') }}">
+      
+    </form>
+  </div>
+  
+  
+  
+
+  <div class="programs-scroll-wrapper">
+    <div class="programs-scroll-container">
+      <!-- js automatically renders here -->
+    </div>
+  </div>
+
+{% endblock %}
+{% block scripts %}
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7H9JTC8BY1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7H9JTC8BY1');
+
+</script>
+{% endblock %}

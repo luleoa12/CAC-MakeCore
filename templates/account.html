@@ -1,0 +1,492 @@
+{% extends 'base.html' %}
+{% block title %}Account | MakeCore{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="/static/css/account.css">
+<link rel="stylesheet" href="/static/css/toggle_ads.css">
+{% endblock %}
+{% block content %}
+
+<div class="account-header-bg">
+  <div class="account-header">
+    <div class="account-avatar-box">
+      <img data-theme-src="{{ user.profile_pic_url or '/static/themes/makecore/img/default_avatar.svg' }}" alt="Profile Picture" class="account-avatar" id="userAvatar">
+      <form id="avatarForm" enctype="multipart/form-data">
+        <input type="file" name="profile_pic" id="accountProfilePicInput" accept="image/*" class="hidden-input" style="display:none;">
+        <button type="button" class="account-avatar-edit-btn" onclick="document.getElementById('accountProfilePicInput').click();">Edit</button>
+      </form>
+    </div>
+    <div class="account-user-info">
+      <div class="account-username">{{ user.username }}</div>
+    </div>
+  </div>
+</div>
+<div class="account-main">
+  <div class="account-sidebar">
+    <ul>
+      <li id="settings-tab" class="active tab-btn" tabindex="0"><span>Account</span></li>
+      <li id="badges-tab" class="tab-btn" tabindex="0"><span>Badges</span></li>
+      <li id="themes-tab" class="tab-btn" tabindex="0">Themes</li>
+      <li style="visibility: hidden;" id="ads-tab" class="tab-btn" tabindex="0">Ads</li>
+      <li style="visibility: hidden;"><span>Notifications</span></li>
+      <li style="visibility: hidden;"><a href="/followers/{{ user.username }}" style="color:inherit;text-decoration:none;">Followers</a></li>
+      <li style="visibility: hidden;"><a href="/following/{{ user.username }}" style="color:inherit;text-decoration:none;">Following</a></li>
+    </ul>
+  </div>
+  <div class="account-content">
+    <!-- Settings -->
+    <div id="settings-content-section">
+      <h3>Account Information</h3>
+      <form method="POST" action="/edit_profile" enctype="multipart/form-data" class="account-info-form">
+      <div class="account-info-row">
+        <label>Username</label>
+        <span>{{ user.username }}</span>
+      </div>
+      <div class="account-info-row">
+        <label>Email</label>
+        <span>{{ user.email }} <button id="showChangeEmailModalBtn" type="button" class="change-email-btn">Change Email</button></span>
+      </div>
+      <div class="account-info-row">
+        <label>Password</label>
+        {% if not user.password_hash %}
+          <a href="#" id="showSetPasswordModalBtn" class="account-link">Set Password</a>
+        {% else %}
+          <a href="#" id="showChangePasswordModalBtn" class="account-link">Change Password</a>
+        {% endif %}
+      </div>
+      <div class="account-info-row">
+        <label>Bio</label>
+        <textarea name="bio" id="bio" maxlength="100" rows="4" oninput="document.getElementById('bio-char-count').textContent = this.value.length + '/100 characters';">{{ user.bio|default('', true) }}</textarea>
+        <div id="bio-char-count">{{ user.bio|length if user.bio else 0 }}/100 characters</div>
+      </div>
+      <button type="submit" class="account-save-btn">Save Changes</button>
+      </form>
+
+    </div>
+    <!-- Badges -->
+    <div id="badges-content-section" style="display:none;">
+      <h3>Badges</h3>
+      <div class="badge-grid badge-grid-small">
+        {% for badge in all_badges %}
+          <div class="badge-card">
+            <div class="badge-img-tooltip-wrapper">
+              {% if badge.name in earned_badges %}
+                <img 
+                  data-theme-src="{{ badge.icon_url }}" 
+                  alt="{{ badge.name }}" 
+                  class="badge-img-small"
+                  data-badge-type="{{ badge.badge_type }}"
+                  data-required-count="{{ badge.required_count }}"
+                  data-description="{{ badge.description }}">
+              {% else %}
+                <img 
+                  data-theme-src="{{ badge.icon_url.replace('obtained', 'unobtained') }}" 
+                  alt="{{ badge.name }}" 
+                  class="badge-img-small badge-unobtained"
+                  data-badge-type="{{ badge.badge_type }}"
+                  data-required-count="{{ badge.required_count }}"
+                  data-description="{{ badge.description }}">
+              {% endif %}
+              <div class="badge-tooltip">{{ badge.tooltip }}</div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+    </div>
+    <!-- Themes -->
+    <div id="themes-content-section" style="display:none;">
+      <h3>Themes</h3>
+      <div id="themePanel">
+        <div class="themeCard" data-theme="orange">
+          <img src="/static/themes/orange/img/orange.svg" alt="Orange Theme" class="theme-thumbnail">
+          <div class="theme-swatches">
+            <div class="swatch" style="background: #ffae85;"></div>
+            <div class="swatch" style="background: #ff935d;"></div>
+            <div class="swatch" style="background: #f76820;"></div>
+            <div class="swatch" style="background: #b04a18;"></div>
+          </div>
+          <div class="themeName">Orange</div>
+          <div class="themeDesc">Warm, energetic, cheerful with soft oranges and deep ambers.</div>
+        </div>
+
+        <div class="themeCard" data-theme="blue" style="background:#f5fbff">
+          <img src="/static/themes/blue/img/blue.svg" alt="Blue Theme" class="theme-thumbnail">
+          <div class="theme-swatches">
+            <div class="swatch" style="background: #b3e3fb;"></div>
+            <div class="swatch" style="background: #6bc7f6;"></div>
+            <div class="swatch" style="background: #0897df;"></div>
+            <div class="swatch" style="background: #044b6f;"></div>
+          </div>
+          <div class="themeName">Blue</div>
+          <div class="themeDesc">Cool, calming, professional with sky blues and deep ocean tones.</div>
+        </div>
+
+        <div class="themeCard" data-theme="green" style="background: #f0fff9; border: 1px solid var(--color3);">
+          <img src="/static/themes/green/img/green.svg" alt="Green Theme" class="theme-thumbnail">
+          <div class="theme-swatches">
+            <div class="swatch" style="background: #00ff99;"></div>
+            <div class="swatch" style="background: #00ae69;"></div>
+            <div class="swatch" style="background: #007f4c;"></div>
+            <div class="swatch" style="background: #00321f;"></div>
+          </div>
+          <div class="themeName">Green</div>
+          <div class="themeDesc" style="color: var(--color8);">Fresh and natural with vibrant greens and forest shades.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Removed ads to participate in Congressional App Challenge, uncomment to add them back -->
+    <div id="ads-content-section" style="display:none;">
+      <h3>Ads</h3>
+  
+      <div id="ads-toggle-container" style="margin-top:1rem;">
+        <form method="POST" action="/update_ads_toggle" id="ads-form" style="margin-top:18px;">
+          <label style="display:inline-flex; align-items:center; cursor:pointer; font-family:'Fira Code', monospace; color: var(--color2); font-size:1.2rem;">
+            <span style="margin-right: 10px;">Show Ads</span>
+            <input type="checkbox" name="show_ads" id="ads-toggle" {% if user.show_ads %}checked{% endif %}>
+            <span class="toggle-slider">
+              <span class="toggle-slider-span"></span>
+            </span>
+          </label>
+        </form>
+        
+        <div id="ads-benefits">
+          Enable ads to support <b>MakeCore</b> and <em>unlock</em>:
+          <ul style="margin-top:0.5rem;">
+            <li>Username appears in the <em>Credits</em> section</li>
+            <li>Programs <u>will</u> be featured</li>
+            <li><b>Early access</b> to future updates</li>
+            <li>Many more to come!</li>
+          </ul>
+        </div>
+      </div>
+      
+      
+    </div>
+    <!-- Change email modal -->
+    <div id="changeEmailModal" class="modal-bg" style="display:none;">
+      <div class="modal-content">
+        <button class="modal-close" id="closeChangeEmailModal" type="button">&times;</button>
+        <form method="POST" action="/change_email">
+          <div style="font-size:1.32rem; color:var(--color4); font-weight:700; margin-bottom:12px;">Change your email address</div>
+          <div style="margin-bottom:10px;">
+            <div style="font-weight:700; color:var(--color4); margin-bottom:2px;">Current Email</div>
+            <span style="font-size:1.13rem; color:var(--color4);">{{ user.email }}</span>
+            <span style="color:var(--color3); font-size:1.3rem; margin-left:6px;">&#10004;</span>
+          </div>
+          <div style="margin-bottom:10px;">
+            <label for="new_email" style="font-weight:700; color:var(--color4);">Type new Email:</label><br>
+            <input type="email" name="new_email" id="new_email" style="width:100%; max-width:440px; padding:8px 10px; border-radius:6px; border:1.5px solid var(--color2); background:var(--color9); color:var(--color4); font-size:1.08rem; margin-top:2px;">
+          </div>
+          <div style="margin-bottom:16px;">
+            <label for="confirm_password" style="font-weight:700; color:var(--color4);">Confirm password:</label><br>
+            <input type="password" name="confirm_password" id="confirm_password" style="width:100%; max-width:440px; padding:8px 10px; border-radius:6px; border:1.5px solid var(--color2); background:var(--color9); color:var(--color4); font-size:1.08rem; margin-top:2px;">
+          </div>
+          <button type="submit" style="background:var(--color16); color:var(--color9); border:none; border-radius:8px; padding:8px 22px; font-size:1.08rem; font-family:'Fira Code',monospace; font-weight:700; box-shadow:0 1px 8px rgba(var(--color3-rgb), 0.25); cursor:pointer;">Change Email</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Change password Modal -->
+    <div id="changePasswordModal" class="modal-bg" style="display:none;">
+      <div class="modal-content">
+        <button class="modal-close" id="closeChangePasswordModal" type="button">&times;</button>
+        <form method="POST" action="{{ url_for('change_password') }}">
+          <div style="font-size:1.32rem; color:var(--color4); font-weight:700; margin-bottom:12px;">Change your password</div>
+          <div style="margin-bottom:10px;">
+            <label for="old_password" style="font-weight:700; color:var(--color4);">Current password:</label><br>
+            <input type="password" name="old_password" id="old_password" required style="width:100%; max-width:440px; padding:8px 10px; border-radius:6px; border:1.5px solid var(--color2); background:var(--color9); color:var(--color4); font-size:1.08rem; margin-top:2px;">
+          </div>
+          <div style="margin-bottom:10px;">
+            <label for="new_password" style="font-weight:700; color:var(--color4);">New password (min 8 characters):</label><br>
+            <input type="password" name="new_password" id="new_password" required minlength="8" style="width:100%; max-width:440px; padding:8px 10px; border-radius:6px; border:1.5px solid var(--color2); background:var(--color9); color:var(--color4); font-size:1.08rem; margin-top:2px;">
+          </div>
+          <div style="margin-bottom:16px;">
+            <label for="confirm_new_password" style="font-weight:700; color:var(--color4);">Confirm new password:</label><br>
+            <input type="password" name="confirm_new_password" id="confirm_new_password" required minlength="8" style="width:100%; max-width:440px; padding:8px 10px; border-radius:6px; border:1.5px solid var(--color2); background:var(--color9); color:var(--color4); font-size:1.08rem; margin-top:2px;">
+          </div>
+          <button type="submit" style="background:var(--color16); color:var(--color9); border:none; border-radius:8px; padding:8px 22px; font-size:1.08rem; font-family:'Fira Code',monospace; font-weight:700; box-shadow:0 1px 8px rgba(var(--color3-rgb), 0.25); cursor:pointer;">Change Password</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Set Password Modal (for Google OAuth users without password) -->
+    <div id="setPasswordModal" class="modal-bg" style="display:none;">
+      <div class="modal-content">
+        <button class="modal-close" id="closeSetPasswordModal" type="button">&times;</button>
+        <form method="POST" action="{{ url_for('set_password') }}">
+          <div style="font-size:1.32rem; color:var(--color4); font-weight:700; margin-bottom:12px;">Set Password</div>
+          <div style="margin-bottom:16px; color:var(--color3); font-size:1rem;">You have not set your MakeCore account password before, please set it first.</div>
+          <div style="margin-bottom:10px;">
+            <label for="new_password_set" style="font-weight:700; color:var(--color4);">Password:</label><br>
+            <input type="password" name="new_password" id="new_password_set" required minlength="8" style="width:100%; max-width:440px; padding:8px 10px; border-radius:6px; border:1.5px solid var(--color2); background:var(--color9); color:var(--color4); font-size:1.08rem; margin-top:2px;" placeholder="Password">
+          </div>
+          <div style="margin-bottom:16px;">
+            <label for="confirm_new_password_set" style="font-weight:700; color:var(--color4);">Password (again):</label><br>
+            <input type="password" name="confirm_new_password" id="confirm_new_password_set" required minlength="8" style="width:100%; max-width:440px; padding:8px 10px; border-radius:6px; border:1.5px solid var(--color2); background:var(--color9); color:var(--color4); font-size:1.08rem; margin-top:2px;" placeholder="Password (again)">
+          </div>
+          <button type="submit" style="background:var(--color3); color:var(--color9); border:none; border-radius:8px; padding:8px 22px; font-size:1.08rem; font-family:'Fira Code',monospace; font-weight:700; box-shadow:0 1px 8px rgba(var(--color3-rgb), 0.25); cursor:pointer;">Set Password</button>
+        </form>
+      </div>
+    </div>
+
+      
+    </form>
+  </div>
+</div>
+
+
+{% include 'modals/badge_modal.html' %}
+
+{% endblock %}
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7H9JTC8BY1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-7H9JTC8BY1');
+</script>
+
+
+{% block scripts %}
+<script>
+
+const style = document.createElement('style');
+style.textContent = `
+  .account-avatar-box {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+  }
+  .account-avatar-box.loading {
+    background-color: var(--color17);
+    border: 4px solid var(--color18);
+    object-fit: cover;
+    box-shadow: 0 2px 16px rgba(var(--color4-rgb), 0.25);
+    width: 110px;
+    height: 110px;
+    border-radius: 20px;
+  }
+  .account-avatar-box.loading .account-avatar {
+    opacity: 0;
+    border: 4px solid var(--color18);
+    object-fit: cover;
+    box-shadow: 0 2px 16px rgba(var(--color4-rgb), 0.25);
+    width: 110px;
+    height: 110px;
+    border-radius: 20px;
+  }
+  .account-avatar-box.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    margin: -30px 0 0 -15px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #ffffff;
+    animation: spin 1s ease-in-out infinite;
+    z-index: 2;
+    border-radius: 20px;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+`;
+document.head.appendChild(style);
+
+document.addEventListener('DOMContentLoaded', function() {
+  // tabs
+  // removed the ads tab for Congressional App Challenge
+  const tabs = ['settings', 'badges', 'themes'];
+  function switchTab(tab) {
+    tabs.forEach(t => {
+      document.getElementById(`${t}-content-section`).style.display = (t === tab ? 'block' : 'none');
+      document.getElementById(`${t}-tab`).classList.toggle('active', t === tab);
+    });
+    window.history.replaceState(null, '', `#${tab}`);
+  }
+  tabs.forEach(t => document.getElementById(`${t}-tab`).addEventListener('click', () => switchTab(t)));
+  const hashTab = window.location.hash.substring(1);
+  switchTab(tabs.includes(hashTab) ? hashTab : 'settings');
+  window.addEventListener('hashchange', () => {
+    const hashTab = window.location.hash.substring(1);
+    if (tabs.includes(hashTab)){
+      switchTab(hashTab);
+    }
+  });
+
+  // modals
+  function setupModal(showBtnId, modalId, closeBtnId) {
+    const showBtn = document.getElementById(showBtnId);
+    const modal = document.getElementById(modalId);
+    const closeBtn = document.getElementById(closeBtnId);
+    if (!showBtn || !modal || !closeBtn) return;
+    showBtn.onclick = e => { e.preventDefault(); modal.style.display = 'flex'; };
+    closeBtn.onclick = () => modal.style.display = 'none';
+    modal.onclick = e => { if (e.target === modal) modal.style.display = 'none'; };
+  }
+  setupModal('showChangeEmailModalBtn', 'changeEmailModal', 'closeChangeEmailModal');
+  setupModal('showChangePasswordModalBtn', 'changePasswordModal', 'closeChangePasswordModal');
+  setupModal('showSetPasswordModalBtn', 'setPasswordModal', 'closeSetPasswordModal');
+
+  // theme
+  const themeCards = document.querySelectorAll('.themeCard');
+  function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    themeCards.forEach(c => c.classList.toggle('active', c.dataset.theme === theme));
+    document.querySelectorAll('img[data-theme-src]').forEach(img => {
+      img.src = img.getAttribute('data-theme-src').replace(/\/themes\/[^/]+\//, `/themes/${theme}/`);
+    });
+  }
+  themeCards.forEach(c => c.addEventListener('click', () => setTheme(c.dataset.theme)));
+  setTheme(localStorage.getItem('theme') || 'orange');
+
+  
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const showAdsServer = {{ 'true' if show_ads else 'false' }};
+    updateAdsDisplay(showAdsServer);
+
+    const adsToggle = document.getElementById('ads-toggle');
+    if (adsToggle) {
+        adsToggle.addEventListener('change', () => {
+            fetch('/update_ads_toggle', {
+                method: 'POST',
+                headers: { 
+                    'X-Requested-With': 'XMLHttpRequest', 
+                    'Content-Type': 'application/x-www-form-urlencoded' 
+                },
+                body: new URLSearchParams(new FormData(document.getElementById('ads-form')))
+            })
+            .then(r => r.json())
+            .then(data => {
+                const show = data.success ? adsToggle.checked : !adsToggle.checked;
+                updateAdsDisplay(show);
+                updateBackgroundForAds(show);
+                if(show) updateAdPosition();
+            })
+            .catch(() => {
+                adsToggle.checked = !adsToggle.checked;
+                updateAdsDisplay(adsToggle.checked);
+                updateBackgroundForAds(adsToggle.checked);
+            });
+        });
+    }
+});
+
+function updateAllProfilePictures(newSrc) {
+    const navbarProfilePics = document.querySelectorAll('.profile-avatar');
+    navbarProfilePics.forEach(img => {
+        img.src = newSrc;
+    });
+
+    const mobileProfilePics = document.querySelectorAll('.profile-avatar');
+    mobileProfilePics.forEach(img => {
+        img.src = newSrc;
+    });
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+
+const style = document.createElement('style');
+style.textContent = `
+  .avatar-uploading {
+    position: relative;
+  }
+  .avatar-uploading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    margin: -15px 0 0 -15px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+`;
+document.head.appendChild(style);
+
+const avatarInput = document.getElementById('accountProfilePicInput');
+const avatarPreview = document.getElementById('userAvatar');
+const avatarContainer = document.querySelector('.account-avatar-box');
+
+if (avatarInput && avatarPreview) {
+  avatarInput.addEventListener('change', () => {
+    if (!avatarInput.files || !avatarInput.files[0]) return;
+
+    avatarContainer.classList.add('loading');
+    const editButton = document.querySelector('.account-avatar-edit-btn');
+    const originalButtonText = editButton.textContent;
+    editButton.textContent = 'Uploading';
+    editButton.disabled = true;
+
+    const formData = new FormData();
+    formData.append('profile_pic', avatarInput.files[0]);
+
+    fetch('/edit_profile', {
+      method: 'POST',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+          const timestamp = new Date().getTime();
+          const newSrc = `${data.profile_pic_url}${data.profile_pic_url.includes('?') ? '&' : '?'}t=${timestamp}`;
+          
+          const img = new Image();
+          img.onload = () => {
+            avatarPreview.src = newSrc;
+            if (avatarPreview.hasAttribute('data-theme-src')) {
+              avatarPreview.setAttribute('data-theme-src', newSrc);
+            }
+            updateAllProfilePictures(newSrc);
+            
+            setTimeout(() => {
+              avatarContainer.classList.remove('loading');
+              editButton.textContent = originalButtonText;
+              editButton.disabled = false;
+            }, 300);
+          };
+          img.onerror = () => {
+            avatarContainer.classList.remove('loading');
+            editButton.textContent = originalButtonText;
+            editButton.disabled = false;
+          };
+          img.src = newSrc;
+        } else {
+          throw new Error(data.error || 'Failed to upload profile picture');
+        }
+      })
+    .catch(err => {
+      console.error('Upload error:', err);
+      avatarContainer.classList.remove('loading');
+      editButton.textContent = originalButtonText;
+      editButton.disabled = false;
+      alert('Failed to upload profile picture. Please try again.');
+    });
+  });
+}
+});
+
+
+</script>
+{% endblock %}

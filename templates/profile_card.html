@@ -1,0 +1,67 @@
+<link rel="stylesheet" href="/static/css/profile_card.css">
+<script>
+
+  
+</script>
+<div>
+  <div class="profile-card-header">
+    <div class="profile-card-avatar-outline">
+      <img data-theme-src="{{ user.viewing_user_profile_pic_url or '/static/themes/makecore/img/default_avatar.svg' }}" alt="Profile Picture" class="profile-card-avatar" id="editProfilePicBtn">
+    </div>
+    <div class="profile-card-header-main">
+      <span class="profile-card-username">{{ username }}</span>
+      <span class="profile-card-badge"><img data-theme-src="/static/themes/makecore/img/star.svg" alt="Star" class="profile-card-star-img">
+  {% if makejam_rating is not none %}
+    {% if makejam_rating >= 2000 %}Legendary
+    {% elif makejam_rating >= 1800 %}Master
+    {% elif makejam_rating >= 1600 %}Expert
+    {% elif makejam_rating >= 1400 %}Intermediate
+    {% elif makejam_rating >= 1200 %}Novice
+    {% else %}Beginner
+    {% endif %}
+  {% else %}N/A{% endif %}
+</span>
+    </div>
+    <!-- could be new UI update idk yet -->
+    <!-- {% if session['user'] != user.username %}
+      <form method="POST" action="{{ url_for('follow' if not is_following else 'unfollow', user_id=account_user.id) }}" style="display:inline;">
+        {% if is_following %}
+          <button class="profile-card-follow-btn followed" type="submit">Unfollow</button>
+        {% else %}
+          <button class="profile-card-follow-btn" type="submit">Follow</button>
+        {% endif %}
+      </form>
+    {% endif %} -->
+  </div>
+  <div class="profile-card-bio" style="min-width: 220px;">{{ user.bio or 'No bio set.' }}</div>
+  {% if session['user'] == username %}
+    <a href="/account" class="profile-edit-btn">Edit Profile</a>
+  {% else %}
+    <form method="POST" action="{{ url_for('follow' if not is_following else 'unfollow', user_id=account_user.id) }}" style="display:inline;">
+      {% if is_following %}
+        <button class="profile-edit-btn followed" type="submit">Unfollow</button>
+      {% else %}
+        <button class="profile-edit-btn" type="submit">Follow</button>
+      {% endif %}
+    </form>
+  {% endif %}
+
+  <div class="profile-card-community-stats">
+    <div class="community-stats-title">Community Stats</div>
+    <div class="community-stats-list">
+      <div class="community-stats-item" style="color: var(--color4)"><img data-theme-src="/static/themes/makecore/img/viewers.svg" class="community-stats-icon" alt="Views" style="width:20px;height:15px;"> Views <span class="community-stats-num" style="color: white;">{{ user.views or 0 }}</span></div>
+      <div></div>
+      <div class="community-stats-item" style="color: var(--color4)"><img data-theme-src="/static/themes/makecore/img/voted.svg" class="community-stats-icon" alt="Upvote" style="width:20px;height:20px;"> Upvotes <span class="community-stats-num" style="color: white;">{{ user.upvotes or 0 }}</span></div>
+      <div></div>
+      <div class="community-stats-item" style="color: var(--color4)"><img data-theme-src="/static/themes/makecore/img/voted.svg" class="community-stats-icon" alt="Downvote" style="width:20px;height:20px;transform:rotate(180deg);"> Downvotes <span class="community-stats-num" style="color: white;">{{ user.downvotes or 0 }}</span></div>
+      <div></div>
+      <div class="community-stats-item" style="color: var(--color4)"><img data-theme-src="/static/themes/makecore/img/comments.svg" class="community-stats-icon" alt="Comments" style="width:20px;height:20px;"> Comments <span class="community-stats-num" style="color: white;">{{ user.comments or 0 }}</span></div>
+      <div></div>
+      <div class="community-stats-item" style="color: var(--color4)"><img data-theme-src="/static/themes/makecore/img/follow.svg" class="community-stats-icon" alt="Followers" style="width:20px;height:autopx;"> Followers <span class="community-stats-num" style="color: white;">{{ follower or 0 }}</span></div>
+      <div></div>
+      <div class="community-stats-item" style="color: var(--color4)"><img data-theme-src="/static/themes/makecore/img/following.svg" class="community-stats-icon" alt="Following" style="width:20px;height:auto;"> Following <span class="community-stats-num" style="color: white;">{{ following or 0 }}</span></div>
+    </div>
+  </div>
+
+</div>
+

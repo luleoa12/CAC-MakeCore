@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block title %}Forgot Password | MakeCore{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="/static/css/colors.css">
+  <link rel="stylesheet" href="/static/css/auth.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+  <div class="login-wrapper">
+    <div class="login-layout">
+      <!-- Left Column - Marketing Content -->
+      <div class="marketing-column">
+        <div class="quote-section">
+          <h1 class="quote-title">Reset Your Password</h1>
+          <div class="testimonial">
+            <div class="quote-mark">"</div>
+            <blockquote class="quote-text">
+              Don't worry, it happens to the best of us! We'll help you get back into your account quickly and securely.
+            </blockquote>
+            <div class="testimonial-author">
+              <div class="author-avatar">
+                <div class="avatar-placeholder">LL</div>
+              </div>
+              <div class="author-info">
+                <div class="author-name">Leo Lu</div>
+                <div class="author-title">Developer of MakeCore</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game Images Carousel -->
+        <div class="game-carousel-section">
+          <div class="carousel-header">
+            <h3>Join 1K+ Creators</h3>
+          </div>
+          <div class="game-carousel">
+            <div class="carousel-track">
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/1.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/2.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/3.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/4.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/5.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/6.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/7.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/8.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/9.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/10.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/11.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/12.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/13.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/14.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/15.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/16.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/17.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/18.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <!-- Duplicates for smooth infinite loop -->
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/1.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/2.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/3.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/4.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/5.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/6.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/7.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/8.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/9.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/10.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/11.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/12.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/13.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/14.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/15.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/16.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/17.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+              <div class="carousel-item">
+                <img src="/static/uploads/carousel/18.png" alt="Game Screenshot" class="carousel-image">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column - Forgot Password Form -->
+      <div class="login-form-column">
+        <div class="auth-container">
+          <h2>Forgot Password</h2>
+          <h3>No worries, we'll send you instructions for reset</h3>
+          <form method="POST" action="/forgot">
+            <label for="email">Email</label>
+            <div class="input-group">
+              <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+            
+            <button type="submit" class="auth-submit">Reset Password</button>
+          </form>
+
+          <div class="auth-alt">
+            Remember your password? <a href="/login">Back to Sign In</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block scripts %}
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7H9JTC8BY1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-7H9JTC8BY1');
+</script>
+{% endblock %}

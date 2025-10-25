@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <title>Edit Program | MakeCore</title>
+  <link rel="stylesheet" href="/static/css/edit_program.css">
+</head>
+{% endblock %}
+{% block content %}
+<body>
+  <div class="scroll-container">
+    <div class="edit-program-container">
+    <div class="edit-title">Edit Program</div>
+    <form class="edit-form" method="POST" enctype="multipart/form-data">
+      <label class="edit-label" for="name">Program Name</label>
+      <input class="edit-input" type="text" id="name" name="name" required maxlength="120" value="{{ program.name }}">
+
+      <label class="edit-label" for="description">Description</label>
+      <textarea class="edit-textarea" id="description" name="description" required maxlength="300">{{ program.description }}</textarea>
+
+      <label class="edit-label" for="controls">Controls</label>
+      <textarea class="edit-textarea" id="controls" name="controls" required maxlength="120">{{ program.controls }}</textarea>
+
+      <div class="image-upload-container">
+        <label class="edit-label">Program Image</label>
+        <div>Current Image:</div>
+        {% if program.image_url %}
+          <img src="{{ program.image_url }}" alt="Current program image" class="current-image" id="current-image">
+        {% else %}
+          <img data-theme-src="/static/themes/orange/img/studio_default.svg" alt="Default program image" class="current-image" id="current-image">
+        {% endif %}
+        
+        <div class="file-upload">
+          <label for="image" class="file-upload-label">
+            <i class="fas fa-upload"></i> Choose New Image
+          </label>
+          <input type="file" id="image" name="image" class="file-upload-input" accept="image/*" onchange="previewImage(this)">
+          <div>Click to select a new image (JPG, PNG, GIF)</div>
+        </div>
+        
+        <img id="image-preview" class="image-preview" alt="Image preview">
+      </div>
+
+      <label class="edit-label" for="program_url">Program URL</label>
+      <input class="edit-input" type="url" id="program_url" name="program_url" value="{{ program.program_url }}" placeholder="https://scratch.mit.edu/projects/...">
+
+      <label class="edit-label" for="version">Version</label>
+      <input class="edit-input" type="text" id="version" name="version" required maxlength="20" value="{{ program.version }}">
+
+<button class="edit-btn" type="submit">Save Changes</button>
+    </form>
+  </div>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function previewImage(input) {
+    const preview = document.getElementById('image-preview');
+    const currentImage = document.getElementById('current-image');
+    
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      
+      reader.onload = function(e) {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+        if (currentImage) currentImage.style.display = 'none';
+      }
+      
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+</script>
+{% endblock %}

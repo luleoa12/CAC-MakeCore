@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block head %}
+  <link rel="stylesheet" href="/static/css/myprograms.css">
+  <link rel="stylesheet" href="/static/css/colors.css">
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<div class="myprograms-page">
+  <!-- Left Sidebar Navigation -->
+  <div class="myprograms-sidebar">
+    <div class="sidebar-header">
+      <h3>My Stuff</h3>
+    </div>
+    <div class="sidebar-tabs">
+      <button class="sidebar-tab active" data-tab="programs">Programs ({{ programs|length }})</button>
+      <button class="sidebar-tab" data-tab="studios">Studios ({{ owned_studios|length }})</button>
+    </div>
+  </div>
+  
+  <!-- Right Main Content Area -->
+  <div class="sidebar-content">
+    <!-- Programs Tab Content -->
+    <div class="content-section" id="programs-content">
+      <div class="content-header">
+        <h2>Programs</h2>
+      </div>
+      <div class="myprograms-list">
+    {% for p in programs %}
+    <div class="myprogram-card">
+      <a href="/program/{{ p.id }}" class="myprogram-imgbox" style="display:block;">
+        <img src="{{ p.image_url or '/static/themes/orange/img/studio_default.svg' }}" alt="{{ p.name }}" class="myprogram-img" />
+      </a>
+            <div class="myprogram-info">
+              <a href="/program/{{ p.id }}" class="myprogram-title" style="text-decoration:none; color:inherit;">
+        {{ p.name }}
+      </a>
+      <div class="meta-container">
+        <div class="meta-item">
+          <span class="meta-label">Last updated:</span>
+          <span class="meta-value">{{ p.last_updated.strftime('%b %-d, %Y') }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Version:</span>
+          <span class="meta-value">{{ p.version }}</span>
+        </div>
+      </div>
+      <div class="myprogram-votes">
+      <span title="Upvotes" style="display: flex; align-items: center; gap: 4px;">
+        <img data-theme-src="/static/themes/makecore/img/arrow.svg" alt="Upvote" style="width: 22px; height: 22px; transform: rotate(0deg);">
+        {{ p.likes }}
+      </span>
+      <span title="Downvotes" style="display: flex; align-items: center; gap: 4px;">
+        <img data-theme-src="/static/themes/makecore/img/arrow.svg" alt="Downvote" style="width: 22px; height: 22px; transform: rotate(180deg);">
+        {{ p.dislikes }}
+      </span>
+      <span title="Views" style="display: flex; align-items:center; gap:4px;">
+        <img data-theme-src="/static/themes/makecore/img/viewers.svg" alt="Views" style="width: 30px; height: 20px;">
+        {{ p.views }}
+      </span>
+      <span title="Comments" style="display: flex; align-items: center; gap: 4px;">
+        <img data-theme-src="/static/themes/makecore/img/comments.svg" alt="Comments" style="width: 22px; height: auto;">
+        {{ comments[p] }}
+      </span>
+    </div>
+    </div>
+    <div class="myprogram-actions">
+        <a href="/program/{{ p.id }}/edit" class="myprogram-edit-btn myprogram-action-btn">Edit</a>
+        <form method="POST" action="/program/{{ p.id }}/delete" style="display:inline;">
+          <button type="submit" class="myprogram-delete-btn myprogram-action-btn" onclick="return confirm('Delete this program?');">Delete</button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+      </div>
+    </div>
+    
+    <!-- Studios Tab Content -->
+    <div class="content-section" id="studios-content" style="display: none;">
+      <div class="content-header">
+        <h2>Studios</h2>
+      </div>
+      <div class="mystudios-list">
+        {% for studio in owned_studios %}
+        <div class="mystudio-card">
+          <a href="/studios/{{ studio.id }}" class="mystudio-imgbox" style="display:block;">
+            <img src="{{ studio.thumbnail_url or '/static/themes/makecore/img/default_project.png' }}" alt="{{ studio.title }}" class="mystudio-img" />
+          </a>
+          <div class="mystudio-info">
+            <a href="/studios/{{ studio.id }}" class="mystudio-title" style="text-decoration:none; color:inherit;">
+              {{ studio.title }}
+            </a>
+            <div class="meta-container">
+              <div class="meta-item">
+                <span class="meta-label">Created:</span>
+                <span class="meta-value">{{ studio.created_at.strftime('%b %-d, %Y') }}</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Projects:</span>
+                <span class="meta-value">{{ studio.projects|length }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="mystudio-actions">
+            <a href="/studios/{{ studio.id }}/edit" class="mystudio-edit-btn mystudio-action-btn">Edit</a>
+            <form method="POST" action="/studios/{{ studio.id }}/delete" style="display:inline;">
+              <button type="submit" class="mystudio-delete-btn mystudio-action-btn" onclick="return confirm('Delete this studio?');">Delete</button>
+            </form>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const tabs = document.querySelectorAll('.sidebar-tab');
+  const contents = document.querySelectorAll('.content-section');
+  
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      tabs.forEach(t => t.classList.remove('active'));
+      contents.forEach(c => c.style.display = 'none');
+      
+      this.classList.add('active');
+      const targetContent = document.getElementById(this.dataset.tab + '-content');
+      if (targetContent) {
+        targetContent.style.display = 'block';
+      }
+    });
+  });
+});
+</script>
+{% endblock %}
+{% block scripts %}
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7H9JTC8BY1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-7H9JTC8BY1');
+</script>
+{% endblock %}

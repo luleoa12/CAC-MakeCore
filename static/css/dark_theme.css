@@ -1,0 +1,46 @@
+:root {
+  /* Backgrounds */
+
+  --container-bg: rgba(var(--color1-rgb), 0.8);
+  --container-shadow: 0 4px 24px rgba(var(--color1-rgb), 0.27);
+  --modal-bg: var(--color10);
+
+  /* Primary & Accent Colors */
+  --primary: var(--color1);
+  --primary-cc: rgba(var(--color1-rgb), 0.8);
+  --primary-light: #ffc0a2;
+  --primary-dark: var(--color18);
+  --accent: #ffb347;
+  --accent2: #ff7f50;
+  --secondary: #ffe2d1;
+
+  /* Text Colors */
+  --text-main: var(--color7);
+  --text-light: var(--color10);
+  --text-placeholder: var(--color4);
+  --text-error: #c00;
+
+  /* Borders */
+  --border-main: var(--color1);
+  --border-input: #b7a9a1;
+  --border-chip: #b7a9a1;
+  --border-radius-lg: 32px;
+  --border-radius-md: 24px;
+  --border-radius-sm: 10px;
+  --border-radius-xs: 6px;
+
+  /* Chips & Pills */
+  --chip-bg: #3a2a24;
+  --chip-text: var(--color10);
+  --chip-placeholder-bg: var(--color10);
+  --chip-placeholder-text: var(--color4);
+
+  /* Buttons */
+  --button-bg: var(--color4);
+  --button-text: #fff;
+  --button-shadow: 0 1px 8px rgba(var(--color4-rgb), 0.25);
+
+  /* Misc */
+  --modal-shadow: 0 4px 24px rgba(var(--color4-rgb), 0.25);
+}
+

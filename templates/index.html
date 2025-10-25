@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block title %}MakeCore{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="static/themes/makecore/img/icon.png" type="image/png" />
+
+  <style>
+    
+    html, body {
+      overscroll-behavior: none;
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    @media screen and (max-width: 600px) {
+      [data-theme="orange"] .landing-page {
+        background: url('/static/themes/orange/img/mobile_landing_page.svg') no-repeat center center fixed !important;
+        background-size: min(77%, 600px) auto !important;
+      }
+
+      [data-theme="green"] .landing-page {
+        background: url('/static/themes/green/img/mobile_landing_page.svg') no-repeat center center fixed !important;
+        background-size: min(77%, 600px) auto !important;
+      }
+
+      [data-theme="blue"] .landing-page {
+        background: url('/static/themes/blue/img/mobile_landing_page.svg') no-repeat center center fixed !important;
+        background-size: min(77%, 600px) auto !important;
+      }
+  
+      .landing-page {
+        width: 100%;
+        height: 100vh;
+        position: absolute;
+        top: 56%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 0;
+      }
+
+      .snub {
+        visibility: visible;
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        padding: 8px 12px;
+      }
+
+      .title {
+        margin-top: 30px;
+        visibility: visible;
+      }
+    }
+
+    @media screen and (min-width: 601px) {
+      [data-theme="orange"] .landing-page {
+        background: url('/static/themes/orange/img/landing_page.svg') no-repeat center center fixed !important;
+      }
+
+      [data-theme="green"] .landing-page {
+        background: url('/static/themes/green/img/landing_page.svg') no-repeat center center fixed !important;
+      }
+
+      [data-theme="blue"] .landing-page {
+        background: url('/static/themes/blue/img/landing_page.svg') no-repeat center center fixed !important;
+      }
+      .landing-page {
+        background: url('/static/themes/orange/img/landing_page.svg') no-repeat center center fixed;
+        width: 100%;
+        height: 100vh;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      .snub {
+        visibility: hidden;
+      }
+
+      .title {
+        visibility: hidden;
+      }
+    }
+    .version {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      padding: 8px 12px;
+      color: white;
+      z-index: 100;
+    }
+
+  </style>
+{% endblock %}
+
+
+
+{% block content %}
+<div id="disclaimer" style="margin-top: 10px; text-align: center; background-color: var(--color3); color: var(--color8);  padding: 8px 15px; margin-bottom: 20px; font-size: 14px; position: relative; font-family: 'Fira Code', monospace;">
+  Not affiliated with or endorsed by Microsoft MakeCode.
+  <button onclick="dismissDisclaimer()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--color8); font-size: 16px; cursor: pointer; z-index: 1000; padding: 4px 8px; line-height: 1;">×</button>
+</div>
+  <div class="overlay">
+    <img data-theme-src="static/themes/makecore/img/title.svg" alt="Title" class="title">
+    <img data-theme-src="static/themes/makecore/img/version.svg" alt="Version" class="version">
+    <img data-theme-src="static/themes/makecore/img/snub.svg" alt="Snub" class="snub">
+    <div class="landing-page"></div>
+  </div>
+  <!-- <div class="auth-bar">
+    {% if username %}
+      <span class="welcome-msg">Welcome, {{ username }}</span>
+      <a href="/logout" class="auth-btn">Logout</a>
+    {% else %}
+      <a href="/login" class="auth-btn">Login</a>
+      <a href="/signup" class="auth-btn">Sign Up</a>
+    {% endif %}
+  </div> -->
+  <a href="https://hits.sh/makecore.org/" style="display:none;vertical-align:middle; visibility: hidden !important;">
+    <img alt="Hits" src="https://hits.sh/makecore.org.svg?label=Views&color=fe7d37&labelColor=e05d44&logo=ai" style="height:24px; display: none; visibility: hidden;"/>
+  </a>
+
+
+{% endblock %}
+{% block scripts %}
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7H9JTC8BY1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-7H9JTC8BY1');
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    if (localStorage.getItem('disclaimerDismissed') === 'true') {
+      document.getElementById('disclaimer').style.display = 'none';
+    }
+  });
+  
+  function dismissDisclaimer() {
+    document.getElementById('disclaimer').style.display = 'none';
+    localStorage.setItem('disclaimerDismissed', 'true');
+  }
+</script>
+{% endblock %}

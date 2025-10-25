@@ -1,0 +1,479 @@
+{% extends 'base.html' %}
+
+{% block title %}Updates | MakeCore{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/css/updates.css">
+{% endblock %}
+
+{% block content %}
+<div class="updates-container">
+  <h1 class="page-title" style="margin-top: -20px;">What's New</h1>
+  <p class="page-subtitle">Stay up to date with every change and feature released in MakeCore</p>
+
+  <div class="timeline" style="margin-top: -50px;">
+
+    <!-- Version 4.1.0 – Leaderboard -->
+    <div class="timeline-item">
+      <div class="timeline-date">October 24, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 4.1.0</h2>
+        <div class="version-meta"><span class="version-type">New Feature</span></div>
+        <ul>
+          <li>Introduced a leaderboard to track user ratings and contests.</li>
+          <li>Displays rank, username, contests attended, and their rating.</li>
+          <li>Page system with 30 users per page for better performance.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 4.0.1 – UI Updates -->
+    <div class="timeline-item">
+      <div class="timeline-date">October 22, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 4.0.1</h2>
+        <div class="version-meta"><span class="version-type">UI Updates</span></div>
+        <ul>
+          <li>Revamped page designs with updated colors.</li>
+          <li>Maintained theme consistency across all themes.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 4.0.0 – Google Login -->
+    <div class="timeline-item">
+      <div class="timeline-date">October 18, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 4.0.0</h2>
+        <div class="version-meta"><span class="version-type">Authentication</span></div>
+        <ul>
+          <li>Implemented Google OAuth sign-in for faster, password-free login.</li>
+          <li>One click authentication via Google account.</li>
+          <li>Improved security and user experience.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 3.4.0 – Bug Fixes -->
+    <div class="timeline-item">
+        <div class="timeline-date">August 30, 2025</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <h2>Version 3.4.0</h2>
+          <div class="version-meta"><span class="version-type">New Feature</span></div>
+          <ul>
+            <li>Created a dedicated “What’s New” updates page to keep users informed of all recent changes and features.</li>
+            <li>Added an “Updates” link to the site’s navbar for quick access.</li>
+            <li>Reorganized the navbar for a cleaner and more intuitive navigation experience.</li>
+          </ul>
+        </div>
+    </div>
+
+    <!-- Version 3.3.4 – Bug Fixes -->
+    <div class="timeline-item">
+      <div class="timeline-date">August 27, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 3.3.4</h2>
+        <div class="version-meta"><span class="version-type">Bug Fix</span></div>
+        <ul>
+          <li>Fixed an issue with program links so that editing programs now works correctly.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 3.3.3 – Ad & UI Updates -->
+    <div class="timeline-item">
+      <div class="timeline-date">August 24, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 3.3.3</h2>
+        <div class="version-meta"><span class="version-type">Ad & UI Updates</span></div>
+        <ul>
+          <li>Added new ad icons for blue and green themes.</li>
+          <li>Changed the order of the navigation bar for better usability.</li>
+          <li>Fixed small bugs affecting layout and display.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 3.3.2 – Cleanup & Featured Program -->
+    <div class="timeline-item">
+      <div class="timeline-date">August 23, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 3.3.2</h2>
+        <div class="version-meta"><span class="version-type">Cleanup & Featured Program</span></div>
+        <ul>
+          <li>Adjusted page margins and spacing for a cleaner look.</li>
+          <li>Fixed some ad-related display issues.</li>
+          <li>Removed unnecessary test data for ads.</li>
+          <li>Finished updates for the featured program section.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 3.3.1 – Featured Program Additions -->
+    <div class="timeline-item">
+      <div class="timeline-date">August 22, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 3.3.1</h2>
+        <div class="version-meta"><span class="version-type">Featured Program</span></div>
+        <ul>
+          <li>Made minor improvements to the system.</li>
+          <li>Added a featured program to highlight special projects.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 3.2.0 – Ads Integration -->
+    <div class="timeline-item">
+      <div class="timeline-date">August 20, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 3.2.0</h2>
+        <div class="version-meta"><span class="version-type">Ads Integration</span></div>
+        <ul>
+          <li>Completed final updates for ads.</li>
+          <li>Added messages and pages for ads.</li>
+          <li>Included the necessary files for ad management.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 3.2.0 (Dev Build) – Supporting Updates -->
+
+    <!-- Version 3.1.0 – Badges & UI Enhancements -->
+    <div class="timeline-item">
+      <div class="timeline-date">August 17, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 3.1.0</h2>
+        <div class="version-meta"><span class="version-type">Badges & UI</span></div>
+        <ul>
+          <li>Completed updates for the badge system.</li>
+          <li>Added new icons and visuals for dashboards and notifications.</li>
+          <li>Fixed minor UI bugs and added missing badges.</li>
+          <li>Updated the logic in the app for displaying badges properly.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 3.0.0 – Theme & Layout Redesign -->
+    <div class="timeline-item">
+      <div class="timeline-date">August 16, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 3.0.0</h2>
+        <div class="version-meta"><span class="version-type">Theme & Layout</span></div>
+        <ul>
+          <li>Introduced new themes with a theme switcher in account settings.</li>
+          <li>Added a blue theme along with related badges.</li>
+          <li>Minor fixes to improve layout and theme-changing logic.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 2.9.0 – Icons & Styles -->
+    <div class="timeline-item">
+      <div class="timeline-date">August 15, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 2.9.0</h2>
+        <div class="version-meta"><span class="version-type">Icons & Styles</span></div>
+        <ul>
+          <li>Updated icons across dashboards and studios.</li>
+          <li>Improved program styles and feedback visuals.</li>
+          <li>Fixed layout and color issues to make everything look more consistent.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 2.8.0 – Appearance & SEO Enhancements -->
+    <div class="timeline-item">
+      <div class="timeline-date">August 14, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 2.8.0</h2>
+        <div class="version-meta"><span class="version-type">Design & SEO</span></div>
+        <ul>
+          <li>Updated colors and visuals to be more exciting.</li>
+          <li>Added sitemap and SEO improvements to help search engines find the site.</li>
+          <li>Improved badge display for certain themes.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 2.7.0 – GLX Theme Rollout -->
+    <div class="timeline-item">
+      <div class="timeline-date">August 12, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 2.7.0</h2>
+        <div class="version-meta"><span class="version-type">Theme Launch</span></div>
+        <ul>
+          <li>Launched the green theme with updated colors and landing page.</li>
+          <li>Improved mobile design and removed unnecessary elements.</li>
+          <li>Added new icons specific to the green theme.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 2.6.0 – Responsive Updates & Navbar Tweaks -->
+    <div class="timeline-item">
+      <div class="timeline-date">August 09, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 2.6.0</h2>
+        <div class="version-meta"><span class="version-type">Responsive & Navbar</span></div>
+        <ul>
+          <li>Made pages mobile-friendly, including program listings and landing page.</li>
+          <li>Updated navigation bar for both logged-in and guest users.</li>
+          <li>Improved icons and disabled text selection where needed.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 2.5.0 – Navigation & Analytics -->
+    <div class="timeline-item">
+      <div class="timeline-date">August 06, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 2.5.0</h2>
+        <div class="version-meta"><span class="version-type">Navbar & Analytics</span></div>
+        <ul>
+          <li>Updated navigation titles for MakeJam and removed old titles.</li>
+          <li>Added analytics and status icons to the navbar.</li>
+          <li>Fixed rating display issues and improved mobile menu.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 2.4.0 – Rating Logic Fixes -->
+    <div class="timeline-item">
+      <div class="timeline-date">August 05, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 2.4.0</h2>
+        <div class="version-meta"><span class="version-type">Bug Fixes</span></div>
+        <ul>
+          <li>Fixed rating calculation errors across multiple features.</li>
+          <li>Ensured MakeJam always builds using the latest version.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 2.3.0 – Layout Adjustments -->
+    <div class="timeline-item">
+      <div class="timeline-date">August 04, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 2.3.0</h2>
+        <div class="version-meta"><span class="version-type">Layout Improvements</span></div>
+        <ul>
+          <li>Added mobile menu icons and adjusted the layout for smaller screens.</li>
+          <li>Added analytics link to the mobile landing page.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 2.2.0 – Badges Tile -->
+    <div class="timeline-item">
+      <div class="timeline-date">August 03, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 2.2.0</h2>
+        <div class="version-meta"><span class="version-type">Navbar Feature</span></div>
+        <ul>
+          <li>Added a badges tile to the navbar so users can see achievements easily.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 2.1.0 – MakeJam & Auth UI -->
+    <div class="timeline-item">
+      <div class="timeline-date">July 27, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 2.1.0</h2>
+        <div class="version-meta"><span class="version-type">UI Polish</span></div>
+        <ul>
+          <li>Improved studio creation page and auth buttons.</li>
+          <li>Updated feedback email field and added arrows for navigation.</li>
+          <li>Finalized landing page and navbar improvements.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 2.0.0 – Landing Page Improvements -->
+    <div class="timeline-item">
+      <div class="timeline-date">July 24, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 1.9.0</h2>
+        <div class="version-meta"><span class="version-type">Landing Enhancements</span></div>
+        <ul>
+          <li>Updated the landing page layout and visuals.</li>
+          <li>Improved arrows and Open Graph images for better social media previews.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 1.9.0 – SEO & Infrastructure -->
+    <div class="timeline-item">
+      <div class="timeline-date">July 22, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 1.8.1</h2>
+        <div class="version-meta"><span class="version-type">SEO & Infrastructure</span></div>
+        <ul>
+          <li>Added meta tags and sitemap for better search engine optimization.</li>
+          <li>Added a prompt reminding users to check their spam folder for emails.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 1.8.0 – Badge System Rollout -->
+    <div class="timeline-item">
+      <div class="timeline-date">July 20, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 1.8.0</h2>
+        <div class="version-meta"><span class="version-type">Badge System</span></div>
+        <ul>
+          <li>Added a full badge system with modals, displays, and rating graph updates.</li>
+          <li>Users can now earn and view badges in the “My Programs” section.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 1.7.0 – UI & Database Updates -->
+    <div class="timeline-item">
+      <div class="timeline-date">July 18, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 1.7.0</h2>
+        <div class="version-meta"><span class="version-type">UI & DB Updates</span></div>
+        <ul>
+          <li>Improved badge display and tooltip UI.</li>
+          <li>Fixed minor database-related display bugs.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 1.6.0 – Badges Generation & Submission -->
+    <div class="timeline-item">
+      <div class="timeline-date">July 17, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 1.6.0</h2>
+        <div class="version-meta"><span class="version-type">Badge Logic</span></div>
+        <ul>
+          <li>Fixed badge creation logic and app updates.</li>
+          <li>Added badge system announcements and criteria settings.</li>
+          <li>Introduced a collection badge modal.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 1.5.0 – Badges Assets & Bugs -->
+    <div class="timeline-item">
+      <div class="timeline-date">July 16, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 1.5.0</h2>
+        <div class="version-meta"><span class="version-type">Badges Assets</span></div>
+        <ul>
+          <li>Updated badge images and tooltips.</li>
+          <li>Added scripts and assets needed to create badges.</li>
+          <li>Fixed minor errors in badge display.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 1.4.0 – Build & DB Setup -->
+    <div class="timeline-item">
+      <div class="timeline-date">July 15, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 1.4.0</h2>
+        <div class="version-meta"><span class="version-type">Build & DB</span></div>
+        <ul>
+          <li>Set up database, backup, and initial badges.</li>
+          <li>Updated dashboard UI and added “My Programs” to navbar.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 1.3.0 – Auth & Notification Features -->
+    <div class="timeline-item">
+      <div class="timeline-date">July 14, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 1.3.0</h2>
+        <div class="version-meta"><span class="version-type">Auth & Notifications</span></div>
+        <ul>
+          <li>Added notification counters and hit/view tracking.</li>
+          <li>Fixed rating chart bugs and improved notification UI.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 1.2.0 – Developer Features & UI Enhancements -->
+    <div class="timeline-item">
+      <div class="timeline-date">July 4, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 1.2.0</h2>
+        <div class="version-meta"><span class="version-type">Dev & UI</span></div>
+        <ul>
+          <li>Added a developer link in program pages.</li>
+          <li>Created a 404 page with analytics tracking.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 1.1.0 – Tierlist & Studio Improvements -->
+    <div class="timeline-item">
+      <div class="timeline-date">July 1, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 1.1.0</h2>
+        <div class="version-meta"><span class="version-type">Bug Fixes & UI</span></div>
+        <ul>
+          <li>Improved tierlist and studio UI.</li>
+          <li>Fixed bugs in program browsing and studio details.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Version 1.0.0 – Initial Release -->
+    <div class="timeline-item">
+      <div class="timeline-date">June 14, 2025</div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h2>Version 1.0.0</h2>
+        <div class="version-meta"><span class="version-type">Initial Release</span></div>
+        <ul>
+          <li>First commit!</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7H9JTC8BY1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-7H9JTC8BY1');
+</script>
+{% endblock %}

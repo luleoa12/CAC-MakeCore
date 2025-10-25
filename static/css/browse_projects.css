@@ -1,0 +1,354 @@
+/* Browse Projects Modal - Themed UI/UX */
+.modal-bg {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5vh 2vw;
+  box-sizing: border-box;
+  backdrop-filter: blur(4px);
+}
+
+.modal-bg.active { 
+  display: flex !important; 
+}
+
+.modal-content {
+  background: var(--color9);
+  border-radius: 16px;
+  position: relative;
+  min-width: 400px;
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--color8);
+}
+
+.modal-header {
+  background: var(--color2);
+  color: var(--color9);
+  padding: 24px 32px;
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 600;
+  border-radius: 16px 16px 0 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-title {
+  margin: 0;
+  color: var(--color9);
+}
+
+.modal-close {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: var(--color9);
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.modal-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.modal-body {
+  overflow-y: auto;
+  max-height: calc(80vh - 120px);
+  padding: 24px 32px;
+  background: var(--color10);
+}
+
+.project-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .project-modal-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+  }
+  
+  .modal-content {
+    min-width: 320px;
+    margin: 0 16px;
+  }
+  
+  .modal-body {
+    padding: 20px 16px;
+  }
+}
+
+.project-card-modal {
+  background: var(--color9);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  outline: none;
+  border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  min-height: 180px;
+  transition: all 0.2s ease;
+}
+
+/* Removed hover effect to avoid misleading users */
+
+.project-card-modal:focus {
+  outline: 2px solid var(--color2);
+  outline-offset: 2px;
+}
+
+.project-image {
+  aspect-ratio: 4/3;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+.project-image-placeholder {
+  aspect-ratio: 4/3;
+  width: 100%;
+  height: auto;
+  background: var(--color8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color4);
+  font-size: 2rem;
+}
+
+.project-card-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color4);
+  text-align: center;
+  margin: 12px 8px 8px 8px;
+  padding: 0;
+  line-height: 1.3;
+  height: 2.6em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.project-card-check {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  background: var(--color9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color6);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+  transition: all 0.2s ease;
+}
+
+.project-card-check .plus-icon {
+  font-size: 1.4rem;
+  color: var(--color6);
+  display: block;
+  line-height: 1;
+  font-weight: 600;
+}
+
+.checkmark-svg {
+  display: none;
+  stroke: var(--color9);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  width: 18px;
+  height: 18px;
+}
+
+/* Initial state - show plus, hide checkmark for unselected cards */
+.project-card-modal:not(.selected) .checkmark-svg {
+  display: none;
+}
+
+.project-card-modal:not(.selected) .plus-icon {
+  display: block;
+}
+
+/* Ensure selected cards show checkmark on page load */
+.project-card-modal.selected .checkmark-svg {
+  display: block !important;
+}
+
+.project-card-modal.selected .plus-icon {
+  display: none !important;
+}
+
+/* Selected state */
+.project-card-modal.selected {
+  border-color: var(--color3);
+  background: var(--color19);
+}
+
+.project-card-modal.selected .project-card-check {
+  background: var(--color3);
+  border-color: var(--color3);
+  color: var(--color9);
+}
+
+/* Rules moved above for better organization */
+
+/* Removed hover states to avoid misleading users */
+
+.empty-projects-msg {
+  color: var(--color4);
+  font-size: 1.1rem;
+  text-align: center;
+  margin: 40px 0;
+  padding: 20px;
+  background: var(--color9);
+  border-radius: 8px;
+  border: 1px solid var(--color8);
+}
+
+.modal-footer {
+  background: var(--color9);
+  border-top: 1px solid var(--color8);
+  padding: 20px 32px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  border-radius: 0 0 16px 16px;
+}
+
+.done-btn {
+  background: var(--color3);
+  color: var(--color9);
+  border-radius: 8px;
+  font-size: 1rem;
+  padding: 12px 24px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(var(--color3-rgb), 0.2);
+}
+
+/* Removed hover effect for done button to avoid misleading users */
+
+.done-btn:active {
+  transform: translateY(0);
+}
+
+/* Theme-specific adjustments */
+[data-theme="orange"] .project-card-modal.selected {
+  background: var(--color19);
+}
+
+[data-theme="green"] .project-card-modal.selected {
+  background: rgba(var(--color2-rgb), 0.1);
+}
+
+[data-theme="blue"] .project-card-modal.selected {
+  background: rgba(var(--color2-rgb), 0.1);
+}
+
+/* Accessibility improvements */
+.project-card-modal:focus-visible {
+  outline: 2px solid var(--color2);
+  outline-offset: 2px;
+}
+
+/* Loading states */
+.project-card-modal.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.project-card-modal.loading .project-card-check {
+  background: var(--color8);
+  border-color: var(--color8);
+}
+
+/* Animation for checkmark */
+@keyframes checkmark-appear {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.project-card-modal.selected .checkmark-svg {
+  animation: checkmark-appear 0.3s ease-out;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .modal-content {
+    margin: 0 8px;
+    min-width: 280px;
+  }
+  
+  .project-modal-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .project-card-modal {
+    min-height: 160px;
+  }
+  
+  .project-card-title {
+    font-size: 0.9rem;
+    margin: 8px 6px 6px 6px;
+  }
+  
+  .project-card-check {
+    width: 32px;
+    height: 32px;
+    top: 8px;
+    right: 8px;
+  }
+}

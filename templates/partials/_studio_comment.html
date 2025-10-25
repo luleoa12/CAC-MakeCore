@@ -1,0 +1,53 @@
+
+<div class="studio-comment-item comment-{{ comment.status }}{% if is_reply %} reply{% endif %}" style="margin-left: {% if is_reply %}18px{% else %}0{% endif %};">
+  <div class="studio-comment-main">
+    <div class="studio-comment-header-row" style="display: flex; align-items: center; justify-content: space-between;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div class="studio-comment-avatar">
+          <img data-theme-src="{{ comment.user.profile_pic_url or '/static/themes/makecore/img/default_avatar.svg' }}" alt="avatar">
+        </div>
+        <span class="studio-comment-username">{{ comment.user.username if comment.user else 'Deleted User' }}</span>
+      </div>
+      <span class="studio-comment-date" style="color: var(--color4); font-size: 0.97rem;">{{ comment.created_at.strftime('%b %d, %Y') if comment.created_at else '' }}</span>
+    </div>
+    <div class="studio-comment-text" style="color: white !important; margin-top: 8px;">{{ comment.content }}</div>
+    <div class="studio-comment-actions">
+      {% if not is_reply %}
+        <button class="comment-action-btn{% if comment.user_voted_up %} voted{% endif %}" title="Upvote" data-comment-id="{{ comment.id }}" data-vote-type="up" onclick="voteComment({{ comment.id }}, 'up', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m18 15-6-6-6 6"/>
+          </svg>
+          <span class="vote-count" id="upvotes-{{ comment.id }}">{{ comment.upvotes }}</span>
+        </button>
+        <button class="comment-action-btn{% if comment.user_voted_down %} voted{% endif %}" title="Downvote" data-comment-id="{{ comment.id }}" data-vote-type="down" onclick="voteComment({{ comment.id }}, 'down', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m6 9 6 6 6-6"/>
+          </svg>
+          <span class="vote-count" id="downvotes-{{ comment.id }}">{{ comment.downvotes }}</span>
+        </button>
+        <button class="comment-action-btn" title="Reply" type="button" onclick="showReplyForm({{ comment.id }})">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            <path d="M13 8H7"/>
+            <path d="M17 12H7"/>
+          </svg>
+          Reply
+        </button>
+      {% endif %}
+    </div>
+    {% if not is_reply %}
+    <form method="POST" action="{{ url_for('post_studio_comment', studio_id=studio.id) }}" class="studio-reply-form" id="reply-form-{{ comment.id }}" style="display:none; margin-left:12px;">
+      <input type="hidden" name="parent_id" value="{{ comment.id }}">
+      <div class="reply-avatar">
+        <img data-theme-src="{{ current_user.profile_pic_url or '/static/themes/makecore/img/default_avatar.svg' }}" alt="avatar">
+      </div>
+      <input type="text" name="content" class="add-comment-input" placeholder="Type reply here..." maxlength="300" autocomplete="off">
+      <button type="button" class="reply-cancel-btn" onclick="hideReplyForm({{ comment.id }})">Cancel</button>
+      <button type="submit" class="reply-submit-btn">Reply</button>
+    </form>
+    {% endif %}
+    {% if comment.status == 'flagged' %}
+      <span class="flagged">[Flagged]</span>
+    {% endif %}
+  </div>
+</div>

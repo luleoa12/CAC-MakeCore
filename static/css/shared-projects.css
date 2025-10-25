@@ -1,0 +1,132 @@
+
+.shared-projects-container {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px #0001;
+  padding: 18px 18px 12px 18px;
+  margin: 34px auto 0 auto;
+  max-width: 980px;
+  position: relative;
+}
+.shared-projects-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.18rem;
+  font-weight: 600;
+  color: var(--color4);
+  margin-bottom: 8px;
+}
+.shared-viewall {
+  font-size: 1.02rem;
+  color: var(--color4);
+  text-decoration: none;
+  font-weight: 500;
+  margin-left: 12px;
+}
+
+.shared-viewall:hover {
+  text-decoration: underline;
+}
+
+.shared-projects-list-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+.shared-arrow {
+  font-size: 2.3rem;
+  cursor: pointer;
+  user-select: none;
+  margin: 0 14px;
+  color: var(--color17);
+  transition: color 0.18s;
+}
+.shared-arrow.disabled {
+  color: var(--color17) !important;
+  cursor: default;
+  opacity: 0.7;
+}
+.shared-arrow:not(.disabled):hover {
+  color: var(--color4);
+}
+.shared-arrow:not(.disabled) {
+  color: var(--color17);
+  cursor: pointer;
+  opacity: 1;
+}
+
+.shared-arrow:not(.disabled):hover {
+  color: var(--color7);
+}
+.shared-projects-list {
+  display: flex;
+  flex-direction: row;
+  gap: 26px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none; 
+  margin: 10px 0 0 0;
+  padding: 0 0 4px 0;
+  width: 100%;
+  justify-content: flex-start;
+}
+.shared-projects-list::-webkit-scrollbar {
+  display: none;
+}
+.project-card {
+  background: #faf9ff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #0002;
+  width: 150px;
+  padding: 12px 10px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: box-shadow 0.2s;
+}
+.project-card:hover {
+  box-shadow: 0 4px 16px #7c4dff33;
+}
+.project-img {
+  width: 120px;
+  height: auto;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  border-radius: 6px;
+  background: #e0e0e0;
+  margin-bottom: 5px;
+}
+.project-title {
+  font-size: 0.81rem !important;
+  font-weight: 500;
+  color: var(--color18);
+  text-decoration: none;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+  display: block;
+}
+
+.project-author {
+  font-size: 0.93rem;
+  color: #444;
+  margin-bottom: 2px;
+}
+
+.dashboard-shared-projects {
+  margin-top: 0;
+  padding: 32px 18px;
+}
+
+.project-img {
+width:150px; 
+aspect-ratio: 4/3;
+align-items: center;
+object-fit:cover;
+}

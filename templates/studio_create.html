@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dark_theme.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/studios.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/studio_create.css') }}">
+
+{% endblock %}
+
+{% block content %}
+
+<div class="studio-section orange-theme" style="background: var(--container-bg); color: var(--text-main); border-radius: var(--border-radius-lg); margin-top: 7px;">
+  <h2 class="studio-title" style="color: var(--color7);">Create New Studio</h2>
+  <form method="POST" enctype="multipart/form-data" class="studio-form">
+    <div class="studio-create-flex">
+      <div class="studio-create-left" style="margin-right: 170px;">
+        <label for="title" style="color: var(--primary-dark);">Studio Title</label>
+        <input type="text" style="background: var(--color10);" name="title" id="title" maxlength="100" required>
+        <div id="title-word-count">0/25 characters</div>
+        <label for="description" style="margin-top: 0px; color: var(--primary-dark);">Description</label>
+        <textarea style="background: var(--color10);" name="description" id="description" rows="6" required maxlength="100" ></textarea>
+        <div id="desc-word-count">0/100 characters</div>
+        <div class="studio-slider-row" style="margin-top:10px; display:flex; align-items:center; gap:18px;">
+          <label class="studio-slider-label" for="anyone_can_add" style="font-weight:500; color:var(--color18); font-size:1.08rem;">Anyone can add projects</label>
+          <label class="switch">
+            <input type="checkbox" id="anyone_can_add" name="anyone_can_add">
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
+      <div class="studio-create-right">
+        <label for="thumbnail" style="color: var(--primary-dark); margin-bottom: 5px;">Thumbnail</label>
+        <div class="image-dropzone" id="image-dropzone">
+          <span class="dropzone-text" id="dropzone-text">
+            <b>Insert Image Here</b><br><span style="color: var(--color4);">[4:3 Ratio]</span>
+          </span>
+          <input type="file" id="thumbnail" name="thumbnail" accept="image/*" required>
+          <img id="image-preview" alt="Preview" />
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="studio-btn">Create Studio</button>
+  </form>
+
+  <a href="{{ url_for('studios') }}" class="btn-link">&larr; Back to Studios</a>
+</div>
+
+<script src="{{ url_for('static', filename='js/studio_create.js') }}"></script>
+
+<script>
+
+const imageInput = document.getElementById('thumbnail');
+const dropzone = document.getElementById('image-dropzone');
+const previewImg = document.getElementById('image-preview');
+const dropzoneText = document.getElementById('dropzone-text');
+
+function showPreview(file) {
+  if (!file) {
+    previewImg.src = '';
+    previewImg.style.display = 'none';
+    if (dropzoneText) dropzoneText.style.display = 'block';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    previewImg.src = e.target.result;
+    previewImg.style.display = 'block';
+    if (dropzoneText) dropzoneText.style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+imageInput.addEventListener('change', function(e) {
+  const file = this.files && this.files[0];
+  showPreview(file);
+});
+
+dropzone.addEventListener('dragover', function(e) {
+  e.preventDefault();
+  dropzone.classList.add('dragover');
+});
+dropzone.addEventListener('dragleave', function(e) {
+  dropzone.classList.remove('dragover');
+});
+dropzone.addEventListener('drop', function(e) {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  const files = e.dataTransfer.files;
+  if (files && files[0] && files[0].type.startsWith('image/')) {
+    imageInput.files = files;
+    showPreview(files[0]);
+  }
+});
+dropzone.tabIndex = 0;
+dropzone.addEventListener('keydown', function(e) {
+  if ((e.key === 'Backspace' || e.key === 'Delete') && previewImg.style.display === 'block') {
+    imageInput.value = '';
+    previewImg.src = '';
+    previewImg.style.display = 'none';
+    if (dropzoneText) dropzoneText.style.display = 'block';
+    e.preventDefault();
+  }
+});
+</script>
+<script>
+
+const titleInput = document.getElementById('title');
+const titleWordCount = document.getElementById('title-word-count');
+if (titleInput && titleWordCount) {
+  titleInput.addEventListener('input', function() {
+    if (this.value.length > 25) {
+      this.value = this.value.slice(0, 25);
+    }
+    const count = this.value.length;
+    titleWordCount.textContent = `${count}/25 characters`;
+
+    titleWordCount.classList.remove('over-limit');
+
+  });
+}
+
+
+const desc = document.getElementById('description');
+const charCount = document.getElementById('desc-word-count');
+if (desc && charCount) {
+  desc.addEventListener('input', function() {
+    let count = this.value.length;
+    if (count > 100) {
+      this.value = this.value.slice(0, 100);
+      count = 100;
+    }
+    charCount.textContent = count + '/100 characters';
+  });
+}
+</script>
+{% endblock %}
+{% block scripts %}
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7H9JTC8BY1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-7H9JTC8BY1');
+</script>
+{% endblock %}

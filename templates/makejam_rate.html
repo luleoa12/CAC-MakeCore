@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="orange-theme studio-section" style="max-width:700px;margin:40px auto 0 auto;">
+  <h2 class="studio-title">Rate Submission</h2>
+  <div style="margin-bottom:18px;">
+    <b>User:</b> {{ submission.user.username }}<br>
+    <b>Project:</b> <a href="{{ submission.project_link }}" target="_blank">{{ submission.project_title }}</a><br>
+    <b>Description:</b> {{ submission.description }}
+  </div>
+  <form method="POST" style="margin-top:24px;">
+    <label for="score">Score (0-100):</label>
+    <input type="number" name="score" id="score" min="0" max="100" value="{{ submission.score or '' }}" required style="width:80px; margin-left:12px;">
+    <button type="submit" class="btn btn-orange" style="margin-left:24px;">Save Rating</button>
+  </form>
+  {% if rated %}
+    <div style="margin-top:18px; color:#1fa345; font-weight:bold;">Rating saved!</div>
+  {% endif %}
+  <div style="margin-top:32px;"><a href="/dashboard" class="btn">Back to Dashboard</a></div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7H9JTC8BY1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-7H9JTC8BY1');
+</script>
+{% endblock %}

@@ -1,0 +1,218 @@
+.leaderboard-container {
+  background: rgba(var(--color1-rgb), 0.8);
+  border-radius: 32px;
+  box-shadow: 0 4px 24px rgba(var(--color1-rgb), 0.27);
+  border: none;
+  padding: 4vw 4vw 3vw 4vw;
+  margin: 4vw auto 0 auto;
+  max-width: 96vw;
+  min-height: 80vh;
+  width: calc(100vw - 500px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  font-family: 'Fira Code', monospace;
+}
+
+.leaderboard-title {
+  color: var(--color4);
+  font-size: 2.1rem;
+  font-weight: 800;
+  margin-bottom: 18px;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+}
+
+.leaderboard-table {
+  background: rgba(var(--color1-rgb), 0.05);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(var(--color1-rgb), 0.27);
+}
+
+.leaderboard-header {
+  display: grid;
+  grid-template-columns: 60px 1fr 100px 80px;
+  gap: 15px;
+  padding: 12px 16px;
+  background: var(--color7);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  font-family: 'Fira Code', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.leaderboard-row {
+  display: grid;
+  grid-template-columns: 60px 1fr 100px 80px;
+  gap: 15px;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(var(--color1-rgb), 0.1);
+  transition: background-color 0.2s ease;
+}
+
+.leaderboard-row:last-child {
+  border-bottom: none;
+}
+
+.leaderboard-row.odd {
+  background: var(--color10);
+}
+
+.leaderboard-row.even {
+  background: none;
+}
+
+.leaderboard-rank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rank-number {
+  background: var(--color14);
+  color: #fff;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: 'Fira Code', monospace;
+  min-width: 32px;
+  text-align: center;
+}
+
+.leaderboard-username {
+  display: flex;
+  align-items: center;
+}
+
+.username-link {
+  color: var(--color4);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  font-family: 'Fira Code', monospace;
+  transition: color 0.18s;
+}
+
+.username-link:hover {
+  color: var(--color2);
+}
+
+.leaderboard-rating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.rating-value {
+  background: var(--color14);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  font-family: 'Fira Code', monospace;
+}
+
+.leaderboard-contests {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contests-value {
+  background: var(--color14);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  font-family: 'Fira Code', monospace;
+}
+
+.no-data {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--color4);
+  font-size: 1.03rem;
+  font-family: 'Fira Code', monospace;
+  padding: 40px 20px;
+}
+
+.pagination-container {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pagination-btn {
+  background: var(--color32);
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: 'Fira Code', monospace;
+  transition: all 0.2s ease;
+}
+
+.pagination-numbers {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pagination-number {
+  background: rgba(var(--color4-rgb), 0.1);
+  color: var(--color4);
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: 'Fira Code', monospace;
+  transition: all 0.2s ease;
+  max-width: 32px;
+  text-align: center;
+  border: 1px solid rgba(var(--color4-rgb), 0.1);
+}
+
+
+.pagination-number.current {
+  background: var(--color3);
+  border: 1px solid var(--color3);
+  color: #fff;
+}
+
+.pagination-ellipsis {
+  color: var(--color4);
+  padding: 6px 8px;
+  font-size: 0.85rem;
+  font-family: 'Fira Code', monospace;
+}
+
+.pagination-info {
+  color: var(--color4);
+  font-size: 0.8rem;
+  font-family: 'Fira Code', monospace;
+  opacity: 0.8;
+}

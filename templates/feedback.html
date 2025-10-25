@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block head %}
+  <link rel="stylesheet" href="/static/css/feedback.css">
+{% endblock %}
+{% block content %}
+<div class="feedback-form-wrapper">
+  <h2>Send Feedback</h2>
+  <form action="/feedback" method="POST">
+    <label for="feedback_type">Type:</label>
+    <select name="feedback_type" id="feedback_type" required>
+      <option value="General">General feedback</option>
+      <option value="Bug">Bug report</option>
+      <option value="Feature">Feature request</option>
+      <option value="Other">Other</option>
+    </select>
+    <label for="feedback_text">Your feedback:</label>
+    <textarea name="feedback_text" id="feedback_text" required rows="5" placeholder="Describe your feedback, bug, or suggestion..."></textarea>
+    <label for="feedback_email">Your email (optional):</label>
+    <input type="email" name="feedback_email" id="feedback_email" placeholder="example@domain.com">
+    <button type="submit" class="btn-orange">Send Feedback</button>
+  </form>
+</div>
+{% endblock %}
+{% block scripts %}
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7H9JTC8BY1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-7H9JTC8BY1');
+</script>
+{% endblock %}

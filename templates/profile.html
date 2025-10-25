@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="profile-header">
+    <img src="{{ profile_user.profile_pic_url or url_for('static', filename='img/default_profile.png') }}" class="profile-avatar">
+    <div class="profile-info">
+        <div class="profile-username">{{ profile_user.username }}</div>
+        <div class="profile-bio">{{ profile_user.bio or 'No bio set.' }}</div>
+        <div class="profile-follow-row">
+            <form method="POST" action="{{ url_for('follow' if not is_following else 'unfollow', user_id=profile_user.id) }}">
+                {% if profile_user.id != session['user_id'] %}
+                    {% if is_following %}
+                        <button class="unfollow-btn" type="submit">Unfollow</button>
+                    {% else %}
+                        <button class="follow-btn" type="submit">Follow</button>
+                    {% endif %}
+                {% endif %}
+            </form>
+            <span><a href="{{ url_for('followers', username=profile_user.username) }}">{{ follower_count }} followers</a></span>
+            <span><a href="{{ url_for('following', username=profile_user.username) }}">{{ following_count }} following</a></span>
+        </div>
+    </div>
+</div>
+{% endblock %}

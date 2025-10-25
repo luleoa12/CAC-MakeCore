@@ -1,0 +1,625 @@
+
+
+  <link rel="stylesheet" href="/static/css/studio_detail.css">
+  <style>
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 6px;
+      color: var(--color4);
+      font-size: 16px;
+      transition: background-color 0.2s ease;
+    }
+
+    .dropdown-toggle:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: var(--color6);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(var(--color6-rgb), 0.25);
+      padding: 4px;
+      min-width: 140px;
+      z-index: 1000;
+      display: none;
+      border: none;
+    }
+
+    .dropdown-menu.show {
+      display: block;
+    }
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 8px 12px;
+      border: none;
+      background: none;
+      text-align: left;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--color1);
+      transition: background-color 0.2s ease;
+      border-radius: 6px;
+      margin: 2px 0;
+    }
+
+    .dropdown-item:hover {
+      background-color: var(--color3);
+    }
+
+    .dropdown-item.remove {
+      color: var(--color1);
+    }
+
+    .dropdown-item.promote {
+      color: var(--color1);
+    }
+
+    .dropdown-item i {
+      width: 16px;
+      text-align: center;
+    }
+
+    .contributors-tab {
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .contributors-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .contributors-header h3 {
+      color: var(--color4);
+      margin: 0;
+    }
+    
+    .contributors-search {
+      padding: 8px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--color8);
+      width: 250px;
+      font-size: 14px;
+      background: var(--color10);
+      color: var(--color5);
+    }
+
+    .contributors-search::placeholder {
+      color: var(--color4);
+    }
+    
+    .contributors-list-section {
+      margin-bottom: 30px;
+    }
+    
+    .contributors-list-section h4 {
+      color: var(--color4);
+      margin-bottom: 12px;
+      font-size: 1.1em;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--color9);
+    }
+    
+    .contributors-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    
+    .contributor-card {
+      background: var(--color10);
+      border: 1px solid var(--color8);
+      border-radius: 6px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      transition: all 0.2s ease;
+    }
+    
+    
+    .contributor-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      margin-right: 8px;
+      object-fit: cover;
+      background: var(--color8);
+      flex-shrink: 0;
+    }
+    
+    .contributor-info {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .contributor-name {
+      font-weight: 600;
+      color: var(--color4);
+      margin: 0 0 2px 0;
+      font-size: 0.9em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .contributor-role {
+      display: inline-block;
+      font-size: 0.75em;
+      padding: 1px 6px;
+      border-radius: 8px;
+      background: var(--color2);
+      color: var(--color9);
+    }
+    
+    .contributor-role.creator {
+      background: var(--color3);
+      color: var(--color9);
+    }
+    
+    .contributor-role.manager {
+      background: var(--color3);
+      color: var(--color9);
+    }
+    
+    .contributor-actions {
+      margin-left: auto;
+      display: flex;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    
+    .btn-action {
+      padding: 3px 8px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 0.75em;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      transition: all 0.2s;
+    }
+    
+    .btn-action i {
+      font-size: 0.9em;
+    }
+    
+    .btn-action.promote {
+      background: var(--color3);
+      color: var(--color9);
+    }
+    
+    .btn-action.remove {
+      background: var(--color14);
+      color: var(--color9);
+    }
+    
+    .btn-action.revoke {
+      background: var(--color4);
+      color: var(--color9);
+    }
+    
+    .invite-form {
+      margin-top: 30px;
+      padding: 20px;
+      background: var(--color19);
+      border: 1px solid var(--color8);
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(var(--color4-rgb), 0.1);
+    }
+    
+    .invite-form h4 {
+      margin-top: 0;
+      color: var(--color4);
+      margin-bottom: 15px;
+    }
+    
+    .invite-form-inner {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .invite-input {
+      flex: 1;
+      padding: 10px 15px;
+      border: 1px solid var(--color8);
+      border-radius: 4px;
+      font-size: 1em;
+      background: var(--color10);
+      color: var(--color4);
+    }
+
+    .invite-input::placeholder {
+      color: var(--color25);
+    }
+    
+    .btn-invite {
+      background: var(--color3);
+      color: var(--color9);
+      border: none;
+      border-radius: 4px;
+      padding: 0 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+    
+    .btn-invite:hover {
+      background: var(--color5);
+    }
+    
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    .loading-content {
+      background: var(--color10);
+      padding: 20px 30px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--color8);
+    }
+    
+    .spinner {
+      width: 30px;
+      height: 30px;
+      border: 3px solid var(--color8);
+      border-top-color: var(--color3);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .empty-contributors {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 80px !important;
+      text-align: center;
+      padding: 20px;
+      background: var(--color19);
+      border-radius: 8px;
+      margin: 10px 0;
+      border: 1px dashed var(--color8);
+    }
+    
+    .empty-state {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    
+    .empty-icon {
+      font-size: 48px;
+      color: var(--color4);
+      margin-bottom: 16px;
+      opacity: 0.6;
+    }
+    
+    .empty-state h3 {
+      color: var(--color4);
+      margin: 16px 0 8px;
+      font-size: 1.5rem;
+    }
+    
+    .empty-state p {
+      color: var(--color18);
+      margin-bottom: 24px;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    
+    @media (max-width: 768px) {
+      .contributors-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .contributors-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+    }
+  </style>
+
+
+
+<div class="contributors-tab">
+  <div class="contributors-header">
+    <h3>Studio Team</h3>
+    <input type="text" id="contributorSearch" class="contributors-search" placeholder="Search studio...">
+  </div>
+  
+  <!-- Managers Section -->
+  <div class="contributors-list-section">
+    <h4>Managers</h4>
+    <div class="contributors-grid" id="managersGrid">
+      {% set creator = managers|selectattr('role', 'equalto', 'creator')|first %}
+      {% if creator %}
+      <div class="contributor-card" data-username="{{ creator.user.username|lower }}" data-role="creator">
+        <img src="{{ creator.user.profile_pic_url or '/static/themes/makecore/img/default_avatar.svg' }}" alt="{{ creator.user.username }}" class="contributor-avatar">
+        <div class="contributor-info">
+          <div class="contributor-name">{{ creator.user.username }}</div>
+          <span class="contributor-role creator">Creator</span>
+        </div>
+      </div>
+      {% endif %}
+      
+      {% for member in managers %}
+        {% if member.role != 'creator' %}
+        <div class="contributor-card" data-username="{{ member.user.username|lower }}" data-role="manager">
+          <img src="{{ member.user.profile_pic_url or '/static/themes/makecore/img/default_avatar.svg' }}" alt="{{ member.user.username }}" class="contributor-avatar">
+          <div class="contributor-info">
+            <div class="contributor-name">{{ member.user.username }}</div>
+            <span class="contributor-role manager">Manager</span>
+          </div>
+          {% if role in ['creator'] %}
+          <div class="contributor-actions">
+            <form method="POST" action="{{ url_for('remove_member', studio_id=studio.id, member_id=member.user_id) }}" 
+                  onsubmit="return confirm('Are you sure you want to remove this manager?');">
+              <button type="submit" class="btn-action remove" title="Remove Manager">
+                <i class="fas fa-user-minus"></i> Remove
+              </button>
+            </form>
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+  
+  <!-- Contributors Section -->
+  <div id="contributorsSection" class="contributors-list-section">
+    <h4>Contributors</h4>
+    {% if contributors|length > 0 %}
+    <div class="contributors-grid" id="contributorsGrid">
+      {% for member in contributors %}
+      <div class="contributor-card" data-username="{{ member.user.username|lower }}" data-role="contributor">
+        <img src="{{ member.user.profile_pic_url or '/static/themes/makecore/img/default_avatar.svg' }}" alt="{{ member.user.username }}" class="contributor-avatar">
+        <div class="contributor-info">
+          <div class="contributor-name">{{ member.user.username }}</div>
+          <span class="contributor-role">Contributor</span>
+        </div>
+        {% if role in ['creator', 'manager'] %}
+        <div class="contributor-actions">
+          <div class="dropdown">
+            <button class="dropdown-toggle" onclick="toggleDropdown(this)">
+              <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <div class="dropdown-menu">
+              <form method="POST" action="{{ url_for('promote_member', studio_id=studio.id, member_id=member.user_id) }}" 
+                    onsubmit="return confirm('Promote this user to manager? They will be able to manage contributors and studio settings.');">
+                <button type="submit" class="dropdown-item promote">
+                  <i class="fas fa-arrow-up"></i> Promote
+                </button>
+              </form>
+              <form method="POST" action="{{ url_for('remove_member', studio_id=studio.id, member_id=member.user_id) }}" 
+                    onsubmit="return confirm('Are you sure you want to remove this contributor?');">
+                <button type="submit" class="dropdown-item remove">
+                  <i class="fas fa-user-minus"></i> Remove
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-contributors">
+      <div class="empty-state">
+        <h3>No contributors yet</h3>
+        {% if role == 'creator' %}
+        <p style="width: 420px;">Invite people to contribute to your studio</p>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  
+  <!-- No contributors -->
+  <div id="noContributorsMessage" class="empty-contributors" style="display: none;">
+    <div class="empty-state">
+      <h3>No contributors found</h3>
+    </div>
+  </div>
+
+  <!-- Pending Invites Section -->
+  {% if pending %}
+  <div class="contributors-list-section">
+    <h4>Pending Invites</h4>
+    <div class="contributors-grid" id="pendingGrid">
+      {% for invite in pending %}
+      <div class="contributor-card" data-username="{{ invite.user.username|lower }}" data-role="pending">
+        <img src="{{ invite.user.profile_pic_url or '/static/themes/makecore/img/default_avatar.svg' }}" alt="{{ invite.user.username }}" class="contributor-avatar">
+        <div class="contributor-info">
+          <div class="contributor-name">{{ invite.user.username }}</div>
+          <span class="contributor-role">Invited</span>
+        </div>
+        <div class="contributor-actions">
+          {% if user and invite.user.username == user.username and not invite.accepted %}
+            <form method="POST" action="{{ url_for('join_studio', studio_id=studio.id) }}">
+              <button type="submit" class="btn-action promote" title="Accept Invitation">
+                <i class="fas fa-check"></i> Accept
+              </button>
+            </form>
+          {% endif %}
+          {% if role in ['creator', 'manager'] %}
+            <div class="dropdown">
+              <button class="dropdown-toggle" onclick="toggleDropdown(this)">
+                <i class="fas fa-ellipsis-v"></i>
+              </button>
+              <div class="dropdown-menu">
+                <form method="POST" action="{{ url_for('remove_member', studio_id=studio.id, member_id=invite.user_id) }}" 
+                      onsubmit="return confirm('Are you sure you want to revoke this invitation?');">
+                  <button type="submit" class="dropdown-item remove">
+                    <i class="fas fa-times"></i> Revoke
+                  </button>
+                </form>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+  
+  <!-- Invite Form -->
+  {% if role in ['creator', 'manager'] %}
+  <div class="invite-form">
+    <h4>Invite New Contributor</h4>
+    <form method="POST" action="{{ url_for('invite_member', studio_id=studio.id) }}" class="invite-form-inner">
+      <input type="text" name="invite_username" class="invite-input" placeholder="Enter username" required>
+      <button type="submit" class="btn-invite">
+        <i class="fas fa-paper-plane"></i> Send Invite
+      </button>
+    </form>
+  </div>
+  {% endif %}
+</div>
+
+<div id="loading-overlay" class="loading-overlay">
+  <div class="loading-content">
+    <div class="spinner"></div>
+    <div id="loading-text">Loading...</div>
+  </div>
+</div>
+
+<script>
+
+  const contributorSearch = document.getElementById('contributorSearch');
+  if (contributorSearch) {
+    const noContributorsMessage = document.getElementById('noContributorsMessage');
+    const contributorsSection = document.getElementById('contributorsSection');
+    
+    contributorSearch.addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.contributor-card');
+      let hasVisibleContributors = false;
+      let hasAnyVisible = false;
+      
+      cards.forEach(card => {
+        if (card.dataset.role === 'contributor') {
+          const username = card.dataset.username || '';
+          const nameElement = card.querySelector('.contributor-name');
+          const name = nameElement ? nameElement.textContent.toLowerCase() : '';
+          
+          if (!searchTerm || 
+              username.includes(searchTerm) || 
+              name.includes(searchTerm)) {
+            hasVisibleContributors = true;
+          }
+        }
+      });
+      
+      cards.forEach(card => {
+        const isCreator = card.dataset.role === 'creator';
+        const username = card.dataset.username || '';
+        const role = card.dataset.role || '';
+        const nameElement = card.querySelector('.contributor-name');
+        const name = nameElement ? nameElement.textContent.toLowerCase() : '';
+        
+        if (isCreator) {
+          card.style.display = 'flex';
+          hasAnyVisible = true;
+          return;
+        }
+        
+        if (!searchTerm || 
+            username.includes(searchTerm) || 
+            role.includes(searchTerm) || 
+            name.includes(searchTerm)) {
+          card.style.display = 'flex';
+          if (role === 'contributor') hasVisibleContributors = true;
+          hasAnyVisible = true;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      
+      if (searchTerm) {
+        if (hasVisibleContributors) {
+          contributorsSection.style.display = 'block';
+          noContributorsMessage.style.display = 'none';
+        } else {
+          contributorsSection.style.display = 'none';
+          noContributorsMessage.style.display = 'flex';
+        }
+      } else {
+        contributorsSection.style.display = 'block';
+        noContributorsMessage.style.display = 'none';
+      }
+    });
+  }
+  
+  document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', function(e) {
+      const onsubmitAttr = form.getAttribute('onsubmit');
+      if (!onsubmitAttr || !onsubmitAttr.includes('confirm')) {
+        document.getElementById('loading-overlay').style.display = 'flex';
+      }
+    });
+  });
+
+  function toggleDropdown(button) {
+    const dropdown = button.nextElementSibling;
+    const isOpen = dropdown.classList.contains('show');
+    
+    document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+      menu.classList.remove('show');
+    });
+    
+    if (!isOpen) {
+      dropdown.classList.add('show');
+    }
+  }
+
+  document.addEventListener('click', function(event) {
+    if (!event.target.closest('.dropdown')) {
+      document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+        menu.classList.remove('show');
+      });
+    }
+  });
+</script>

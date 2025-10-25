@@ -1,0 +1,103 @@
+body {
+  min-height: 100vh;
+  margin: 0;
+}
+
+.feedback-form-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+}
+
+.feedback-form-wrapper h2 {
+  font-family: 'Fira Code', monospace;
+  font-size: 2.2rem;
+  background: var(--color1);
+  border-radius: 24px;
+  padding: 8px 36px;
+  display: inline-block;
+  border: none;
+  margin-bottom: 18px;
+  color: var(--color7);
+  box-shadow: 0 2px 12px rgba(var(--color1-rgb), 0.27);
+}
+
+.feedback-form-wrapper form {
+  max-width: 420px;
+  width: 100%;
+  background: rgba(var(--color1-rgb), 0.8);
+  padding: 32px 24px 24px 24px;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(var(--color1-rgb), 0.27);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  font-family: 'Fira Code', monospace;
+  color: var(--color7);
+}
+
+.feedback-form-wrapper label {
+  font-size: 1.1rem;
+  margin-bottom: 2px;
+  font-weight: 500;
+  color: var(--color7);
+}
+
+.feedback-form-wrapper select,
+.feedback-form-wrapper textarea,
+.feedback-form-wrapper input[type="email"] {
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--color1);
+  padding: 8px 14px;
+  background: #fff9f6;
+  color: var(--color7);
+  margin-bottom: 8px;
+  font-family: 'Fira Code', monospace;
+  box-shadow: 0 2px 8px rgba(var(--color1-rgb), 0.2);
+  outline: none;
+  transition: border 0.2s;
+}
+
+.feedback-form-wrapper textarea {
+  resize: none;
+}
+
+.feedback-form-wrapper select:focus,
+.feedback-form-wrapper textarea:focus,
+.feedback-form-wrapper input[type="email"]:focus {
+  border: 1.5px solid var(--color1);
+}
+
+.feedback-form-wrapper button[type="submit"],
+.btn-orange {
+  background: linear-gradient(90deg, var(--color2) 60%, var(--color2) 100%);
+  color: var(--color7);
+  border: none;
+  border-radius: 10px;
+  padding: 12px 0;
+  font-size: 1.1rem;
+  font-family: 'Fira Code', monospace;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  box-shadow: 0 2px 12px rgba(var(--color1-rgb), 0.27);
+  transition: background 0.2s;
+}
+.feedback-form-wrapper button[type="submit"]:hover,
+.btn-orange:hover {
+  background: linear-gradient(90deg, var(--color2) 60%, var(--color2) 100%);
+}
+
+@media (max-width: 600px) {
+  .feedback-form-wrapper form {
+    padding: 18px 2vw 14px 2vw;
+    max-width: 98vw;
+  }
+  .feedback-form-wrapper h2 {
+    font-size: 1.3rem;
+    padding: 6px 12px;
+  }
+}

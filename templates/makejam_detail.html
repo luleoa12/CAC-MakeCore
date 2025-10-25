@@ -1,0 +1,347 @@
+{% extends 'base.html' %}
+{% block head %}
+<link rel="stylesheet" href="/static/css/makejam.css">
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<style>
+body, .orange-theme, .studio-section, .makejam-header-content, .makejam-header-text, .studio-title, .program-meta, .program-meta-item, .program-description, .btn, .btn-orange, .submission-container, .makejam-section-title, .makejam-submit-form, .form-group, input, label, textarea {
+  font-family: 'Fira Code', monospace !important;
+}
+</style>
+
+<div class="orange-theme studio-section">
+  <div class="program-header">
+
+    <div class="makejam-header-content">
+      {% if jam.thumbnail %}
+      <div class="makejam-thumbnail">
+        <img src="{{ jam.thumbnail }}" alt="{{ jam.name.replace('Biweekly ', '') }} thumbnail" onerror="console.error('Failed to load thumbnail:', this.src)">
+      </div>
+      {% else %}
+
+      {% endif %}
+      <div class="makejam-header-text">
+        <h1 class="studio-title">{{ jam.name.replace('Biweekly ', '') }}</h1>
+        <div class="program-meta">
+          
+          <div class="program-meta-item">
+            <span class="meta-label">Status:</span>
+            <span class="meta-value" id="jam-status">{% if jam_end_pdt > now_pdt %}Ongoing{% else %}Closed{% endif %}</span>
+            {% set seconds_left = (jam_end_pdt - now_pdt).total_seconds() | int %}
+            {% if seconds_left > 3600 %}
+              <span class="meta-label" style="margin-left: 24px;">Ends:</span>
+              <span class="meta-value">{{ jam_end_pdt.strftime('%b %d, %Y %I:%M%p').replace('AM', 'am').replace('PM', 'pm') }} PDT</span>
+            {% elif seconds_left > 60 %}
+              <span class="meta-label" style="margin-left: 24px;">Time Left:</span>
+              <span class="meta-value" id="jam-timer">
+                {{ (seconds_left // 60) }} minutes remaining!
+              </span>
+            {% elif seconds_left > 0 %}
+              <span class="meta-label" style="margin-left: 24px;">Time Left:</span>
+              <span class="meta-value" id="jam-timer">
+                {{ seconds_left }} seconds remaining!
+              </span>
+            {% endif %}
+          </div>
+        <script>
+const jamId = {{ jam.id }};
+let jamStatusInterval = null;
+
+function formatJamTimer(seconds_left) {
+  if (seconds_left > 60) {
+    const min = Math.floor(seconds_left / 60);
+    return `${min} minute${min !== 1 ? 's' : ''} remaining!`;
+  } else if (seconds_left > 0) {
+    return `${seconds_left} second${seconds_left !== 1 ? 's' : ''} remaining!`;
+  } else {
+    return "Jam Closed";
+  }
+}
+
+function updateJamStatus() {
+  fetch(`/api/jam_status/${jamId}`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('jam-status').textContent = data.status;
+
+      const timerLabel = document.querySelector('.meta-label[style*="margin-left"]');
+      const timerValue = document.getElementById('jam-timer');
+      if (data.status === 'Ongoing') {
+        if (timerLabel) timerLabel.style.display = '';
+        if (timerValue) {
+          timerValue.style.display = '';
+          timerValue.textContent = formatJamTimer(data.seconds_left);
+        }
+
+        if (data.seconds_left <= 60 && jamStatusInterval && jamStatusInterval._interval !== 1000) {
+          clearInterval(jamStatusInterval.id);  
+          jamStatusInterval = setSmartInterval(updateJamStatus, 1000);
+        } else if (data.seconds_left > 60 && jamStatusInterval && jamStatusInterval._interval !== 15000) {
+          clearInterval(jamStatusInterval.id);
+          jamStatusInterval = setSmartInterval(updateJamStatus, 15000);
+        }
+
+        const dateSpan = document.querySelector('.program-meta-item .meta-value[data-date]');
+        if (dateSpan && dateSpan.dataset.state !== 'short') {
+          dateSpan.textContent = dateSpan.dataset.short;
+          dateSpan.dataset.state = 'short';
+        }
+      } else {
+        if (timerLabel) timerLabel.style.display = 'none';
+        if (timerValue) timerValue.style.display = 'none';
+
+        const submissionWrapper = document.getElementById('makejam-submission-wrapper');
+        if (submissionWrapper) submissionWrapper.style.display = 'none';
+        const rubricWrapper = document.getElementById('makejam-rubric-wrapper');
+        if (rubricWrapper) rubricWrapper.style.display = 'none';
+        const submitBtnWrapper = document.getElementById('makejam-submit-btn-wrapper');
+        if (submitBtnWrapper) submitBtnWrapper.style.display = 'none';
+        if (jamStatusInterval) clearInterval(jamStatusInterval.id);
+
+        const dateSpan = document.querySelector('.program-meta-item .meta-value[data-date]');
+        if (dateSpan && dateSpan.dataset.state !== 'full') {
+          dateSpan.textContent = dateSpan.dataset.full;
+          dateSpan.dataset.state = 'full';
+        }
+      }
+    });
+}
+
+function setSmartInterval(fn, ms) {
+  const id = setInterval(fn, ms);
+  id._interval = ms;
+  return { id, _interval: ms };
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  jamStatusInterval = setSmartInterval(updateJamStatus, 15000);
+  updateJamStatus();
+});
+</script>
+          <div class="program-meta-item">
+            <span class="meta-label">Dates:</span>
+<span class="meta-value" data-date data-short="{{ jam_start_pdt.strftime('%b %d') }} - {{ jam_end_pdt.strftime('%b %d, %Y') }}" data-full="{{ jam_start_pdt.strftime('%b %d, %Y %H:%M') }} PDT - {{ jam_end_pdt.strftime('%b %d, %Y %H:%M') }} PDT" data-state="{% if jam_end_pdt > now_pdt %}short{% else %}full{% endif %}">
+  {% if jam_end_pdt > now_pdt %}
+    {{ jam_start_pdt.strftime('%b %d') }} - {{ jam_end_pdt.strftime('%b %d, %Y') }}
+  {% else %}
+    {{ jam_start_pdt.strftime('%b %d, %Y %H:%M') }} PDT - {{ jam_end_pdt.strftime('%b %d, %Y %H:%M') }} PDT
+  {% endif %}
+</span>
+          </div>
+        </div>
+        <div class="program-description">
+          {{ jam.description }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if user %}
+    {% if jam_end_pdt > now_pdt %}
+      <div id="makejam-submission-wrapper" class="submission-container">
+        <div class="program-main" id="submit-form">
+          <h2 class="makejam-section-title">Your Submission</h2>
+          <form method="POST" class="makejam-submit-form">
+            <div class="form-group">
+              <label for="project_title">Project Title</label>
+              <input type="text" id="project_title" name="project_title" required 
+                     value="{{ user_submission.project_title if user_submission else '' }}"
+                     placeholder="Enter your project title">
+            </div>
+            
+            <div class="form-group">
+              <label for="project_link">Project Link</label>
+              <input type="url" id="project_link" name="project_link" required
+                     value="{{ user_submission.project_link if user_submission else '' }}"
+                     placeholder="https://example.com">
+            </div>
+            
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea id="description" name="description" rows="4" 
+                        placeholder="Tell us about your project...">{{ user_submission.description if user_submission else '' }}</textarea>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn">
+                <span>{{ 'Update' if user_submission else 'Submit' }} Project</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div class="rubric-container" id="makejam-rubric-wrapper">
+          <div class="rubric-card">
+            <h3 class="rubric-title">Rubric</h3>
+            <div class="rubric-criteria">
+              <div class="criterion">
+                <div class="criterion-header">
+                  <span class="criterion-name">Theme Use</span>
+                  <span class="criterion-points">15 pts</span>
+                </div>
+                <div class="criterion-desc">Uses the Theme often</div>
+              </div>
+              
+              <div class="criterion">
+                <div class="criterion-header">
+                  <span class="criterion-name">Theme Build</span>
+                  <span class="criterion-points">10 pts</span>
+                </div>
+                <div class="criterion-desc">Built Around the Theme</div>
+              </div>
+              
+              <div class="criterion">
+                <div class="criterion-header">
+                  <span class="criterion-name">Art Style</span>
+                  <span class="criterion-points">10 pts</span>
+                </div>
+                <div class="criterion-desc">Consistent Art Style</div>
+              </div>
+              
+              <div class="criterion">
+                <div class="criterion-header">
+                  <span class="criterion-name">Art Originality</span>
+                  <span class="criterion-points">5 pts</span>
+                </div>
+                <div class="criterion-desc">Doesn't Copy other Art</div>
+              </div>
+              
+              <div class="criterion">
+                <div class="criterion-header">
+                  <span class="criterion-name">Gameplay</span>
+                  <span class="criterion-points">15 pts</span>
+                </div>
+                <div class="criterion-desc">Fun and Engaging</div>
+              </div>
+              
+              <div class="criterion">
+                <div class="criterion-header">
+                  <span class="criterion-name">Gameplay Originality</span>
+                  <span class="criterion-points">10 pts</span>
+                </div>
+                <div class="criterion-desc">Unique and Creative</div>
+              </div>
+              
+              <div class="criterion">
+                <div class="criterion-header">
+                  <span class="criterion-name">Controls</span>
+                  <span class="criterion-points">5 pts</span>
+                </div>
+                <div class="criterion-desc">Intuitive and Responsive</div>
+              </div>
+              
+              <div class="criterion">
+                <div class="criterion-header">
+                  <span class="criterion-name">Sound Design</span>
+                  <span class="criterion-points">5 pts</span>
+                </div>
+                <div class="criterion-desc">Enhances the Experience</div>
+              </div>
+              
+              <div class="criterion">
+                <div class="criterion-header">
+                  <span class="criterion-name">Polish</span>
+                  <span class="criterion-points">5 pts</span>
+                </div>
+                <div class="criterion-desc">Few to No Bugs</div>
+              </div>
+              
+              <div class="criterion">
+                <div class="criterion-header">
+                  <span class="criterion-name">Replayability</span>
+                  <span class="criterion-points">5 pts</span>
+                </div>
+                <div class="criterion-desc">Encourages Multiple Plays</div>
+              </div>
+              
+              <div class="criterion">
+                <div class="criterion-header">
+                  <span class="criterion-name">Theme Interpretation</span>
+                  <span class="criterion-points">10 pts</span>
+                </div>
+                <div class="criterion-desc">Creative Take on the Theme</div>
+              </div>
+              
+              <div class="criterion">
+                <div class="criterion-header">
+                  <span class="criterion-name">Overall Enjoyment</span>
+                  <span class="criterion-points">5 pts</span>
+                </div>
+                <div class="criterion-desc">How Much Fun Was It?</div>
+              </div>
+            </div>
+            <div class="rubric-total">
+              <span>Total: 100 pts</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="alert alert-info">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin-right: 8px;">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" fill="var(--color7)"/>
+        </svg>
+        Submissions are closed for this contest. You can view all submissions below.
+      </div>
+    {% endif %}
+  {% else %}
+    <div class="alert alert-warning">
+      <a href="/login" class="login-link">Log in</a>&nbsp;to submit your project!
+    </div>
+  {% endif %}
+
+  <div class="submissions-section">
+    <h2 class="makejam-section-title">All Submissions</h2>
+    <div class="submissions-grid">
+      {% if submissions|length > 0 %}
+        {% for submission in submissions %}
+          <div class="makejam-sub-card">
+            <div class="makejam-sub-check">
+              <img 
+                data-theme-src="{{ submission.user.profile_pic_url or '/static/themes/makecore/img/default_avatar.svg' }}" 
+                alt="{{ submission.user.username }}" 
+                class="submission-user-avatar"
+                onerror="this.onerror=null; this.src='/static/themes/makecore/img/default_avatar.svg'"
+              >
+            </div>
+            <h3>{{ submission.project_title }}</h3>
+            <p>{{ submission.description|safe }}</p>
+            <div class="submission-meta">
+              <span class="submission-date">
+                {% if submission.submitted_at %}
+                  {{ submission.submitted_at.strftime('%b %d, %Y') }}
+                {% else %}
+                  Submitted
+                {% endif %}
+              </span>
+              <a href="{{ submission.project_link }}" target="_blank" class="submission-link">
+                View Project
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="no-submissions">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--color7)" stroke-width="1.5">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <p>No submissions yet. Be the first to submit!</p>
+          <div id="makejam-submit-btn-wrapper">
+  {% if user and jam_end_pdt > now_pdt %}
+    <a href="#submit-form" class="btn" style="margin-top: 16px;">
+      Submit Your Project
+    </a>
+  {% endif %}
+</div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

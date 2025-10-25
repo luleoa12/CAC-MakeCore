@@ -1,0 +1,475 @@
+{% extends 'base.html' %}
+{% block head %}
+  <link href="https://fonts.googleapis.com/css?family=Fira+Code:400,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/makejam.css">
+  <link rel="stylesheet" href="/static/css/makejam_list.css">
+  {{ super() }}
+  <script>
+    function switchContestSection(section, button) {
+      document.querySelectorAll('.makejam-switch-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      button.classList.add('active');
+      
+      document.querySelectorAll('.makejam-section').forEach(section => {
+        section.style.display = 'none';
+      });
+      
+      const sectionToShow = document.querySelector(`.makejam-section[data-section="${section}"]`);
+      if (sectionToShow) {
+        sectionToShow.style.display = 'block';
+      }
+    }
+  </script>
+{% endblock %}
+{% block content %}
+
+{% if user.username == 'MakeJam' %}
+<div class="makejam-admin-dashboard-wrapper" style="display: flex; justify-content: center; align-items: center; height: 80vh;">
+  <div style="text-align: center;">
+    <a href="/makejams/new"
+       style="
+        display: inline-block;
+        font-size: 2rem;
+        padding: 24px 64px;
+        background: linear-gradient(135deg, var(--color2) 60%, var(--color1) 100%);
+        color: #fff;
+        border: none;
+        border-radius: 20px;
+        font-weight: 700;
+        font-family: 'Fira Code', monospace, monospace;
+        box-shadow: 0 4px 16px rgba(var(--color1-rgb), 0.27);
+        text-decoration: none;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin: 0 auto;
+      "
+      onmouseover="this.style.background='linear-gradient(135deg, var(--color1) 60%, var(--color2) 100%)';this.style.transform='translateY(-2px) scale(1.03)';this.style.boxShadow='0 8px 24px rgba(var(--color1-rgb), 0.47)';"
+      onmouseout="this.style.background='linear-gradient(135deg, var(--color2) 60%, var(--color1) 100%)';this.style.transform='none';this.style.boxShadow='0 4px 16px rgba(var(--color1-rgb), 0.27)';"
+    >
+      Create MakeJam
+    </a>
+  </div>
+</div>
+{% else %}
+<div class="makejam-dashboard-outer">
+
+
+  {% if no_active_jam %}
+  <div class="makejam-contest-header" style="width: 1000px; margin: 40px auto 20px auto; text-align: center; padding: 32px 0; font-size: 1.3rem; font-family: 'Fira Code', monospace; color: var(--color4); background: var(--color10); border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.05);">
+    <b>No active MakeJam contest at the moment.</b>
+  </div>
+{% else %}
+<div class="makejam-contest-header" style="display: flex; gap: 30px; width: 950px; margin: 20px auto; align-items: center;">
+    {% if active_jams and active_jams[0].thumbnail %}
+      <img src="{{ active_jams[0].thumbnail }}" 
+           alt="{{ active_jams[0].name }}" 
+           style="width: 160px; height: 120px; object-fit: cover; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); flex-shrink: 0;">
+    {% endif %}
+    <div class="makejam-header-text" style="flex: 1;">
+      <h1 class="studio-title">{{ active_jams[0].name }}</h1>
+      <div class="program-meta">
+        <div class="program-meta-item">
+          <span class="meta-label">Status:</span>
+          <span class="meta-value">Ongoing</span>
+        </div>
+
+        {% if minutes_remaining is not none and minutes_remaining >= 120 %}
+        <div class="program-meta-item">
+          <span class="meta-label">Ends:</span>
+          <span class="meta-value">{{ active_jams[0].end_date.astimezone(now_pdt.tzinfo).strftime('%b %d, %Y %I:%M%p').replace('AM', 'am').replace('PM', 'pm') }} PDT</span>
+        </div>
+        {% elif minutes_remaining is not none and minutes_remaining > 0 %}
+        <div class="program-meta-item">
+          <span class="meta-label">Time Left:</span>
+          <span class="meta-value" style="color: var(--color4); font-family: 'Fira Code', monospace; font-size: 1.09rem;"><b>{{ minutes_remaining }}</b> minutes remaining</span>
+        </div>
+        {% elif minutes_remaining is not none and minutes_remaining == 0 %}
+        <div class="program-meta-item">
+          <span class="meta-label">Time Left:</span>
+          <span class="meta-value" style="color: var(--color4); font-family: 'Fira Code', monospace; font-size: 0.96rem;"><b>Less than 1 minute remaining!</b></span>
+        </div>
+        {% endif %}
+      </div>
+      <div class="program-description">
+        {{ active_jams[0].description }}
+      </div>
+    </div>
+    
+    <div style="display: flex; flex-direction: column; justify-content: center; gap: 8px; margin-left: 20px; min-width: 160px; height: 100%;">
+      <a href="#" class="makejam-mini-btn" id="viewRubricBtn" style="
+        background: var(--color14);
+        color: white;
+        padding: 8px 4px;
+        border-radius: 8px;
+        border: 1.5px solid var(--color14);
+        text-align: center;
+        font-family: 'Fira Code', monospace;
+        font-size: 13px;
+        text-decoration: none;
+        border: none;
+        box-shadow: 0 2px 8px rgba(255, 107, 53, 0.2);
+        transition: all 0.2s ease;
+        width: 100%;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+        cursor: pointer;">
+        View Rubric
+      </a>
+      <a href="{{ url_for('makejam_detail', jam_id=active_jams[0].id) }}" class="makejam-mini-btn" style="
+        background: white;
+        color: var(--color14);
+        padding: 8px 4px;
+        border-radius: 8px;
+        text-align: center;
+        font-family: 'Fira Code', monospace;
+        font-size: 13px;
+        text-decoration: none;
+        border: 1.5px solid var(--color14);
+        transition: all 0.2s ease;
+        font-weight: 500;
+        width: 100%;
+        letter-spacing: 0.3px;
+        box-shadow: 0 2px 8px rgba(255, 107, 53, 0.1);">
+        View MakeJam
+      </a>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="makejam-bottom-container">
+
+    <div class="makejam-left-col" style="max-width: 800px; margin: 0 auto;">
+          <div class="makejam-switch-btns" style="display: flex; gap: 14px; margin-bottom: 24px; justify-content: flex-start;">
+        <button class="makejam-switch-btn active" type="button" onclick="switchContestSection('past', this)">Past Contests</button>
+        <button class="makejam-switch-btn" type="button" onclick="switchContestSection('my', this)">My Contests</button>
+      </div>
+  
+      <div class="makejam-past-contests makejam-section" data-section="past" style="font-family: 'Fira Code', monospace; padding: 20px 0;">
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 0 20px; max-height: 490px; overflow-y: auto; box-shadow: 0 2px 12px rgba(var(--color1-rgb), 0.13) inset;">
+          {% for jam in past_jams %}
+          <div class="makejam-contest-card" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <a href="{{ url_for('makejam_detail', jam_id=jam.id) }}" style="text-decoration: none; color: inherit; display: block; height: 100%;">
+              <div class="makejam-contest-thumbnail" style="position: relative; width: 100%; height: 0; padding-bottom: 60%; overflow: hidden;">
+                {% if jam.thumbnail %}
+                  <img src="{{ jam.thumbnail }}" alt="{{ jam.name }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+                {% else %}
+                  <img src="{{ url_for('static', filename='img/makejam-default.jpg') }}" alt="{{ jam.name }}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+                {% endif %}
+              </div>
+              <div style="padding: 12px;">
+                <div style="font-size: 15px; font-weight: 600; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ jam.name.replace('Biweekly ', '') }}</div>
+                <div style="font-size: 10px; color: #666;">
+                  {{ jam.start_date.strftime('%b %d') }} - {{ jam.end_date.strftime('%b %d, %Y') }}
+                </div>
+              </div>
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      
+      <!-- My Contests Section -->
+      <div class="makejam-my-contests makejam-section" data-section="my" style="font-family: 'Fira Code', monospace; padding: 20px 0; display: none;">
+        {% if participated_jams %}
+          <div style="max-height: 530px; overflow-y: auto; padding: 0 20px;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="border-bottom: 2px solid var(--color2);">
+                  <th style="text-align: left; padding: 10px 15px; color: var(--color2);">Contest</th>
+                  <th style="text-align: center; padding: 10px 15px; color: var(--color2);">Date</th>
+                  <th style="text-align: right; padding: 10px 15px; color: var(--color2);">Rating Change</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for jam in participated_jams|sort(attribute='end_date', reverse=true) %}
+                  {% set submission = jam.submissions|selectattr('user_id', 'equalto', user.id)|first %}
+                  {% if submission %}
+                    <tr style="border-bottom: 1px solid var(--color2);">
+                      <td style="padding: 12px 15px;">
+                        <a href="{{ url_for('makejam_detail', jam_id=jam.id) }}" style="color: var(--color3); text-decoration: none; font-weight: 500;">
+                          {{ jam.name.replace('Biweekly ', '') }}
+                        </a>
+                      </td>
+                      <td style="text-align: center; padding: 12px 15px; color: var(--color3);">
+                        {{ jam.end_date.strftime('%b %d, %Y') }}
+                      </td>
+                      <td style="text-align: right; padding: 12px 15px; font-weight: 500; color: {% if submission.rating_change is none or submission.rating_change == 0 %}#666{% elif submission.rating_change > 0 %}#4caf50{% else %}#f44336{% endif %};">
+                        {% if submission.rating_change is none %}-{% else %}{{ "%+d"|format(submission.rating_change) if submission.rating_change != 0 else "-" }}{% endif %}
+                      </td>
+                    </tr>
+                  {% endif %}
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <div style="text-align: center; padding: 40px 20px; color: var(--color4); font-size: 1.1rem;">
+            You haven't participated in any contests yet.
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+  
+    <!-- leaderboard section (bottom row, right column) -->
+    <div class="makejam-right-col">
+  <div style="display: flex; border-bottom: 2px solid var(--color3); margin-bottom: 10px;">
+    <h3 class="makejam-section-title" style="border-bottom: none;">Leaderboard</h3>
+    <a href="/leaderboard" style="width: 100px; height: 30px; background: var(--color14); color: #fff; border: none; border-radius: 6px; font-size: 13px; font-family: 'Fira Code', monospace; font-weight: 600; cursor: pointer; margin-left: auto; text-decoration: none; display: flex; align-items: center; justify-content: center;">View All</a>
+  </div>
+  <div class="makejam-leaderboard">
+    {% if leaderboard_users %}
+      {% for u in leaderboard_users %}
+        <div class="makejam-leaderboard-entry">
+          <span class="makejam-leaderboard-rank">{{ loop.index }}.</span>
+          <a class="makejam-leaderboard-name" href="/dashboard/{{ u.username }}">{{ u.username }}</a>
+          <span class="makejam-leaderboard-votes">{{ u.rating|int }}</span>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div style="color: var(--color4);">No leaderboard data.</div>
+    {% endif %}
+  </div>
+</div>
+  </div>
+</div>
+{% endif %}
+
+<!-- Rubric Modal -->
+<div id="rubricModal" class="rubric-modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.4); overflow: hidden;">
+  <div class="rubric-slide-container" style="position: fixed; left: -400px; top: 0; width: 380px; height: 100%; background-color: var(--color8); transition: left 0.3s ease-out; display: flex; flex-direction: column;">
+    <div class="rubric-container" id="makejam-rubric-wrapper" style="flex: 1; overflow-y: auto; padding: 20px; background: none;  position: relative;">
+      <span class="close-rubric" style="position: absolute; right: 20px; top: 20px; color: var(--color7); font-size: 28px; font-weight: bold; cursor: pointer; z-index: 1000001;">&times;</span>
+      <div style="background: none; padding: 0;">
+        <h3 class="rubric-title" style="color: var(--color14); font-family: 'Fira Code', monospace; margin-top: 0; font-size: 1.5rem; border-bottom: 2px solid var(--color1); padding-bottom: 12px; margin-bottom: 20px;">Rubric</h3>
+        <div style="height: 90%; display: grid; grid-template-columns: 1fr; gap: 12px;">
+          <div class="criterion" style="background: var(--color10); border-radius: 8px; padding: 12px; border-left: 4px solid var(--color14);">
+            <div class="criterion-header" style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+              <span class="criterion-name" style="font-weight: 600; color: var(--color2);">Theme Use</span>
+              <span class="criterion-points" style="font-family: 'Fira Code', monospace; color: var(--color14); font-weight: 600;">15 pts</span>
+            </div>
+            <div class="criterion-desc" style="color: var(--color20); font-size: 0.9rem;">Uses the Theme often</div>
+          </div>
+          
+          <div class="criterion" style="background: var(--color10); border-radius: 8px; padding: 12px; border-left: 4px solid var(--color14);">
+            <div class="criterion-header" style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+              <span class="criterion-name" style="font-weight: 600; color: var(--color2);">Theme Build</span>
+              <span class="criterion-points" style="font-family: 'Fira Code', monospace; color: var(--color14); font-weight: 600;">10 pts</span>
+            </div>
+            <div class="criterion-desc" style="color: var(--color20); font-size: 0.9rem;">Built Around the Theme</div>
+          </div>
+          
+          <div class="criterion" style="background: var(--color10); border-radius: 8px; padding: 12px; border-left: 4px solid var(--color14);">
+            <div class="criterion-header" style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+              <span class="criterion-name" style="font-weight: 600; color: var(--color2);">Art Style</span>
+              <span class="criterion-points" style="font-family: 'Fira Code', monospace; color: var(--color14); font-weight: 600;">10 pts</span>
+            </div>
+            <div class="criterion-desc" style="color: var(--color20); font-size: 0.9rem;">Consistent Art Style</div>
+          </div>
+          
+          <div class="criterion" style="background: var(--color10); border-radius: 8px; padding: 12px; border-left: 4px solid var(--color14);">
+            <div class="criterion-header" style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+              <span class="criterion-name" style="font-weight: 600; color: var(--color2);">Art Originality</span>
+              <span class="criterion-points" style="font-family: 'Fira Code', monospace; color: var(--color14); font-weight: 600;">5 pts</span>
+            </div>
+            <div class="criterion-desc" style="color: var(--color20); font-size: 0.9rem;">Doesn't Copy other Art</div>
+          </div>
+          
+          <div class="criterion" style="background: var(--color10); border-radius: 8px; padding: 12px; border-left: 4px solid var(--color14);">
+            <div class="criterion-header" style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+              <span class="criterion-name" style="font-weight: 600; color: var(--color2);">Gameplay</span>
+              <span class="criterion-points" style="font-family: 'Fira Code', monospace; color: var(--color14); font-weight: 600;">15 pts</span>
+            </div>
+            <div class="criterion-desc" style="color: var(--color20); font-size: 0.9rem;">Fun and Engaging</div>
+          </div>
+          
+          <div class="criterion" style="background: var(--color10); border-radius: 8px; padding: 12px; border-left: 4px solid var(--color14);">
+            <div class="criterion-header" style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+              <span class="criterion-name" style="font-weight: 600; color: var(--color2);">Gameplay Originality</span>
+              <span class="criterion-points" style="font-family: 'Fira Code', monospace; color: var(--color14); font-weight: 600;">10 pts</span>
+            </div>
+            <div class="criterion-desc" style="color: var(--color20); font-size: 0.9rem;">Unique and Creative</div>
+          </div>
+          
+          <div class="criterion" style="background: var(--color10); border-radius: 8px; padding: 12px; border-left: 4px solid var(--color14);">
+            <div class="criterion-header" style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+              <span class="criterion-name" style="font-weight: 600; color: var(--color2);">Controls</span>
+              <span class="criterion-points" style="font-family: 'Fira Code', monospace; color: var(--color14); font-weight: 600;">5 pts</span>
+            </div>
+            <div class="criterion-desc" style="color: var(--color20); font-size: 0.9rem;">Intuitive and Responsive</div>
+          </div>
+          
+          <div class="criterion" style="background: var(--color10); border-radius: 8px; padding: 12px; border-left: 4px solid var(--color14);">
+            <div class="criterion-header" style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+              <span class="criterion-name" style="font-weight: 600; color: var(--color2);">Sound Design</span>
+              <span class="criterion-points" style="font-family: 'Fira Code', monospace; color: var(--color14); font-weight: 600;">5 pts</span>
+            </div>
+            <div class="criterion-desc" style="color: var(--color20); font-size: 0.9rem;">Enhances the Experience</div>
+          </div>
+          
+          <div class="criterion" style="background: var(--color10); border-radius: 8px; padding: 12px; border-left: 4px solid var(--color14);">
+            <div class="criterion-header" style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+              <span class="criterion-name" style="font-weight: 600; color: var(--color2);">Polish</span>
+              <span class="criterion-points" style="font-family: 'Fira Code', monospace; color: var(--color14); font-weight: 600;">5 pts</span>
+            </div>
+            <div class="criterion-desc" style="color: var(--color20); font-size: 0.9rem;">Few to No Bugs</div>
+          </div>
+          
+          <div class="criterion" style="background: var(--color10); border-radius: 8px; padding: 12px; border-left: 4px solid var(--color14);">
+            <div class="criterion-header" style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+              <span class="criterion-name" style="font-weight: 600; color: var(--color2);">Replayability</span>
+              <span class="criterion-points" style="font-family: 'Fira Code', monospace; color: var(--color14); font-weight: 600;">5 pts</span>
+            </div>
+            <div class="criterion-desc" style="color: var(--color20); font-size: 0.9rem;">Encourages Multiple Plays</div>
+          </div>
+          
+          <div class="criterion" style="background: var(--color10); border-radius: 8px; padding: 12px; border-left: 4px solid var(--color14);">
+            <div class="criterion-header" style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+              <span class="criterion-name" style="font-weight: 600; color: var(--color2);">Overall Impression</span>
+              <span class="criterion-points" style="font-family: 'Fira Code', monospace; color: var(--color14); font-weight: 600;">10 pts</span>
+            </div>
+            <div class="criterion-desc" style="color: var(--color20); font-size: 0.9rem;">How much you enjoyed it</div>
+          </div>
+          
+          <div class="criterion" style="background: var(--color10); border-radius: 8px; padding: 12px; border-left: 4px solid var(--color14);">
+            <div class="criterion-header" style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+              <span class="criterion-name" style="font-weight: 600; color: var(--color2);">Overall Enjoyment</span>
+              <span class="criterion-points" style="font-family: 'Fira Code', monospace; color: var(--color14); font-weight: 600;">5 pts</span>
+            </div>
+            <div class="criterion-desc" style="color: var(--color20); font-size: 0.9rem;">How Much Fun Was It?</div>
+          </div>
+        </div>
+        
+      </div>
+      
+    </div>
+    <div class="rubric-total" style="margin-right: 20px; text-align: right; font-family: 'Fira Code', monospace; font-weight: 600; color: var(--color11); font-size: 1.1rem; padding: 12px 0; margin-top: auto;">
+      <span>Total: 100 pts</span>
+    </div>
+</div>
+
+<script>
+var modal = document.getElementById("rubricModal");
+var btn = document.getElementById("viewRubricBtn");
+var span = document.getElementsByClassName("close-rubric")[0];
+var slideContainer = document.querySelector(".rubric-slide-container");
+
+if (btn) {
+  btn.onclick = function(e) {
+    e.preventDefault();
+    modal.style.display = "block";
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+      modal.querySelector('.rubric-slide-container').style.left = '0';
+    }, 10);
+  };
+}
+
+if (span) {
+  span.onclick = function() {
+    modal.querySelector('.rubric-slide-container').style.left = '-400px';
+    setTimeout(() => {
+      modal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }, 300);
+  };
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.querySelector('.rubric-slide-container').style.left = '-400px';
+    setTimeout(() => {
+      modal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }, 300);
+  }
+}
+
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    modal.querySelector('.rubric-slide-container').style.left = '-400px';
+    setTimeout(() => {
+      modal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }, 300);
+    document.body.style.overflow = 'auto'; 
+  }
+});
+</script>
+
+<style>
+
+.rubric-modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+}
+
+
+
+.close-rubric {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  color: var(--color7);
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.2s;
+  z-index: 1001;
+}
+
+.close-rubric:hover,
+.close-rubric:focus {
+  color: var(--color14);
+  text-decoration: none;
+}
+
+.criterion {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.criterion:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 107, 53, 0.15);
+}
+
+.rubric-modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.rubric-modal-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.rubric-modal-content::-webkit-scrollbar-thumb {
+  background: #ffb08f;
+  border-radius: 4px;
+}
+
+.rubric-modal-content::-webkit-scrollbar-thumb:hover {
+  background: #ff6b35;
+}
+</style>
+
+{% endblock %}
+{% block scripts %}
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7H9JTC8BY1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-7H9JTC8BY1');
+</script>
+{% endblock %}

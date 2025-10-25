@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/makejam_new.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="makejam-form-container" style="max-width: 520px;">
+  <div class="makejam-form-header">
+    <h2>Create New MakeJam</h2>
+  </div>
+  <form method="POST" class="studio-form" enctype="multipart/form-data">
+    <label>Name</label>
+    <input type="text" name="name" placeholder="Enter MakeJam name" required value="{{ form_data.name if form_data and form_data.name is not none else '' }}">
+    
+    <label>Description</label>
+    <textarea name="description" rows="3" placeholder="Enter MakeJam description">{{ form_data.description if form_data and form_data.description is not none else '' }}</textarea>
+    
+    <label>Start Date & Time</label>
+    <div style="display: flex; gap: 12px; align-items: center;">
+      <input type="date" name="start_date" required value="{{ form_data.start_date if form_data and form_data.start_date is not none else '' }}">
+      <input type="time" name="start_time" required value="{{ form_data.start_time if form_data and form_data.start_time is not none else '' }}">
+    </div>
+    <label>End Date & Time</label>
+    <div style="display: flex; gap: 12px; align-items: center;">
+      <input type="date" name="end_date" required value="{{ form_data.end_date if form_data and form_data.end_date is not none else '' }}">
+      <input type="time" name="end_time" required value="{{ form_data.end_time if form_data and form_data.end_time is not none else '' }}">
+    </div>
+    
+    <label class="thumbnail-label" style="display:block; margin:18px 0 7px 2px; font-weight:bold; color:var(--color7); font-size:1.08rem; letter-spacing:0.5px;">Thumbnail</label>
+    <div class="image-dropzone" id="image-dropzone">
+      <span class="dropzone-text" id="dropzone-text"><b>Insert Image Here</b><br><span style="font-weight:normal;">[4:3 Ratio]</span></span>
+      <input type="file" id="thumbnail" name="thumbnail" accept="image/*" style="position:absolute;opacity:0;width:100%;height:100%;cursor:pointer;left:0;top:0;z-index:3;">
+      <img id="image-preview" style="display:none; width:100%; height:100%; position:absolute; top:0; left:0; object-fit:cover; border-radius:10px; background:#fff; z-index:2;" alt="Preview" />
+    </div>
+    <label for="admin_password" style="margin-top:14px;">Admin Password</label>
+    <input type="password" name="admin_password" id="admin_password" required placeholder="Enter admin password">
+    {% if error %}
+      <div id="pwderr" style="color:#c00; margin:10px 0 0 2px; font-weight:bold;">{{ error }}</div>
+    {% endif %}
+    <button type="submit" class="btn-orange" style="margin-top:18px;">Create Contest</button>
+  </form>
+</div>
+
+<script>
+(function() {
+  const input = document.getElementById('thumbnail');
+  const preview = document.getElementById('image-preview');
+  const dropzone = document.getElementById('image-dropzone');
+  const droptext = document.getElementById('dropzone-text');
+  if(input && preview && dropzone && droptext) {
+    // Preview on input change
+    input.addEventListener('change', function(e) {
+      if(this.files && this.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          preview.src = ev.target.result;
+          preview.style.display = 'block';
+          droptext.style.display = 'none';
+        };
+        reader.readAsDataURL(this.files[0]);
+      } else {
+        preview.style.display = 'none';
+        droptext.style.display = 'block';
+      }
+    });
+    // Drag and drop support
+    dropzone.addEventListener('dragover', function(e){
+      e.preventDefault();
+      dropzone.style.boxShadow = '0 0 0 3px rgba(var(--color2-rgb), 0.53)';
+    });
+    dropzone.addEventListener('dragleave', function(e){
+      dropzone.style.boxShadow = '';
+    });
+    dropzone.addEventListener('drop', function(e){
+      e.preventDefault();
+      dropzone.style.boxShadow = '';
+      if(e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+        input.files = e.dataTransfer.files;
+        const event = new Event('change', { bubbles: true });
+        input.dispatchEvent(event);
+      }
+    });
+  }
+})();
+</script>
+{% endblock %}
+{% block scripts %}
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7H9JTC8BY1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-7H9JTC8BY1');
+</script>
+{% endblock %}

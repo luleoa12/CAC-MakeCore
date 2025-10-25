@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>{{ user.username }} is Following</h2>
+<ul class="following-list">
+    {% for u in following %}
+        <li><a href="{{ url_for('profile', username=u.username) }}">{{ u.username }}</a></li>
+    {% endfor %}
+</ul>
+<a href="{{ url_for('profile', username=user.username) }}">Back to profile</a>
+{% endblock %}

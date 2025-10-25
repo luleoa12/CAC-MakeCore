@@ -1,0 +1,252 @@
+
+.myprograms-page {
+  display: flex;
+  max-width: 1150px;
+  margin: 48px auto 0 auto;
+  gap: 24px;
+  font-family: 'Fira Code', monospace;
+  color: var(--color7);
+}
+
+.myprograms-sidebar {
+  min-width: 255px;
+  flex-shrink: 0;
+  background: var(--color1);
+  border-radius: 32px;
+  box-shadow: 0 4px 24px rgba(var(--color1-rgb), 0.27);
+  padding: 24px;
+  height: fit-content;
+  top: 80px;
+}
+
+.sidebar-content {
+  flex: 1;
+  background: var(--color1);
+  border-radius: 32px;
+  box-shadow: 0 4px 24px rgba(var(--color1-rgb), 0.27);
+  padding: 32px 24px 18px 24px;
+  min-height: 400px;
+}
+
+.sidebar-header h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--color7);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.sidebar-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.sidebar-tab {
+  background: var(--color10);
+  color: var(--color7);
+  border: 2px solid var(--color1);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Fira Code', monospace;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.sidebar-tab:hover {
+  background: var(--color8);
+  border-color: var(--color2);
+}
+
+.sidebar-tab.active {
+  background: var(--color2);
+  color: var(--color27);
+  border-color: var(--color2);
+}
+
+.content-section {
+  display: block;
+}
+
+.content-header h2 {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: var(--color7);
+  margin-bottom: 16px;
+  text-align: center;
+}
+.myprograms-header {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--color7);
+  margin-bottom: 24px;
+  letter-spacing: 1px;
+}
+.myprograms-list, .mystudios-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.myprogram-card, .mystudio-card {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 8px rgba(var(--color1-rgb), 0.27);
+  padding: 12px 16px;
+  gap: 16px;
+  transition: box-shadow 0.18s;
+}
+.myprogram-card:hover, .mystudio-card:hover {
+  box-shadow: 0 6px 18px rgba(var(--color1-rgb), 0.13);
+}
+.myprogram-imgbox, .mystudio-imgbox {
+  width: 80px;
+  height: 60px;
+  background: #bdeaff;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.myprogram-img, .mystudio-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.myprogram-info, .mystudio-info {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.myprogram-title, .mystudio-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #7a2f8c;
+  margin-bottom: 2px;
+  word-break: break-word;
+}
+
+.myprogram-meta {
+  display: flex;
+  gap: 18px;
+  font-size: 0.98rem;
+  color: var(--color7);
+  opacity: 0.8;
+}
+
+.meta-item {
+  display: flex;
+  gap: 4px;
+}
+
+.meta-container {
+  display: flex;
+  gap: 18px;
+}
+
+
+@media screen and (max-width: 768px) {
+  .myprograms-page {
+    flex-direction: column;
+    max-width: 100%;
+    margin: 24px auto 0 auto;
+    padding: 0 16px;
+  }
+  
+  .myprograms-sidebar {
+    width: 100%;
+    position: static;
+    margin-bottom: 24px;
+  }
+  
+  .sidebar-tabs {
+    flex-direction: row;
+    gap: 12px;
+  }
+  
+  .sidebar-tab {
+    flex: 1;
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .myprogram-meta {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .meta-container {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .meta-item {
+    flex-direction: column;
+    gap: 2px;
+  }
+  
+  .meta-label {
+    font-weight: 500;
+  }
+  
+  .meta-value {
+    margin-left: 0;
+  }
+}
+
+.myprogram-votes, .mystudio-stats {
+  font-size: 0.9rem;
+  color: var(--color11);
+  display: flex;
+  gap: 12px;
+  margin-top: 2px;
+}
+.myprogram-actions, .mystudio-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+  margin-left: 12px;
+}
+.myprogram-action-btn, .mystudio-action-btn {
+  min-width: 70px;
+  box-sizing: border-box;
+  display: inline-block;
+  text-align: center;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: background 0.18s, color 0.18s;
+}
+.myprogram-edit-btn, .mystudio-edit-btn {
+  background: var(--color1);
+  color: var(--color7);
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+}
+.myprogram-edit-btn:hover, .mystudio-edit-btn:hover {
+  background: var(--color8);
+}
+.myprogram-delete-btn, .mystudio-delete-btn {
+  background: var(--color10);
+  color: var(--color11);
+  border: 1.5px solid var(--color1);
+  cursor: pointer;
+}
+.myprogram-delete-btn:hover, .mystudio-delete-btn:hover {
+  background: #ffe6d2;
+  color: var(--color7);
+}

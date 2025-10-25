@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="/static/css/leaderboard.css">
+{% endblock %}
+
+{% block content %}
+  <div class="leaderboard-container">
+    <div class="leaderboard-title">
+      Leaderboard
+    </div>
+    <div class="leaderboard-table">
+      <div class="leaderboard-header">
+        <div class="header-rank">Rank</div>
+        <div class="header-username" style="margin-left: -555px;">Username</div>
+        <div class="header-rating">Rating</div>
+        <div class="header-contests">Contests</div>
+      </div>
+      {% for user in leaderboard_users %}
+      <div class="leaderboard-row {% if loop.index is odd %}odd{% else %}even{% endif %}">
+        <div class="leaderboard-rank">
+          <span class="rank-number">{{ (current_page - 1) * 30 + loop.index }}</span>
+        </div>
+        <div class="leaderboard-username">
+          <a href="/dashboard/{{ user.username }}" class="username-link">{{ user.username }}</a>
+        </div>
+        <div class="leaderboard-rating">
+          <span class="rating-value">{{ user.rating|int }}</span>
+        </div>
+        <div class="leaderboard-contests">
+          <span class="contests-value">{{ user.contests_participated or 0 }}</span>
+        </div>
+      </div>
+      {% else %}
+        <div class="leaderboard-row">
+          <div class="no-data">No leaderboard data available.</div>
+        </div>
+      {% endfor %}
+    </div>
+    
+    <div class="pagination-container">
+      <div class="pagination">
+        {% if pagination.has_prev %}
+          <a href="{{ url_for('leaderboard', page=pagination.prev_num) }}" class="pagination-btn prev-btn">← Previous</a>
+        {% endif %}
+        
+        <div class="pagination-numbers">
+          {% for page_num in pagination.iter_pages() %}
+            {% if page_num %}
+              {% if page_num != pagination.page %}
+                <a href="{{ url_for('leaderboard', page=page_num) }}" class="pagination-number">{{ page_num }}</a>
+              {% else %}
+                <span class="pagination-number current">{{ page_num }}</span>
+              {% endif %}
+            {% else %}
+              <span class="pagination-ellipsis">…</span>
+            {% endif %}
+          {% endfor %}
+        </div>
+        
+        {% if pagination.has_next %}
+          <a href="{{ url_for('leaderboard', page=pagination.next_num) }}" class="pagination-btn next-btn">Next →</a>
+        {% endif %}
+      </div>
+      
+      <div class="pagination-info">
+        Showing {{ (current_page - 1) * 30 + 1 }} - {{ (current_page - 1) * 30 + leaderboard_users|length }} of {{ pagination.total }} users
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  updateThemeImages();
+});
+</script>
+{% endblock %}

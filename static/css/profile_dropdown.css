@@ -1,0 +1,128 @@
+.profile-dropdown-trigger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  position: relative;
+}
+
+.profile-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color1);
+  border: 3px solid var(--color4);
+  display: flex;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.7rem;
+  color: #fff;
+  object-fit: cover;
+  transition: box-shadow 0.15s;
+  box-shadow: 0 2px 10px rgba(var(--color1-rgb), 0.25);
+  margin: 0;
+}
+
+.profile-dropdown {
+  position: absolute;
+  right: 0;
+  top: 80px;
+  width: 340px;
+  margin-right: 150px;
+  background-color: var(--color10);
+  border-radius: 20px;
+  box-shadow: 0 4px 32px rgba(var(--color1-rgb), 0.25);
+  z-index: 1000;
+  padding: 22px 24px 18px 24px;
+  display: none;
+}
+
+
+.notif-bell-container {
+  z-index: 1100;
+  position: relative;
+}
+.notif-dropdown {
+  z-index: 1101;
+}
+.profile-dropdown.active {
+  display: block;
+}
+.profile-dropdown-header {
+  display: flex;
+  align-items: center !important;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.profile-dropdown-header .profile-avatar {
+  width: 60px;
+  height: 60px;
+  font-size: 2.1rem;
+}
+.profile-dropdown-header .profile-name {
+  font-family: 'Fira Code', monospace;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--color4);
+}
+.profile-dropdown-header .profile-premium {
+  color: #ff7300;
+  font-size: 1rem;
+  margin-top: 2px;
+}
+.profile-dropdown-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.profile-dropdown-grid .dropdown-tile {
+  background: var(--color1);
+  border-radius: 14px;
+  padding: 14px 0 10px 0;
+  text-align: center !important;
+  color: #fff;
+  font-weight: 700;
+  font-family: 'Fira Code', monospace;
+  font-size: 1.03rem;
+  box-shadow: 0 1px 8px rgba(var(--color1-rgb), 0.25);
+  transition: background 0.18s, color 0.18s;
+  cursor: pointer;
+}
+.profile-dropdown-grid .dropdown-tile:hover {
+  background: var(--color26);
+  color: var(--color10);
+}
+.profile-dropdown-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.profile-dropdown-list li {
+  display: flex;
+  align-items: center !important;
+  gap: 12px;
+  padding: 10px 0;
+  font-family: 'Fira Code', monospace;
+  font-size: 1.07rem;
+  color: var(--color4);
+  cursor: pointer;
+  border-bottom: 1px solid rgba(var(--color1-rgb), 0.13);
+}
+.profile-dropdown-list li:last-child {
+  border-bottom: none;
+}
+.profile-dropdown-list li:hover {
+  background: var(--color10);
+}
+.profile-dropdown-list .dropdown-icon {
+  color: #ff7300;
+  font-size: 1.2rem;
+}
+@media (max-width: 500px) {
+  .profile-dropdown {
+    width: 95vw;
+    left: 2.5vw;
+    right: auto;
+  }
+}

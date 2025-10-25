@@ -1,0 +1,424 @@
+<link rel="stylesheet" href="/static/css/profile_dropdown.css">
+<link rel="stylesheet" href="/static/css/notifications.css">
+<link rel="stylesheet" href="/static/css/navbar.css">
+
+
+<div class="desktop-nav">
+  <nav class="main-navbar">
+
+    <a href="/" class="navbar-logo-link">
+      <img data-theme-src="/static/themes/makecore/img/logo.svg" alt="Logo" class="navbar-logo">
+    </a>
+    <div class="navbar-links"> 
+      <a href="/dashboard" class="navbar-link{% if request.path.startswith('/dashboard') %} active{% endif %}">Dashboard</a>
+      <a href="/featured" class="navbar-link{% if request.path.startswith('/featured') %} active{% endif %}">Featured</a>
+      <a href="/makejams" class="navbar-link{% if request.path.startswith('/makejams') %} active{% endif %}">MakeJams</a>
+      <a href="/studios" class="navbar-link{% if request.path == '/studios' or request.path.startswith('/studios/') and not request.path.startswith('/studios/create') %} active{% endif %}">Studios</a>
+      <a href="/programs" class="navbar-link{% if request.path == '/programs' or request.path.startswith('/program/') %} active{% endif %}">Programs</a>
+      <div class="navbar-dropdown">
+        <button class="navbar-link navbar-dropdown-trigger" id="createDropdownBtn" type="button" aria-haspopup="true" aria-expanded="false">
+          <span class="navbar-link {% if request.path == '/new_project' or request.path == '/studios/create' %} active {% endif %}">Create</span> <span style="margin-left:-32px;" class="navbar-dropdown-arrow">&#9662;</span>
+        </button>
+
+        <div class="navbar-dropdown-menu" id="createDropdownMenu">
+          <a href="/new_project" class="navbar-dropdown-item">New Program</a>
+          <a href="/studios/create" class="navbar-dropdown-item">New Studio</a>
+        </div>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 18px; margin-right: 25px; margin-top: 4px;">
+      <a href="https://hits.sh/makecore.org/" style="display:none;vertical-align:middle; visibility: hidden;">
+        <img alt="Hits" src="https://hits.sh/makecore.org.svg?label=Views&color=fe7d37&labelColor=e05d44&logo=ai" style="height:24px;"/>
+      </a>
+    </div>
+    {% if session.get('user') %}
+    <div style="margin-left:auto; display:flex; align-items:center; position:relative; gap:20px;">
+      <div class="notif-bell-container">
+        <a id="notifBellBtn" class="notif-bell-btn" aria-label="Notifications" href="/notifications" style="position:relative;">
+          <svg width="35" height="35" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;">
+            <path d="M12 2C8.13 2 5 5.13 5 9v5c0 .55-.45 1-1 1s-1 .45-1 1v1h18v-1c0-.55-.45-1-1-1s-1-.45-1-1V9c0-3.87-3.13-7-7-7zm0 19c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2z" fill="var(--color3)"/>
+          </svg>
+          {% if unread_count > 0 %}
+            <span class="notif-bell-badge">{{ unread_count }}</span>
+          {% endif %}
+        </a>
+      </div>
+      <a href="/myprograms"><img data-theme-src="/static/themes/makecore/img/folder.svg" alt="MyPrograms" style="width:36px;height:auto;vertical-align:middle;"></a>
+      <button class="profile-dropdown-trigger" id="profileDropdownBtn">
+        {% if user and user.profile_pic_url %}
+          <img src="{{ user.profile_pic_url }}" class="profile-avatar" alt="Profile">
+        {% else %}
+          <img data-theme-src="/static/themes/makecore/img/default_avatar.svg" class="profile-avatar" alt="Default Profile">
+        {% endif %}
+      </button>
+      <div class="profile-dropdown" id="profileDropdown">
+        <div class="profile-dropdown-header">
+          {% if user and user.profile_pic_url %}
+            <img src="{{ user.profile_pic_url }}" class="profile-avatar" alt="Profile">
+          {% else %}
+            <img data-theme-src="/static/themes/makecore/img/default_avatar.svg" class="profile-avatar" alt="Default Profile">
+          {% endif %}
+          <div>
+            <div class="profile-name">{{ user.username }}</div>
+          </div>
+        </div>
+        <div class="profile-dropdown-grid">
+          <div class="dropdown-tile">
+            <a href="/credits" style="display:flex; flex-direction:column; align-items:center; text-decoration:none; color:inherit; padding:6px 0;">
+              <img data-theme-src="/static/themes/makecore/img/credits.svg" alt="Credits" style="width:auto;height:32px;margin-bottom:4px;">
+              <span style="font-size:0.9rem;">Credits</span>
+            </a>
+          </div>
+        
+          <div class="dropdown-tile">
+            <a href="/feedback" style="display:flex; flex-direction:column; align-items:center; text-decoration:none; color:inherit; padding:6px 0;">
+              <img data-theme-src="/static/themes/makecore/img/feedback.svg" alt="Feedback" style="width:auto;height:32px; margin-bottom:4px;">
+              <span style="font-size:0.9rem;">Feedback</span>
+            </a>
+          </div>
+        
+          <div class="dropdown-tile">
+            <a href="/updates" style="display:flex; flex-direction:column; align-items:center; text-decoration:none; color:inherit; padding:6px 0;">
+              <img data-theme-src="/static/themes/makecore/img/updates.svg" alt="Updates" style="width:auto;height:32px; margin-bottom:4px;">
+              <span style="font-size:0.9rem;">Updates</span>
+            </a>
+          </div>
+
+          <div class="dropdown-tile">
+            <a href="/account#badges" style="display:flex; flex-direction:column; align-items:center; text-decoration:none; color:inherit; padding:6px 0;">
+              <img data-theme-src="/static/themes/makecore/img/navbar_badge.svg" alt="Badges" style="width:auto;height:32px; margin-bottom:4px;">
+              <span style="font-size:0.9rem;">Badges</span>
+            </a>
+          </div>
+        
+          <div class="dropdown-tile">
+            <a href="/account#themes" style="display:flex; flex-direction:column; align-items:center; text-decoration:none; color:inherit; padding:6px 0;">
+              <img data-theme-src="/static/themes/makecore/img/blueprint.svg" alt="Blueprint" style="width:36px;height:36px; margin-bottom:0px;">
+              <span style="font-size:0.9rem;">Themes</span>
+            </a>
+          </div>
+        
+          <div class="dropdown-tile">
+            <a href="/leaderboard" style="display:flex; flex-direction:column; align-items:center; text-decoration:none; color:inherit; padding:6px 0;">
+              <img data-theme-src="/static/themes/makecore/img/trophy.svg" alt="Account" style="width:32px;height:32px; margin-bottom:4px;">
+              <span style="font-size:0.9rem;">Rank</span>
+            </a>
+          </div>
+          
+        </div>
+        
+        <ul class="profile-dropdown-list">
+          <li><span class="dropdown-icon"></span> <img data-theme-src="/static/themes/makecore/img/analytics.svg" alt="Analytics" style="width:22px;height:22px;vertical-align:middle;margin-right:3px;opacity:0.93;"> <a href="https://lookerstudio.google.com/reporting/db4d69d8-6a1c-4121-8844-3806d5c2d978" target="_blank" style="color:inherit;text-decoration:none;">Analytics</a></li>
+          <li><span class="dropdown-icon"></span> <img data-theme-src="/static/themes/makecore/img/status.svg" alt="Credits" style="width:22px;height:22px;vertical-align:middle;margin-right:3px;opacity:0.93;"> <a href="https://status.makecore.org" target="_blank" style="color:inherit;text-decoration:none;">Status</a></li>
+          <li><span class="dropdown-icon"></span> <img data-theme-src="/static/themes/makecore/img/tos.svg" alt="ToS" style="width:22px;height:22px;vertical-align:middle;margin-right:3px;opacity:0.85;"> <a href="/tos" style="color:inherit;text-decoration:none;">Terms of Service</a></li>
+          <li><span class="dropdown-icon"></span> <img data-theme-src="/static/themes/makecore/img/settings.svg" alt="Settings" style="width:22px;height:22px;vertical-align:middle;margin-right:3px;opacity:0.93;"> <a href="/account#settings" style="color:inherit;text-decoration:none;">Settings</a></li>
+          <li><span class="dropdown-icon"></span> <img data-theme-src="/static/themes/makecore/img/signout.svg" alt="Log Out" style="width:22px;height:22px;vertical-align:middle;margin-right:3px;opacity:0.93;"> <a href="/logout" style="color:inherit;text-decoration:none;">Log Out</a></li>
+        </ul>
+      </div>
+      <div style="font-family: 'Fira Code', monospace; margin-right: 25px; background-color: var(--color1); border-radius: 10px; width: 135px; height: 40px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.82rem;"><a href="https://coff.ee/makecore" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: var(--color4);">Buy Me a Coffee</a></div>
+    </div>
+    <script>
+      // Profile dropdown 
+      const profileBtn = document.getElementById('profileDropdownBtn');
+      const profileDropdown = document.getElementById('profileDropdown');
+      if (profileBtn && profileDropdown) {
+        profileBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          
+          const createDropdownMenu = document.getElementById('createDropdownMenu');
+          const createDropdownBtn = document.getElementById('createDropdownBtn');
+          if (createDropdownMenu && createDropdownBtn) {
+            createDropdownMenu.classList.remove('active');
+            createDropdownBtn.setAttribute('aria-expanded', 'false');
+          }
+          
+          const filterContent = document.getElementById('filter-content');
+          const filterToggle = document.getElementById('filter-toggle');
+          if (filterContent && filterToggle) {
+            filterContent.classList.remove('show');
+            filterToggle.classList.remove('active');
+          }
+          
+          const sortContent = document.getElementById('sort-content');
+          const sortToggle = document.getElementById('sort-toggle');
+          if (sortContent && sortToggle) {
+            sortContent.classList.remove('show');
+            sortToggle.classList.remove('active');
+          }
+          
+          document.querySelectorAll('.filter-dropup.show').forEach(dropdown => {
+            dropdown.classList.remove('show');
+          });
+          
+          document.querySelectorAll('[class*="dropdown"].active:not(#profileDropdown)').forEach(dropdown => {
+            dropdown.classList.remove('active');
+          });
+          
+          profileDropdown.classList.toggle('active');
+        });
+        document.addEventListener('click', function(e) {
+          if (!profileDropdown.contains(e.target) && e.target !== profileBtn) {
+            profileDropdown.classList.remove('active');
+          }
+        });
+      }
+      
+    </script>
+    {% else %}
+    <div class="navbar-auth">
+      <a href="/login" class="auth-btn-navbar">Login</a>
+      <a href="/signup" class="auth-btn-navbar">Sign Up</a>
+    </div>
+    {% endif %}
+
+  </nav>
+</div>
+
+<div class="mobile-nav">
+  <nav class="main-navbar" style="display: flex; justify-content: space-between; align-items: center;">
+    <a href="/" class="navbar-logo-link">
+      <img data-theme-src="/static/themes/makecore/img/logo.svg" alt="Logo" class="navbar-logo">
+    </a>
+
+    <div style="display: flex; align-items: center; gap: 12px; margin-right: 70px;">
+      {% if not session.get('user') %}
+        <a href="/login" class="auth-btn-navbar">Login</a>
+        <a href="/signup" class="auth-btn-navbar">Sign Up</a>
+        <div class="navbar-logged-out">
+          <div class="profile-dropdown" id="mobile-navbar-logged-out">
+            <div style="display: flex; gap:20px; margin-bottom: 20px;">
+              <a href="/login" class="auth-btn-navbar">Login</a>
+              <a href="/signup" class="auth-btn-navbar">Sign Up</a>  
+            </div> 
+            <div style="border-bottom: 2px solid rgba(var(--color1-rgb), 0.44);margin: 8px 0;"></div>
+            <ul class="profile-dropdown-list">
+              <li><span class="dropdown-icon"></span> 
+                 <img data-theme-src="/static/themes/makecore/img/trophy.svg" alt="Dashboard" style="width:auto;height:18px;vertical-align:middle;margin-right:7px;opacity:0.93;"> <a href="/makejams" style="color:inherit;text-decoration:none;"></a>
+                <a href="/makejams" style="color:inherit;text-decoration:none; margin-left: -3px;">MakeJams</a>
+              </li>
+              <li><span class="dropdown-icon"></span> <img data-theme-src="/static/themes/makecore/img/programs.svg" alt="Programs" style="width:25px;height:auto;vertical-align:middle;margin-right:7px;opacity:1;"> <a href="/programs" style="color:inherit;text-decoration:none;">Programs</a></li>
+              <li><span class="dropdown-icon"></span> <img data-theme-src="/static/themes/makecore/img/studios.svg" alt="Studios" style="width:25px;height:auto;vertical-align:middle;margin-right:7px; opacity:1;"> <a href="/studios" style="color:inherit;text-decoration:none;">Studios</a></li>
+              <div style="border-bottom: 2px solid rgba(var(--color1-rgb), 0.44);margin: 8px 0;"></div>
+              <li><span class="dropdown-icon"></span> <img data-theme-src="/static/themes/makecore/img/updates.svg" alt="Updates" style="width:25px;height:25px;vertical-align:middle;margin-right:7px;opacity:0.93;"> <a href="/updates" style="color:inherit;text-decoration:none;">Updates</a></li>
+              <li><span class="dropdown-icon"></span> <img data-theme-src="/static/themes/makecore/img/credits.svg" alt="Credits" style="width:25px;height:25px;vertical-align:middle;margin-right:7px;opacity:1;"> <a href="/credits" style="color:inherit;text-decoration:none;">Credits</a></li>
+              <li><span class="dropdown-icon"></span> <img data-theme-src="/static/themes/makecore/img/tos.svg" alt="ToS" style="margin-left: 2px; width:23px;height:auto;vertical-align:middle;margin-right:7px;opacity:1;"> <a href="/tos" style="color:inherit;text-decoration:none;">Terms of Service</a></li>
+              <li><span class="dropdown-icon" style="margin-left: 14px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="var(--color2)" viewBox="0 0 16 16" style="width:23px;height:auto;vertical-align:middle;margin-right:7px;opacity:1;stroke:var(--color3);stroke-width:0.5px;">
+                    <path fill-rule="evenodd" d="M.5 6a.5.5 0 0 0-.488.608l1.652 7.434A2.5 2.5 0 0 0 4.104 16h5.792a2.5 2.5 0 0 0 2.44-1.958l.131-.59a3 3 0 0 0 1.3-5.854l.221-.99A.5.5 0 0 0 13.5 6zM13 12.5a2 2 0 0 1-.316-.025l.867-3.898A2.001 2.001 0 0 1 13 12.5"/>
+                    <path d="m4.4.8-.003.004-.014.019a4 4 0 0 0-.204.31 2 2 0 0 0-.141.267c-.026.06-.034.092-.037.103v.004a.6.6 0 0 0 .091.248c.075.133.178.272.308.445l.01.012c.118.158.26.347.37.543.112.2.22.455.22.745 0 .188-.065.368-.119.494a3 3 0 0 1-.202.388 5 5 0 0 1-.253.382l-.018.025-.005.008-.002.002A.5.5 0 0 1 3.6 4.2l.003-.004.014-.019a4 4 0 0 0 .204-.31 2 2 0 0 0 .141-.267c.026-.06.034-.092.037-.103a.6.6 0 0 0-.09-.252A4 4 0 0 0 3.6 2.8l-.01-.012a5 5 0 0 1-.37-.543A1.53 1.53 0 0 1 3 1.5c0-.188.065-.368.119-.494.059-.138.134-.274.202-.388a6 6 0 0 1 .253-.382l.025-.035A.5.5 0 0 1 4.4.8m3 0-.003.004-.014.019a4 4 0 0 0-.204.31 2 2 0 0 0-.141.267c-.026.06-.034.092-.037.103v.004a.6.6 0 0 0 .091.248c.075.133.178.272.308.445l.01.012c.118.158.26.347.37.543.112.2.22.455.22.745 0 .188-.065.368-.119.494a3 3 0 0 1-.202.388 5 5 0 0 1-.253.382l-.018.025-.005.008-.002.002A.5.5 0 0 1 6.6 4.2l.003-.004.014-.019a4 4 0 0 0 .204-.31 2 2 0 0 0 .141-.267c.026-.06.034-.092.037-.103a.6.6 0 0 0-.09-.252A4 4 0 0 0 6.6 2.8l-.01-.012a5 5 0 0 1-.37-.543A1.53 1.53 0 0 1 6 1.5c0-.188.065-.368.119-.494.059-.138.134-.274.202-.388a6 6 0 0 1 .253-.382l.025-.035A.5.5 0 0 1 7.4.8m3 0-.003.004-.014.019a4 4 0 0 0-.204.31 2 2 0 0 0-.141.267c-.026.06-.034.092-.037.103v.004a.6.6 0 0 0 .091.248c.075.133.178.272.308.445l.01.012c.118.158.26.347.37.543.112.2.22.455.22.745 0 .188-.065.368-.119.494a3 3 0 0 1-.202.388 5 5 0 0 1-.252.382l-.019.025-.005.008-.002.002A.5.5 0 0 1 9.6 4.2l.003-.004.014-.019a4 4 0 0 0 .204-.31 2 2 0 0 0 .141-.267c.026-.06.034-.092.037-.103a.6.6 0 0 0-.09-.252A4 4 0 0 0 9.6 2.8l-.01-.012a5 5 0 0 1-.37-.543A1.53 1.53 0 0 1 9 1.5c0-.188.065-.368.119-.494.059-.138.134-.274.202-.388a6 6 0 0 1 .253-.382l.025-.035A.5.5 0 0 1 10.4.8"/>
+                  </svg>
+                </span> <a href="https://buymeacoffee.com/makecore" target="_blank" style="color:inherit;text-decoration:none;">Buy Me a Coffee</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+     
+      {% else %}
+        <div class="navbar-logged-in">
+          <div class="profile-dropdown" id="mobile-navbar-logged-in">
+            <div class="profile-dropdown-header">
+              {% if user and user.profile_pic_url %}
+                <img src="{{ user.profile_pic_url }}" class="profile-avatar" alt="Profile">
+              {% else %}
+                <img data-theme-src="/static/themes/makecore/img/default_avatar.svg" class="profile-avatar" alt="Default Profile">
+              {% endif %}
+              <div>
+                <div class="profile-name">{{ user.username }}</div>
+              </div>
+            </div>
+            <div class="profile-dropdown-grid">
+              <div class="dropdown-tile">
+                <a href="/feedback" style="display:flex; flex-direction:column; align-items:center; text-decoration:none; color:inherit; padding:6px 0;">
+                  <img data-theme-src="/static/themes/makecore/img/feedback.svg" alt="Feedback" style="width:auto;height:32px;opacity:0.93; margin-bottom:4px;">
+                  <span style="font-size:0.77rem;">Feedback</span>
+                </a>
+              </div>
+              <div class="dropdown-tile">
+                <a href="/account#themes" style="display:flex; flex-direction:column; align-items:center; text-decoration:none; color:inherit; padding:6px 0;">
+                  <img data-theme-src="/static/themes/makecore/img/blueprint.svg" alt="Blueprint" style="width:32px;height:32px;opacity:0.93; margin-bottom:4px;">
+                  <span style="font-size:0.77rem;">Themes</span>
+                </a>
+              </div>
+    
+              <div class="dropdown-tile">
+                <a href="/account#ads" style="display:flex; flex-direction:column; align-items:center; text-decoration:none; color:inherit; padding:6px 0;">
+                  <img data-theme-src="/static/themes/makecore/img/ads.svg" alt="Tech Tree" style="width:32px;height:32px;opacity:0.93; margin-bottom:4px;">
+                  <span style="font-size:0.77rem;">Ads</span>
+                </a>
+              </div>
+    
+              <div class="dropdown-tile">
+                <a href="/account#badges" style="display:flex; flex-direction:column; align-items:center; text-decoration:none; color:inherit; padding:6px 0;">
+                  <img data-theme-src="/static/themes/makecore/img/badges.svg" alt="Badges" style="width:auto;height:32px;opacity:0.93; margin-bottom:4px;">
+                  <span style="font-size:0.77rem;">Badges</span>
+                </a>
+              </div>
+    
+              <div class="dropdown-tile">
+                <a href="/updates" style="display:flex; flex-direction:column; align-items:center; text-decoration:none; color:inherit; padding:6px 0;">
+                  <img data-theme-src="/static/themes/makecore/img/updates.svg" alt="Updates" style="width:32px;height:32px;opacity:0.93; margin-bottom:4px;">
+                  <span style="font-size:0.77rem;">Updates</span>
+                </a>
+              </div>
+
+              <div class="dropdown-tile">
+                <a href="/credits" style="display:flex; flex-direction:column; align-items:center; text-decoration:none; color:inherit; padding:6px 0;">
+                  <img data-theme-src="/static/themes/makecore/img/credits.svg" alt="Credits" style="width:32px;height:32px;opacity:0.93; margin-bottom:4px;">
+                  <span style="font-size:0.77rem;">Credits</span>
+                </a>
+              </div>
+
+              <div class="dropdown-tile">
+                <a href="/notifications" style="display:flex; flex-direction:column; align-items:center; text-decoration:none; color:inherit; padding:6px 0;">
+                  <img data-theme-src="/static/themes/makecore/img/notification.svg" alt="Notifications" style="width:auto;height:32px;opacity:0.93; margin-bottom:4px;">
+                  <span style="font-size:0.77rem;">Messages</span>
+                </a>
+              </div>
+
+              <div class="dropdown-tile">
+                <a href="/myprograms" style="display:flex; flex-direction:column; align-items:center; text-decoration:none; color:inherit; padding:6px 0;">
+                  <img data-theme-src="/static/themes/makecore/img/myprograms.svg" alt="My Programs" style="width:auto;height:32px;opacity:0.93; margin-bottom:4px;">
+                  <span style="font-size:0.77rem;">My Programs</span>
+                </a>
+              </div>
+            </div>
+            
+            <ul class="profile-dropdown-list">
+              <li><span class="dropdown-icon"></span> <img data-theme-src="/static/themes/makecore/img/dashboard.svg" alt="Dashboard" style="width:25px;height:auto;vertical-align:middle;margin-right:7px;opacity:1;"> <a href="/dashboard" style="color:inherit;text-decoration:none;">Dashboard</a></li>
+              <li><span class="dropdown-icon"></span> 
+                 <img data-theme-src="/static/themes/makecore/img/trophy.svg" alt="Dashboard" style="width:25px;height:auto;vertical-align:middle;margin-right:7px; opacity:1;"> <a href="/makejams" style="color:inherit;text-decoration:none;">MakeJams</a>
+              </li>
+              <li><span class="dropdown-icon"></span> <img data-theme-src="/static/themes/makecore/img/programs.svg" alt="Programs" style="width:25px;height:auto;vertical-align:middle;margin-right:7px;opacity:1;"> <a href="/programs" style="color:inherit;text-decoration:none;">Programs</a></li>
+              <li><span class="dropdown-icon"></span> <img data-theme-src="/static/themes/makecore/img/studios.svg" alt="Studios" style="width:25px;height:auto;vertical-align:middle;margin-right:7px; opacity:1;"> <a href="/studios" style="color:inherit;text-decoration:none;">Studios</a></li>
+              <li><span class="dropdown-icon"></span> <img data-theme-src="/static/themes/makecore/img/new_program.svg" alt="New Program" style="width: 25px;height:auto;vertical-align:middle;margin-right:7px;opacity:1;"> <a href="/new_project" style="color:inherit;text-decoration:none;">New Program</a></li>
+              <li><span class="dropdown-icon"></span> <img data-theme-src="/static/themes/makecore/img/new_studio.svg" alt="New Studio" style="width:25px;height:auto;vertical-align:middle;margin-right:7px;opacity:1;"> <a href="/studios/create" style="color:inherit;text-decoration:none;">New Studio</a></li>
+              <div style="border-bottom: 2px solid rgba(var(--color1-rgb), 0.44);margin: 8px 0;"></div>
+              <li><span class="dropdown-icon"></span> <img data-theme-src="/static/themes/makecore/img/analytics.svg" alt="Analytics" style="width:25px;height:25px;vertical-align:middle;margin-right:7px;opacity:0.93;"> <a href="https://lookerstudio.google.com/reporting/db4d69d8-6a1c-4121-8844-3806d5c2d978" target="_blank" style="color:inherit;text-decoration:none;">Analytics</a></li>
+              <li><span class="dropdown-icon"></span> <img data-theme-src="/static/themes/makecore/img/status.svg" alt="Status" style="width:25px;height:25px;vertical-align:middle;margin-right:7px;opacity:0.93;"> <a href="https://status.makecore.org" target="_blank" style="color:inherit;text-decoration:none;">Status</a></li>
+              <li><span class="dropdown-icon"></span> <img data-theme-src="/static/themes/makecore/img/credits.svg" alt="Credits" style="width:25px;height:25px;vertical-align:middle;margin-right:7px;opacity:1;"> <a href="/credits" style="color:inherit;text-decoration:none;">Credits</a></li>
+              <li><span class="dropdown-icon"></span> <img data-theme-src="/static/themes/makecore/img/tos.svg" alt="ToS" style="margin-left: 2px; width:23px;height:auto;vertical-align:middle;margin-right:7px;opacity:1;"> <a href="/tos" style="color:inherit;text-decoration:none;">Terms of Service</a></li>
+              <li><span class="dropdown-icon"></span> <img data-theme-src="/static/themes/makecore/img/settings.svg" alt="Settings" style="width:25px;height:25px;vertical-align:middle;margin-right:7px;opacity:1;"> <a href="/account" style="color:inherit;text-decoration:none;">Settings</a></li>
+              <li><span class="dropdown-icon"></span> <img data-theme-src="/static/themes/makecore/img/signout.svg" alt="Log Out" style="width:25px;height:25px;vertical-align:middle;margin-right:7px;opacity:1;"> <a href="/logout" style="color:inherit;text-decoration:none;">Log Out</a></li>
+              <li><span class="dropdown-icon" style="margin-left: 14px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="var(--color2)" viewBox="0 0 16 16" style="width:23px;height:auto;vertical-align:middle;margin-right:7px;opacity:1;stroke:var(--color3);stroke-width:0.5px;">
+                    <path fill-rule="evenodd" d="M.5 6a.5.5 0 0 0-.488.608l1.652 7.434A2.5 2.5 0 0 0 4.104 16h5.792a2.5 2.5 0 0 0 2.44-1.958l.131-.59a3 3 0 0 0 1.3-5.854l.221-.99A.5.5 0 0 0 13.5 6zM13 12.5a2 2 0 0 1-.316-.025l.867-3.898A2.001 2.001 0 0 1 13 12.5"/>
+                    <path d="m4.4.8-.003.004-.014.019a4 4 0 0 0-.204.31 2 2 0 0 0-.141.267c-.026.06-.034.092-.037.103v.004a.6.6 0 0 0 .091.248c.075.133.178.272.308.445l.01.012c.118.158.26.347.37.543.112.2.22.455.22.745 0 .188-.065.368-.119.494a3 3 0 0 1-.202.388 5 5 0 0 1-.253.382l-.018.025-.005.008-.002.002A.5.5 0 0 1 3.6 4.2l.003-.004.014-.019a4 4 0 0 0 .204-.31 2 2 0 0 0 .141-.267c.026-.06.034-.092.037-.103a.6.6 0 0 0-.09-.252A4 4 0 0 0 3.6 2.8l-.01-.012a5 5 0 0 1-.37-.543A1.53 1.53 0 0 1 3 1.5c0-.188.065-.368.119-.494.059-.138.134-.274.202-.388a6 6 0 0 1 .253-.382l.025-.035A.5.5 0 0 1 4.4.8m3 0-.003.004-.014.019a4 4 0 0 0-.204.31 2 2 0 0 0-.141.267c-.026.06-.034.092-.037.103v.004a.6.6 0 0 0 .091.248c.075.133.178.272.308.445l.01.012c.118.158.26.347.37.543.112.2.22.455.22.745 0 .188-.065.368-.119.494a3 3 0 0 1-.202.388 5 5 0 0 1-.253.382l-.018.025-.005.008-.002.002A.5.5 0 0 1 6.6 4.2l.003-.004.014-.019a4 4 0 0 0 .204-.31 2 2 0 0 0 .141-.267c.026-.06.034-.092.037-.103a.6.6 0 0 0-.09-.252A4 4 0 0 0 6.6 2.8l-.01-.012a5 5 0 0 1-.37-.543A1.53 1.53 0 0 1 6 1.5c0-.188.065-.368.119-.494.059-.138.134-.274.202-.388a6 6 0 0 1 .253-.382l.025-.035A.5.5 0 0 1 7.4.8m3 0-.003.004-.014.019a4 4 0 0 0-.204.31 2 2 0 0 0-.141.267c-.026.06-.034.092-.037.103v.004a.6.6 0 0 0 .091.248c.075.133.178.272.308.445l.01.012c.118.158.26.347.37.543.112.2.22.455.22.745 0 .188-.065.368-.119.494a3 3 0 0 1-.202.388 5 5 0 0 1-.253.382l-.018.025-.005.008-.002.002A.5.5 0 0 1 9.6 4.2l.003-.004.014-.019a4 4 0 0 0 .204-.31 2 2 0 0 0 .141-.267c.026-.06.034-.092.037-.103a.6.6 0 0 0-.09-.252A4 4 0 0 0 9.6 2.8l-.01-.012a5 5 0 0 1-.37-.543A1.53 1.53 0 0 1 9 1.5c0-.188.065-.368.119-.494.059-.138.134-.274.202-.388a6 6 0 0 1 .253-.382l.025-.035A.5.5 0 0 1 10.4.8"/>
+                  </svg>
+                </span> <a href="https://buymeacoffee.com/makecore" target="_blank" style="color:var(--color2);text-decoration:none;">Buy Me a Coffee</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      {% endif %}
+
+
+      <div class="hamburger" style="cursor: pointer; z-index:99999;" id="mobile-navbar-button">
+        <svg class="hamburger-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="var(--color4)" viewBox="0 0 16 16" style="display: block;">
+          <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+        </svg>
+        <svg class="close-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="var(--color4)" viewBox="0 0 16 16" style="display: none;">
+          <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854z"/>
+        </svg>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<script>
+  const button = document.getElementById('mobile-navbar-button');
+  const loggedInDropdown = document.getElementById('mobile-navbar-logged-in');
+  const loggedOutDropdown = document.getElementById('mobile-navbar-logged-out');
+  const dropdown = loggedInDropdown || loggedOutDropdown;
+  const hamburgerIcon = button.querySelector('.hamburger-icon');
+  const closeIcon = button.querySelector('.close-icon');
+  
+  function toggleDropdown() {
+    const isExpanded = dropdown.classList.toggle('active');
+    
+    if (isExpanded) {
+      hamburgerIcon.style.display = 'none';
+      closeIcon.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    } else {
+      hamburgerIcon.style.display = 'block';
+      closeIcon.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  }
+  
+  if (button && dropdown) {
+    button.addEventListener('click', function(e) {
+      e.stopPropagation();
+      toggleDropdown();
+    });
+    
+    document.addEventListener('click', function(e) {
+      if (dropdown.classList.contains('active') && !dropdown.contains(e.target) && e.target !== button && !button.contains(e.target)) {
+        toggleDropdown();
+      }
+    });
+    
+    const dropdownLinks = dropdown.querySelectorAll('a');
+    dropdownLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        toggleDropdown();
+      });
+    });
+    
+    const closeButton = dropdown.querySelector('.close-dropdown');
+    if (closeButton) {
+      closeButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdown.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    }
+  }
+  
+</script>
+
+
+
+{% block script %}
+<script>
+  // Create dropdown 
+  const createDropdownBtn = document.getElementById('createDropdownBtn');
+    const createDropdownMenu = document.getElementById('createDropdownMenu');
+    if (createDropdownBtn && createDropdownMenu) {
+      createDropdownBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const expanded = createDropdownMenu.classList.toggle('active');
+        createDropdownBtn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      });
+      document.addEventListener('click', function(e) {
+        if (!createDropdownMenu.contains(e.target) && e.target !== createDropdownBtn) {
+          createDropdownMenu.classList.remove('active');
+          createDropdownBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+</script>
+{% endblock %}
+
+<style>
+  .auth-btn-navbar {
+    font-family: 'Fira Code', monospace !important;
+    font-size: 1.2rem !important;
+    font-weight: bold !important;
+    color: var(--color6) !important;
+    background: var(--color1) !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 8px 22px !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    transition: all 0.18s ease !important;
+    position: relative !important;
+    display: block !important;
+    margin: 0 !important;
+  }
+  .auth-btn-navbar:hover {
+    background: var(--color3) !important;
+    color: var(--color6) !important;
+  }
+</style>

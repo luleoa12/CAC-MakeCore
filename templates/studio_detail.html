@@ -1,0 +1,693 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="/static/css/browse_projects.css">
+  <link rel="stylesheet" href="/static/css/studio_detail.css">
+  <link rel="stylesheet" href="/static/css/colors.css">
+  <link rel="stylesheet" href="/static/css/studio_contributors.css">
+{% endblock %}
+
+{% block content %}
+  <div class="studio-layout">
+    <aside class="studio-sidebar-new">
+      <div class="studio-title-box">
+        <h1 class="studio-title">{{ studio.title }}</h1>
+      </div>
+      <!-- <form method="POST" action="{{ url_for('join_studio', studio_id=studio.id) }}">
+        <button type="submit" class="btn-follow">Follow Studio</button>
+      </form> -->
+      <div class="studio-thumb-box">
+        {% if studio.thumbnail_url %}
+          <img src="{{ studio.thumbnail_url }}" class="studio-thumb-lg" alt="Studio Thumbnail">
+        {% else %}
+          <img data-theme-src="/static/themes/orange/img/studio_default.svg" class="studio-thumb-lg" alt="Studio Thumbnail">
+        {% endif %}
+      </div>
+
+      <div class="studio-desc-label">Description</div>
+      <div class="studio-desc-box-new">
+        {{ studio.description or "No description available." }}
+      </div>
+      {% if role == 'creator' %}
+      <form method="POST" action="{{ url_for('toggle_anyone_can_add', studio_id=studio.id) }}" style="margin-top:18px;">
+        <div class="studio-slider-row" style="margin-top:10px; display:flex; align-items:center; gap:18px; ">
+          <label class="studio-slider-label" for="anyone_can_add" style="font-weight:500; color:var(--color4); font-size:0.8rem;">Anyone can add projects</label>
+          <label class="switch">
+            <input type="checkbox" id="anyone_can_add" name="anyone_can_add" onchange="this.form.submit()" {% if studio.anyone_can_add %}checked{% endif %}>
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </form>
+      {% endif %}
+    </aside>
+
+    <main class="studio-main-new orange-theme">
+      <nav class="studio-tabs-new" style="margin-top: 20px;">
+        <a href="#" class="studio-tab-new active btn-orange" data-tab="projects">Programs</a>
+        <a href="#" class="studio-tab-new btn-orange" data-tab="comments">Comments</a>
+        <a href="#" class="studio-tab-new btn-orange" data-tab="curators">Contributors</a>
+        <a href="#" class="studio-tab-new btn-orange" data-tab="activity">Activity</a>
+      </nav>
+      <div class="studio-tab-content" id="tab-projects">
+        {% if studio.anyone_can_add or role in ['creator', 'manager', 'contributor'] %}
+        <div class="add-projects-row">
+          <span class="add-projects-label">Add Programs</span>
+          <input id="addByUrlInput" type="text" class="add-projects-input" placeholder="https://makecore.org/program/xxxxxx">
+          <button id="addByUrlBtn" class="btn-orange">Add by URL</button>
+          <button id="browseProgramsBtn" class="btn-orange browse-projects-btn">Browse Programs</button>
+        </div>
+        {% endif %}
+
+        <!-- Studio Projects  -->
+        <div class="studio-projects-grid">
+          {% for program in projects %}
+          <div class="project-card">
+            <a href="/program/{{ program.id }}" class="project-link">
+              <div class="project-image-container">
+                {% if program.image_url %}
+                  <img src="{{ program.image_url }}" alt="{{ program.name }}" class="project-image" loading="lazy">
+                {% else %}
+                  <img data-theme-src="/static/themes/orange/img/studio_default.svg" alt="{{ program.name }}" class="project-image" loading="lazy">
+                {% endif %}
+              </div>
+              <div class="project-card-content">
+                {% if program.user and program.user.profile_pic_url %}
+                  <img data-theme-src="{{ program.user.profile_pic_url }}" 
+                       alt="{{ program.user.username }}" class="developer-avatar">
+                {% else %}
+                  <img data-theme-src="/static/themes/orange/img/default_avatar.svg" 
+                       alt="{{ program.developer or 'User' }}" class="developer-avatar">
+                {% endif %}
+                <div class="project-info">
+                  <h3 class="project-title" title="{{ program.name }}">
+                    {{ program.name|truncate(20, true, '...') }}
+                  </h3>
+                  <span class="developer-username" title="{{ program.user.username if program.user else program.developer }}">
+                    {{ (program.user.username if program.user else program.developer)|truncate(15, true, '...') }}
+                  </span>
+                </div>
+              </div>
+            </a>
+          </div>
+          {% else %}
+          <div class="no-projects">
+            <i class="fas fa-folder-open"></i>
+            <p>No projects in this studio yet.</p>
+            {% if studio.anyone_can_add or role in ['creator', 'manager', 'contributor'] %}
+            <button id="browseProgramsBtnEmpty" class="btn-orange">
+               Add Programs
+            </button>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+        <script>
+  window.userStudioProjectIds = {{ user_studio_project_ids|tojson }};
+</script>
+{% include 'browse_projects.html' %}
+      </div>
+    
+      <div class="studio-tab-content" id="tab-activity" style="display:none;">
+        <ul class="notif-list">
+          {% for activity, user, project in activities %}
+          <li class="notif-row {% if loop.index0 % 2 == 0 %}even{% else %}odd{% endif %}">
+            <div class="notif-activity">
+              <span class="notif-icon"><img data-theme-src="/static/themes/makecore/img/new_program.svg" alt="Project Activity" style="height:25px;vertical-align:middle;"></span>
+              <b><a href="/dashboard/{{ user.username }}" style="text-decoration: none; color: inherit;">{{ user.username }}</a>
+              </b> {% if activity.action == 'add' %}&nbsp;added&nbsp;{% else %}&nbsp;removed&nbsp;{% endif %}the project&nbsp;
+              <span class="notif-link"><a href="/program/{{ project.id }}" style="text-decoration: none; color: inherit;">{{ project.name if project else 'Unknown Project' }}</a></span>
+            </div>
+            <div class="notif-time">{{ activity.timestamp.strftime('%b %d, %Y') }}</div>
+          </li>
+          {% else %} 
+          <li class="notif-row even">
+            <div class="notif-activity">No recent project activity.</div>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="studio-tab-content" id="tab-comments" style="display:none;">
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            var browseBtn = document.getElementById('browseProgramsBtn');
+            var browseBtnEmpty = document.getElementById('browseProgramsBtnEmpty');
+            var modal = document.getElementById('browseProjectsModal');
+            var closeBtn = document.getElementById('closeBrowseProjectsModal');
+
+            function openModal() {
+              if (modal) modal.style.display = 'block';
+            }
+
+            if (browseBtn) {
+              browseBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                openModal();
+              });
+            }
+
+            if (browseBtnEmpty) {
+              browseBtnEmpty.addEventListener('click', function(e) {
+                e.preventDefault();
+                openModal();
+              });
+            }
+
+            if (closeBtn && modal) {
+              closeBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+              });
+              window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                  modal.style.display = 'none';
+                }
+              });
+            }
+          });
+        </script>
+        <div class="studio-comments">
+          <div class="comments-header-row">
+            <img data-theme-src="/static/themes/makecore/img/comments.svg" alt="Comments" class="comments-header-icon">
+            <h3 class="comments-header-title">Comments <span class="comments-count">&nbsp;({{ comments|length }})</span></h3>
+          </div>
+          <div class="studio-comments-scroll-container">
+            <form method="POST" action="{{ url_for('post_studio_comment', studio_id=studio.id) }}" class="studio-add-comment-form" id="add-comment-form">
+              <div class="comment-input-wrapper">
+                <textarea name="content" class="comment-input-textarea" id="add-comment-input" placeholder="Add a comment..." required maxlength="500"></textarea>
+                <button type="submit" class="comment-submit-btn">Comment</button>
+              </div>
+            </form>
+            <div class="comments-list">
+              {% macro render_comment(c, depth=0) %}
+                <div class="studio-comment-item comment-{{ c.status }}{% if depth > 0 %} reply{% endif %}" style="margin-left: {{ depth * 18 }}px;">
+                  <div class="studio-comment-main">
+                    <div class="studio-comment-header-row" style="display: flex; align-items: center; justify-content: space-between;">
+                      <div style="display: flex; align-items: center; gap: 10px;">
+                        <div class="studio-comment-avatar">
+                          <img data-theme-src="{{ c.user.profile_pic_url or '/static/themes/makecore/img/default_avatar.svg' }}" alt="avatar">
+                        </div>
+                        <span class="studio-comment-username">{{ c.user.username if c.user else 'Deleted User' }}</span>
+                      </div>
+                      <span class="studio-comment-date" style="color: var(--color4); font-size: 0.97rem;">{{ c.created_at.strftime('%b %d, %Y') if c.created_at else '' }}</span>
+                    </div>
+                    <div class="studio-comment-text" style="color: white !important; margin-top: 8px;">{{ c.content }}</div>
+                    <div class="studio-comment-actions">
+                      {% if depth == 0 %}
+                        <button class="comment-action-btn{% if c.user_voted_up %} voted{% endif %}" title="Upvote" data-comment-id="{{ c.id }}" data-vote-type="up" onclick="voteComment({{ c.id }}, 'up', this)">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m18 15-6-6-6 6"/>
+                          </svg>
+                          <span class="vote-count" id="upvotes-{{ c.id }}">{{ c.upvotes }}</span>
+                        </button>
+                        <button class="comment-action-btn{% if c.user_voted_down %} voted{% endif %}" title="Downvote" data-comment-id="{{ c.id }}" data-vote-type="down" onclick="voteComment({{ c.id }}, 'down', this)">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m6 9 6 6 6-6"/>
+                          </svg>
+                          <span class="vote-count" id="downvotes-{{ c.id }}">{{ c.downvotes }}</span>
+                        </button>
+                        <button class="comment-action-btn" title="Reply" type="button" onclick="showReplyForm({{ c.id }})">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            <path d="M13 8H7"/>
+                            <path d="M17 12H7"/>
+                          </svg>
+                          Reply
+                        </button>
+                      {% endif %}
+                    </div>
+                    {% if depth == 0 %}
+                      <form method="POST" action="{{ url_for('post_studio_comment', studio_id=studio.id) }}" class="studio-reply-form" id="reply-form-{{ c.id }}" style="display:none; margin-left:12px;">
+                        <input type="hidden" name="parent_id" value="{{ c.id }}">
+                        <div class="reply-avatar">
+                          <img data-theme-src="{{ current_user.profile_pic_url or '/static/themes/orange/img/default_avatar.svg' }}" alt="avatar">
+                        </div>
+                        <input type="text" name="content" class="add-comment-input" placeholder="Type reply here..." maxlength="300" autocomplete="off">
+                        <button type="button" class="reply-cancel-btn" onclick="hideReplyForm({{ c.id }})">Cancel</button>
+                        <button type="submit" class="reply-submit-btn">Reply</button>
+                      </form>
+                    {% endif %}
+                    {% if c.status == 'flagged' %}
+                      <span class="flagged">[Flagged]</span>
+                    {% endif %}
+                  </div>
+                </div>
+                {% if c.children %}
+                  {% for child in c.children %}
+                    {{ render_comment(child, depth+1) }}
+                  {% endfor %}
+                {% endif %}
+              {% endmacro %}
+              {% for comment in comments %}
+                {{ render_comment(comment) }}
+              {% endfor %}
+            </div>
+          </div>
+        </div>       
+      </div>
+      <div class="studio-tab-content" id="tab-curators" style="display:none;">
+        {% include 'studio_contributors.html' %}
+      </div>
+      <div class="studio-tab-content" id="tab-activity" style="display:none;">
+        <div class="studio-activity">
+          <h3>Activity</h3>
+          <p>Recent activity will appear here.</p>
+        </div>
+      </div>
+        <script>
+          function showTab(tabName) {
+            // tabName = tabName ? tabName.toLowerCase() : '';
+            // console.log(tabName)
+            document.querySelectorAll('.studio-tab-new').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.studio-tab-content').forEach(c => c.style.display = 'none');
+            if (tabName) {
+              const tabBtn = document.querySelector('.studio-tab-new[data-tab="' + tabName + '"]');
+              const tabContent = document.getElementById('tab-' + tabName);
+              if (tabBtn && tabContent) {
+                tabBtn.classList.add('active');
+                tabContent.style.display = '';
+              }
+            }
+          }
+          function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+          }
+          function setQueryParam(param, value) {
+            const url = new URL(window.location);
+            url.searchParams.set(param, value);
+            window.history.replaceState({}, '', url);
+          }
+          document.addEventListener('DOMContentLoaded', function() {
+            const tab = getQueryParam('tab') || 'projects';
+            showTab(tab);
+            document.querySelectorAll('.studio-tab-new').forEach(tab => {
+              tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = this.getAttribute('data-tab');
+                showTab(target);
+                setQueryParam('tab', target);
+              });
+            });
+          });
+        </script>
+
+        <script>
+          const addByUrlBtn = document.getElementById('addByUrlBtn');
+          const addByUrlInput = document.getElementById('addByUrlInput');
+          if (addByUrlBtn && addByUrlInput) {
+            addByUrlBtn.addEventListener('click', function() {
+              const url = addByUrlInput.value.trim();
+              const match = url.match(/program\/(\d{8})/);
+              if (!match) {
+                window.showToast('Please enter a valid MakeCore program URL.', '', 'error', 3500);
+                return;
+              }
+              const programId = match[1];
+              window.showToast('Adding program...', '', 'info', 1800);
+              fetch(`/studios/{{ studio.id }}/add_project`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRFToken': (window.csrf_token || '')
+                },
+                body: JSON.stringify({ project_id: programId })
+              }).then(async resp => {
+                if (resp.ok) {
+                  window.showToast('Added!', '', 'success', 1200);
+                  window.location.reload();
+                } else {
+                  const data = await resp.json();
+                  if (data && data.error && data.error.includes('not found')) {
+                    window.showToast('No project found with this ID.', '', 'error', 4200);
+                  } else if (data && data.error && data.error.includes('already')) {
+                    window.showToast('Program already added!', 'This project is already in this studio.', 'warning', 3500);
+                  } else {
+                    window.showToast('Could not add project. Please try again.', '', 'error', 3500);
+                  }
+                }
+              }).catch(() => {
+                window.showToast('Network error. Please try again.', '', 'error', 3500);
+              });
+            });
+            addByUrlInput.addEventListener('keydown', function(e) {
+              if (e.key === 'Enter') {
+                addByUrlBtn.click();
+              }
+            });
+          }
+        </script>
+    </main>
+    </div>
+
+    <script>
+      function showReplyForm(commentId) {
+        document.getElementById('reply-form-' + commentId).style.display = 'flex';
+      }
+      function hideReplyForm(commentId) {
+        document.getElementById('reply-form-' + commentId).style.display = 'none';
+      }
+
+      const addCommentForm = document.getElementById('add-comment-form');
+      if (addCommentForm) {
+        addCommentForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const input = document.getElementById('add-comment-input');
+          const content = input.value.trim();
+          if (!content) return;
+          const submitBtn = addCommentForm.querySelector('button[type="submit"]');
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Posting...';
+          fetch(addCommentForm.action, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
+            body: new URLSearchParams({ content })
+          })
+          .then(resp => resp.json())
+          .then(data => {
+            if (data.success && data.comment_html) {
+              const list = document.querySelector('.comments-list');
+              if (list) {
+                const temp = document.createElement('div');
+                temp.innerHTML = data.comment_html.trim();
+                const newComment = temp.firstElementChild;
+                if (newComment) {
+                  processThemeImages(newComment);
+                  
+  const upvoteBtn = newComment.querySelector('[data-vote-type="up"]');
+  if (upvoteBtn) {
+    upvoteBtn.addEventListener('click', function() {
+      const commentId = this.getAttribute('data-comment-id');
+      voteComment(commentId, 'up', this);
+    });
+  }
+  const downvoteBtn = newComment.querySelector('[data-vote-type="down"]');
+  if (downvoteBtn) {
+    downvoteBtn.addEventListener('click', function() {
+      const commentId = this.getAttribute('data-comment-id');
+      voteComment(commentId, 'down', this);
+    });
+  }
+  const replyBtn = newComment.querySelector('button[title="Reply"]');
+  if (replyBtn) {
+    replyBtn.addEventListener('click', function() {
+      const commentId = this.getAttribute('data-comment-id');
+      showReplyForm(commentId);
+    });
+  }
+  restoreVoteForNewComment(newComment);
+  list.insertBefore(newComment, list.firstChild);
+}
+
+              }
+              input.value = '';
+              const countSpan = document.querySelector('.comments-count');
+              if (countSpan) {
+                const match = countSpan.textContent.match(/\((\d+)\)/);
+                if (match) {
+                  const newCount = parseInt(match[1], 10) + 1;
+                  const prefix = countSpan.textContent.split('(')[0].replace(/\s*$/, '');
+                  countSpan.innerHTML = prefix + '&nbsp;(' + newCount + ')';
+                }
+              }
+            } else {
+              alert(data.error || 'Failed to post comment.');
+            }
+          })
+          .catch(() => alert('Failed to post comment.'))
+          .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Comment';
+          });
+        });
+      }
+
+      function voteComment(commentId, voteType, btn) {
+  const studioId = {{ studio.id }};
+  btn.disabled = true;
+  btn.classList.add('voting');
+  fetch(`/studios/${studioId}/comment/${commentId}/vote`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest'
+    },
+    body: JSON.stringify({ vote: voteType })
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.upvotes !== undefined) {
+        document.getElementById('upvotes-' + commentId).textContent = data.upvotes;
+      }
+      if (data.downvotes !== undefined) {
+        document.getElementById('downvotes-' + commentId).textContent = data.downvotes;
+      }
+      const upBtn = document.querySelector(`button[data-comment-id="${commentId}"][data-vote-type="up"]`);
+      const downBtn = document.querySelector(`button[data-comment-id="${commentId}"][data-vote-type="down"]`);
+      if (upBtn && downBtn) {
+        upBtn.classList.remove('voted');
+        downBtn.classList.remove('voted');
+
+        const upVotedImg = upBtn.querySelector('img.vote-voted-img');
+        const downVotedImg = downBtn.querySelector('img.vote-voted-img');
+        if (upVotedImg) upVotedImg.style.display = 'none';
+        if (downVotedImg) downVotedImg.style.display = 'none';
+        if (data.user_vote === 'up') {
+          upBtn.classList.add('voted');
+          if (upVotedImg) upVotedImg.style.display = '';
+          localStorage.setItem(`studio_comment_vote_${commentId}`, 'up');
+        } else if (data.user_vote === 'down') {
+          downBtn.classList.add('voted');
+          if (downVotedImg) downVotedImg.style.display = '';
+          localStorage.setItem(`studio_comment_vote_${commentId}`, 'down');
+        } else {
+          localStorage.removeItem(`studio_comment_vote_${commentId}`);
+        }
+      }
+    })
+    .finally(() => {
+      btn.disabled = false;
+      btn.classList.remove('voting');
+    });
+}
+
+// Restore vote states on page load
+function restoreCommentVotes() {
+  document.querySelectorAll('.studio-comment-item').forEach(function(commentDiv) {
+    const upBtn = commentDiv.querySelector('button[data-vote-type="up"]');
+    const downBtn = commentDiv.querySelector('button[data-vote-type="down"]');
+    if (!upBtn || !downBtn) return;
+    const commentId = upBtn.getAttribute('data-comment-id');
+    const vote = localStorage.getItem(`studio_comment_vote_${commentId}`);
+    upBtn.classList.remove('voted');
+    downBtn.classList.remove('voted');
+    const upVotedImg = upBtn.querySelector('img.vote-voted-img');
+    const downVotedImg = downBtn.querySelector('img.vote-voted-img');
+    if (upVotedImg) upVotedImg.style.display = 'none';
+    if (downVotedImg) downVotedImg.style.display = 'none';
+    if (vote === 'up') {
+      upBtn.classList.add('voted');
+      if (upVotedImg) upVotedImg.style.display = '';
+    } else if (vote === 'down') {
+      downBtn.classList.add('voted');
+      if (downVotedImg) downVotedImg.style.display = '';
+    }
+  });
+}
+document.addEventListener('DOMContentLoaded', restoreCommentVotes);
+
+function restoreVoteForNewComment(newComment) {
+  const upBtn = newComment.querySelector('[data-vote-type="up"]');
+  const downBtn = newComment.querySelector('[data-vote-type="down"]');
+  if (!upBtn || !downBtn) return;
+  const commentId = upBtn.getAttribute('data-comment-id');
+  const vote = localStorage.getItem(`studio_comment_vote_${commentId}`);
+  upBtn.classList.remove('voted');
+  downBtn.classList.remove('voted');
+  const upVotedImg = upBtn.querySelector('img.vote-voted-img');
+  const downVotedImg = downBtn.querySelector('img.vote-voted-img');
+  if (upVotedImg) upVotedImg.style.display = 'none';
+  if (downVotedImg) downVotedImg.style.display = 'none';
+  if (vote === 'up') {
+    upBtn.classList.add('voted');
+    if (upVotedImg) upVotedImg.style.display = '';
+  } else if (vote === 'down') {
+    downBtn.classList.add('voted');
+    if (downVotedImg) downVotedImg.style.display = '';
+  }
+}
+
+if (window.location.pathname === '/logout') {
+  Object.keys(localStorage).forEach(function(key) {
+    if (key.startsWith('studio_comment_vote_')) {
+      localStorage.removeItem(key);
+    }
+  });
+}
+
+function processThemeImages(container) {
+  const theme = document.documentElement.getAttribute('data-theme') || 'orange';
+  const images = container.querySelectorAll('img[data-theme-src]');
+  
+  images.forEach(img => {
+    const originalSrc = img.getAttribute('data-theme-src');
+    if (originalSrc) {
+      img.src = originalSrc.replace(/\/themes\/[^/]+\//, `/themes/${theme}/`);
+    }
+  });
+}
+
+const originalUpdateThemeImages = window.updateThemeImages;
+window.updateThemeImages = function() {
+  if (originalUpdateThemeImages) {
+    originalUpdateThemeImages();
+  }
+  
+  const studioComments = document.querySelector('.studio-comments-scroll-container');
+  if (studioComments) {
+    processThemeImages(studioComments);
+  }
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+  const studioComments = document.querySelector('.studio-comments-scroll-container');
+  if (studioComments) {
+    processThemeImages(studioComments);
+  }
+  
+  document.addEventListener('submit', function(e) {
+    if (e.target.classList.contains('studio-reply-form')) {
+      e.preventDefault();
+      handleReplySubmission(e.target);
+    }
+  });
+});
+
+function handleReplySubmission(form) {
+  const input = form.querySelector('input[name="content"]');
+  const content = input.value.trim();
+  
+  if (!content) {
+    alert('Please enter a reply.');
+    return;
+  }
+  
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const originalText = submitBtn.textContent;
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Posting...';
+  
+  const formData = new URLSearchParams();
+  formData.append('content', content);
+  const parentId = form.querySelector('input[name="parent_id"]').value;
+  if (parentId) {
+    formData.append('parent_id', parentId);
+  }
+  
+  console.log('Submitting reply:', { content, parentId, action: form.action });
+  
+  fetch(form.action, {
+    method: 'POST',
+    body: formData,
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest',
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    if (data.success && data.comment_html) {
+      form.style.display = 'none';
+      input.value = '';
+      
+      const parentId = form.querySelector('input[name="parent_id"]').value;
+      const parentComment = document.querySelector(`button[data-comment-id="${parentId}"]`)?.closest('.studio-comment-item');
+      
+      if (parentComment) {
+        let repliesContainer = parentComment.querySelector('.replies-container');
+        if (!repliesContainer) {
+          repliesContainer = document.createElement('div');
+          repliesContainer.className = 'replies-container';
+          parentComment.appendChild(repliesContainer);
+        }
+        
+        const temp = document.createElement('div');
+        temp.innerHTML = data.comment_html.trim();
+        const newReply = temp.firstElementChild;
+        if (newReply) {
+          processThemeImages(newReply);
+          
+          attachReplyEventListeners(newReply);
+          
+          repliesContainer.appendChild(newReply);
+        }
+      }
+      
+      const countSpan = document.querySelector('.comments-count');
+      if (countSpan) {
+        const match = countSpan.textContent.match(/\((\d+)\)/);
+        if (match) {
+          const newCount = parseInt(match[1], 10) + 1;
+          const prefix = countSpan.textContent.split('(')[0].replace(/\s*$/, '');
+          countSpan.innerHTML = prefix + '&nbsp;(' + newCount + ')';
+        }
+      }
+    } else {
+      alert(data.error || 'Failed to post reply.');
+    }
+  })
+  .catch(error => {
+    console.error('Reply submission error:', error);
+    alert('Failed to post reply: ' + error.message);
+  })
+  .finally(() => {
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalText;
+  });
+}
+
+function attachReplyEventListeners(replyElement) {
+  // Vote buttons removed from replies - no vote event listeners needed
+}
+
+    </script>
+    <!-- Project Browse Modal -->
+    <div id="project-modal" class="modal" style="display:none; z-index:9999;">
+      <div class="modal-header">Add to Studio</div>
+      <div class="modal-content" style="min-height: 300px; max-width: 860px; min-width: 600px; background: #f5f2ff; border-radius: 18px; box-shadow: 0 2px 32px rgba(var(--color4-rgb), 0.5); padding: 0 0 24px 0; position: relative;">
+        <span class="close-button" style="position:absolute;top:16px;right:18px;background:none;border:none;font-size:2.1rem;color:var(--color7);cursor:pointer;z-index:10;">&times;</button>
+        <div class="project-modal-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px 22px;padding:0 32px 0 32px;min-height:270px;">
+          {% for project in projects %}
+            <div class="project-card-modal" tabindex="0" data-project-id="{{ project.id }}" role="checkbox" aria-checked="false">
+              {% if project.image_url %}
+                <img src="{{ project.image_url }}" alt="{{ project.name }}" style="width:100%;height:120px;object-fit:cover;">
+              {% else %}
+                <div style="width:100%;height:120px;background:#ffd1b3;"></div>
+              {% endif %}
+              <span class="project-card-title">{{ project.name }}</span>
+              <span class="project-card-check"><span class="plus-icon">+</span><svg class="checkmark-svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 18 18"><polyline points="4 10 8 14 14 5"/></svg></span>
+              <span style="position:absolute;top:8px;right:10px;background:#fff3;border-radius:50%;padding:2px 7px;color:#a285e6;font-size:1.4rem;">+</span>
+            </div>
+          {% endfor %}
+        </div>
+        <div style="text-align:right;padding:0 36px 0 0;margin-top:18px;">
+          <button id="project-modal-done" class="btn-orange" style="font-size:1.15rem;padding:9px 38px;">Done</button>
+        </div>
+      </div>
+    </div>
+    <script src="/static/js/project_modal.js"></script>
+  {% endblock %}
+  {% block scripts %}
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7H9JTC8BY1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-7H9JTC8BY1');
+</script>
+{% endblock %}

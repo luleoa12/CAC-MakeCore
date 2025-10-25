@@ -1,0 +1,112 @@
+.edit-program-container {
+
+    max-width: 900px;
+    margin: 20px auto 20px auto;
+    padding: 32px 32px 18px 32px;
+    background: rgba(var(--color1-rgb), 0.8);
+    border-radius: 32px;
+    box-shadow: 0 4px 24px rgba(var(--color1-rgb), 0.27);
+    position: relative;
+    font-family: 'Fira Code', monospace;
+    color: var(--color7);
+}
+.edit-title {
+    font-size: 2.2rem;
+    font-weight: bold;
+    background: var(--color1);
+    border-radius: 24px;
+    padding: 8px 36px;
+    display: inline-block;
+    margin-bottom: 24px;
+}
+.edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-top: 18px;
+}
+.edit-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 1.1rem;
+}
+.edit-input, .edit-textarea {
+    font-family: 'Fira Code', monospace;
+    font-size: 1.15rem;
+    background: var(--color10);
+    border: 2px solid var(--color1);
+    border-radius: 12px;
+    padding: 10px 18px;
+    color: var(--color7);
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+}
+.edit-textarea {
+    min-height: 70px;
+    max-height: 200px;
+    resize: vertical;
+}
+.image-upload-container {
+    margin: 20px 0;
+}
+.current-image {
+    width: 320px;
+    aspect-ratio: 4/3;
+    height: auto;
+    border-radius: 10px;
+    border: 2px solid var(--color1);
+    margin-bottom: 15px;
+    background: var(--color10);
+    display: block;
+}
+.image-preview {
+    max-width: 320px;
+    max-height: 240px;
+    border-radius: 10px;
+    border: 2px dashed var(--color1);
+    margin-top: 15px;
+    background: var(--color10);
+    display: none;
+}
+.file-upload {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.file-upload-label {
+    display: inline-block;
+    padding: 10px 20px;
+    background: var(--color1);
+    color: var(--color7);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-align: center;
+    font-weight: bold;
+}
+.file-upload-label:hover {
+    background: var(--color8);
+}
+.file-upload-input {
+    display: none;
+}
+.edit-btn {
+    background: var(--color1);
+    color: var(--color7);
+    font-family: 'Fira Code', monospace;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 18px;
+    padding: 10px 36px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(var(--color1-rgb), 0.27);
+    transition: background 0.18s, box-shadow 0.18s;
+    margin-top: 18px;
+    width: fit-content;
+    align-self: center;
+}
+.edit-btn:hover {
+    background: var(--color8);
+}
