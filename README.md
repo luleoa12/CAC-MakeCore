@@ -18,7 +18,7 @@
 
 ---
 
-## 🏗 Development Highlights
+## Features + Devlog
 
 ### Programs
 - Create, edit, delete programs  
@@ -33,7 +33,7 @@
 - Studio comments  
 
 ### UI
-- Modern orange color palette  
+- Custom orange, green, and blue themes  
 - Clean layouts, consistent design  
 - Icons designed in Google Slides  
 
@@ -55,9 +55,23 @@
 
 ### Infrastructure
 - Supabase for storing images  
-- Google Analytics integration  
-- Zoho Mail integration  
+- MailGun integration  
 - Website and PostgreSQL hosted on Render  
 
 ---
+
+## Screenshots
+
+**Dashboard**
+![Dashboard](docs/screenshots/dashboard.png)
+
+**MakeJam**
+![MakeJam](docs/screenshots/makejam.png)
+
+**Program Page**
+![Program](docs/screenshots/program.png)
+
+**Studio Page**
+![Studio](docs/screenshots/studio.png)
+
 
