@@ -1,10 +1,10 @@
 <table align="center">
   <tr>
     <td>
-      <img src="docs/screenshots/logo.svg" alt="MakeCore Logo" width="48">
+      <img src="docs/screenshots/logo.svg" alt="MakeCore Logo" width="100">
     </td>
     <td>
-      <h3 style="font-size: 30px; margin-top: 8px;">MakeCore</h1>
+      <h3 style="font-size: 55px;">MakeCore</h1>
     </td>
   </tr>
 </table>
