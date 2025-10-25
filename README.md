@@ -1,19 +1,27 @@
-<img src="docs/screenshots/logo.svg" alt="MakeCore Logo" width="120"><br>
-<h1># MakeCore</h1>
-<a href="https://makecore.org">makecore.org</a><br><br>
-<strong>Start:</strong> March 28, 2025 | <strong>Release:</strong> June 14, 2025 |<strong>End:</strong> October 25, 2025<br>
-<strong>4+ months spent | 15,000+ lines of code</strong><br><br>
+<table align="center">
+  <tr>
+    <td>
+      <img src="docs/screenshots/logo.svg" alt="MakeCore Logo" width="48">
+    </td>
+    <td>
+      <h3 style="font-size: 30px; margin-top: 8px;">MakeCore</h1>
+    </td>
+  </tr>
+</table>
+
+<p align="center">
+  <strong>Start:</strong> March 28, 2025 | <strong>Release:</strong> June 14, 2025 | <strong>End:</strong> October 25, 2025<br>
+  <strong>4+ months spent | 15,000+ lines of code</strong>
+</p>
 
 > “One commit a day keeps unemployment away.” – Leo Lu, 2025
 
----
 
 ## About
 MakeCore is an online platform designed for sharing, reviewing, and discussing MakeCode and Scratch programs. Users can create programs, join studios, participate in game contests (MakeJams), and interact with the community.
 
 **Live Project:** [https://makecore.org](https://makecore.org)
 
----
 
 ## How It's Made
 **Tech used:** HTML, CSS, JavaScript, Flask (Python), PostgreSQL, Supabase, Render, MailGun
@@ -25,7 +33,6 @@ MakeCore was built with a focus on community collaboration and interactive featu
 - Dynamic dashboard showing community stats and program highlights  
 - Authentication flows including email verification and password reset  
 
----
 
 ## Lessons Learned
 - Managing user sessions in Flask
@@ -66,6 +73,7 @@ MakeCore was built with a focus on community collaboration and interactive featu
 
 ### Authentication
 - Sign-in and registration  
+- Google OAuth Implementation
 - Email verification & password reset  
 - Profile editing  
 
@@ -74,7 +82,6 @@ MakeCore was built with a focus on community collaboration and interactive featu
 - MailGun integration  
 - Website and PostgreSQL hosted on Render  
 
----
 
 ## Screenshots
 
