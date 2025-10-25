@@ -1,6 +1,6 @@
-<div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+<p align="center">
   <img src="docs/screenshots/logo.svg" alt="MakeCore Logo" width="400">
-</div>
+</p>
 
 
 
