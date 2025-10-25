@@ -1,7 +1,7 @@
-<p align="center">
-  <img src="docs/screenshots/logo.svg" alt="MakeCore Logo" width="100" style="vertical-align: middle;">
-  <span style="font-size: 50px; vertical-align: middle; margin-left: 15px;">MakeCore</span>
-</p>
+<div align="center" style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+  <img src="docs/screenshots/logo.svg" alt="MakeCore Logo" width="100">
+  <h1 style="margin: 0;">MakeCore</h1>
+</div>
 
 
 
