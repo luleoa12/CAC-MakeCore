@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/screenshots/logo.svg" alt="MakeCore Logo" width="400">
+  <img src="docs/screenshots/logo.svg" alt="MakeCore Logo" width="400" >
 </p>
 
 
