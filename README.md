@@ -1,15 +1,13 @@
-<table align="center">
-  <tr>
-    <td>
-      <img src="docs/screenshots/logo.svg" alt="MakeCore Logo" width="100">
-    </td>
-    <td>
-      <h3 style="font-size: 55px;">MakeCore</h1>
-    </td>
-  </tr>
-</table>
+<div align="center" style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+  <img src="docs/screenshots/logo.svg" alt="MakeCore Logo" width="100">
+  <h3 style="margin: 0; font-size:3.1rem;">MakeCore</h1>
+</div>
 
-<p align="center">
+
+
+
+
+<p align="center" style="margin-top: 15px;">
   <strong>Start:</strong> March 28, 2025 | <strong>Release:</strong> June 14, 2025 | <strong>End:</strong> October 25, 2025<br>
   <strong>4+ months spent | 15,000+ lines of code</strong>
 </p>
