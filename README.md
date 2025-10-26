@@ -10,7 +10,7 @@
 
 <p align="center" style="margin-top: 15px;">
   <strong>Start:</strong> March 28, 2025 | <strong>Release:</strong> June 14, 2025 | <strong>End:</strong> October 25, 2025<br>
-  <strong>4+ months spent | 15,000+ lines of code</strong>
+  <strong>6+ months spent | 15,000+ lines of code</strong>
 </p>
 
 > “One commit a day keeps unemployment away.” – Leo Lu, 2025
