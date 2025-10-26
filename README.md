@@ -16,6 +16,9 @@
 > “One commit a day keeps unemployment away.” – Leo Lu, 2025
 
 
+⚠️ **Disclaimer:** All image files, configuration data, and private keys have been removed from this repository for privacy reasons.
+
+
 ## About
 MakeCore is an online platform designed for sharing, reviewing, and discussing MakeCode and Scratch programs. Users can create programs, join studios, participate in game contests (MakeJams), and interact with the community.
 
